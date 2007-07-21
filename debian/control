@@ -1,0 +1,25 @@
+Source: nagvis
+Section: misc
+Priority: extra
+Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
+Build-Depends: debhelper (>= 5), dpatch
+Standards-Version: 3.7.2
+
+Package: nagvis
+Architecture: all
+Depends: nagios2, ndoutils-mysql, ucf, dbconfig-common, php5-mysql, php5-gd
+Description: Visualization addon for Nagios
+ NagVis can be used to visualize Nagios Data, e.g. to display IT processes like
+ a mail system or a network infrastructure.
+ .
+ Key features are:
+ .
+  * Display of single Hosts or Services
+  * Display the state of a Host dependent on the state of its services
+    ("recognize services")
+  * Visualize a complete Host- oder Servicegroup with one icon
+  * Define Sub-Map icons wich represent a complete NagVis Map of
+    Hosts/Services/Groups in one icon (drill down)
+  * Visualization of complete IT Processes using self drawn graphics
+ .
+  Homepage: http://www.nagvis.org

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. /usr/share/debconf/confmodule
+
+tmp=`mktemp`
+dbconfig-load-include -f sh \
+	-udbc_dbuser -pdbc_dbpass -ddbc_dbname -sdbc_dbserver -Pdbc_dbport \
+	/etc/dbconfig-common/ndoutils-mysql.conf > $tmp
+. $tmp
+rm -f $tmp
+
+if [ -f /usr/share/dbconfig-common/dpkg/frontend.config.mysql ]; then
+	. /usr/share/dbconfig-common/dpkg/frontend.config.mysql
+	dbc_go nagvis $@
+fi
+db_stop
+

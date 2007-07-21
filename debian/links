@@ -1,0 +1,3 @@
+etc/nagvis/maps usr/share/nagvis/htdocs/nagvis/etc/maps
+etc/nagvis/templates usr/share/nagvis/htdocs/nagvis/etc/templates
+usr/share/nagvis/htdocs usr/share/nagios2/htdocs/nagvis

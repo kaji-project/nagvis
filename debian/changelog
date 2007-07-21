@@ -1,0 +1,7 @@
+nagvis (1.1rc2-1) unstable; urgency=low
+
+  * Initial release (Closes: #433048: ITP: nagvis -- Visualization addon for
+    Nagios)
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Sat, 14 Jul 2007 11:37:16 +0200
+

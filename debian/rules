@@ -1,0 +1,118 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpatch/dpatch.make
+DEST = debian/tmp
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+build: build-stamp patch-stamp
+build-stamp: configure-stamp 
+	dh_testdir
+	#$(MAKE)
+	#docbook-to-man debian/nagvis.sgml > nagvis.1
+	touch $@
+
+clean: unpatch
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	# Add here commands to clean up after the build process.
+	#-$(MAKE) clean
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	
+	mkdir -p $(DEST)/{etc,usr/share/nagvis/{debian/,htdocs/{nagvis/,wui/},{,wui/}includes}}
+	
+	cp -a nagvis/etc $(DEST)/etc/nagvis
+	mv $(DEST)/etc/nagvis/config.ini.php.dist \
+		$(DEST)/usr/share/nagvis/debian/
+	sed -e 's/^[; ]*\(\<dbhost\) *=.*$$/\1=_DBC_DBSERVER_/' \
+	    -e 's/^[; ]*\(\<dbport\) *=.*$$/\1=_DBC_DBPORT_/' \
+	    -e 's/^[; ]*\(\<dbname\) *=.*$$/\1=_DBC_DBNAME_/' \
+	    -e 's/^[; ]*\(\<dbuser\) *=.*$$/\1=_DBC_DBUSER_/' \
+	    -e 's/^[; ]*\(\<dbpass\) *=.*$$/\1=_DBC_DBPASS_/' \
+	 < $(DEST)/usr/share/nagvis/debian/config.ini.php.dist \
+	 > $(DEST)/usr/share/nagvis/debian/config.ini.php.dist.new && \
+	 mv $(DEST)/usr/share/nagvis/debian/config.ini.php.dist.new \
+	    $(DEST)/usr/share/nagvis/debian/config.ini.php.dist
+	
+	cp -a nagvis/images $(DEST)/usr/share/nagvis/htdocs/nagvis/
+	cp -a nagvis/includes/classes $(DEST)/usr/share/nagvis/includes/
+	cp -a nagvis/includes/{css,js,languages} $(DEST)/usr/share/nagvis/htdocs/nagvis/
+	cp -a nagvis/*.php $(DEST)/usr/share/nagvis/htdocs/nagvis/
+	
+	cp -a wui/images $(DEST)/usr/share/nagvis/htdocs/wui/
+	cp -a wui/includes/classes $(DEST)/usr/share/nagvis/wui/includes/
+	cp -a wui/includes/{css,js} $(DEST)/usr/share/nagvis/htdocs/wui/
+	cp -a wui/*.php $(DEST)/usr/share/nagvis/htdocs/wui/
+	cp -a *.php $(DEST)/usr/share/nagvis/htdocs/
+	
+	# demo site
+	mkdir -p $(DEST)/demo/{nagvis/images/,etc/nagvis/}maps
+	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
+	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
+		$(DEST)/demo/nagvis/images/maps/
+	
+	dh_installdirs
+	dh_install
+	dh_link
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+#	dh_installmenu
+	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_installman
+#	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

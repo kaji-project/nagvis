@@ -1,0 +1,20 @@
+nagvis for Debian
+-----------------
+
+Thank you using the NagVis addon for Nagios Network Monitoring System.
+
+To get it work you have to be sure the ndoutils package is installed and works
+fine. NagVis uses the database account of ndoutils to connect to the database. If
+you change this account with reconfiguring ndoutils, don't forget to
+dpkg-reconfigure nagvis too to get the new configuration.
+
+If you got still errors of not working NDOUtils, check your /etc/nagios2/nagios.cfg
+if the broker module ndomod.o is enabled and check_external_commands=1 is set to
+get the table <prefix>_programstatus updated.
+(See http://www.nagvis.org/docs/general/often_reported_errors#nagiosnotrunning)
+
+There are some examples in /usr/share/doc/nagvis/examples/demo to see NagVis 
+functionality. Just copy the files in demo/ to the appropriate location and change
+its owner and group to be www-data:www-data.
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Sat, 14 Jul 2007 11:27:33 +0200
