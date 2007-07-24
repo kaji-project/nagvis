@@ -1,3 +1,9 @@
+nagvis (1.1rc3-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Tue, 24 Jul 2007 19:57:44 +0200
+
 nagvis (1.1rc2-1) unstable; urgency=low
 
   * Initial release (Closes: #433048: ITP: nagvis -- Visualization addon for

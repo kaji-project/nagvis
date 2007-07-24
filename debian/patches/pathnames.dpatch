@@ -5,9 +5,9 @@
 ## DP: No description.
 
 @DPATCH@
-diff -urNad nagvis-1.1rc2~/nagvis/draw.php nagvis-1.1rc2/nagvis/draw.php
---- nagvis-1.1rc2~/nagvis/draw.php	2007-07-12 16:36:49.000000000 +0200
-+++ nagvis-1.1rc2/nagvis/draw.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/nagvis/draw.php nagvis-1.1rc3/nagvis/draw.php
+--- nagvis-1.1rc3~/nagvis/draw.php	2007-04-14 20:56:59.000000000 +0200
++++ nagvis-1.1rc3/nagvis/draw.php	2007-07-24 19:59:28.000000000 +0200
 @@ -12,20 +12,20 @@
  ## For developer guidlines have a look at http://www.nagvis.org			##
  ##########################################################################
@@ -48,9 +48,9 @@ diff -urNad nagvis-1.1rc2~/nagvis/draw.php nagvis-1.1rc2/nagvis/draw.php
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/nagvis/etc/config.ini.php.dist nagvis-1.1rc2/nagvis/etc/config.ini.php.dist
---- nagvis-1.1rc2~/nagvis/etc/config.ini.php.dist	2007-07-12 16:36:18.000000000 +0200
-+++ nagvis-1.1rc2/nagvis/etc/config.ini.php.dist	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/nagvis/etc/config.ini.php.dist nagvis-1.1rc3/nagvis/etc/config.ini.php.dist
+--- nagvis-1.1rc3~/nagvis/etc/config.ini.php.dist	2007-06-08 14:37:34.000000000 +0200
++++ nagvis-1.1rc3/nagvis/etc/config.ini.php.dist	2007-07-24 19:59:28.000000000 +0200
 @@ -57,11 +57,11 @@
  ; path options
  [paths]
@@ -66,9 +66,9 @@ diff -urNad nagvis-1.1rc2~/nagvis/etc/config.ini.php.dist nagvis-1.1rc2/nagvis/e
  
  ; options for the NDO-Backend
  ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
-diff -urNad nagvis-1.1rc2~/nagvis/includes/classes/class.GlobalMainCfg.php nagvis-1.1rc2/nagvis/includes/classes/class.GlobalMainCfg.php
---- nagvis-1.1rc2~/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-12 16:36:43.000000000 +0200
-+++ nagvis-1.1rc2/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-14 00:06:09.000000000 +0200
+diff -urNad nagvis-1.1rc3~/nagvis/includes/classes/class.GlobalMainCfg.php nagvis-1.1rc3/nagvis/includes/classes/class.GlobalMainCfg.php
+--- nagvis-1.1rc3~/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-24 00:31:44.000000000 +0200
++++ nagvis-1.1rc3/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-24 19:59:28.000000000 +0200
 @@ -123,43 +123,43 @@
  												'type' => 'string'),
  							'htmlbase' => Array('must' => 1,
@@ -147,9 +147,9 @@ diff -urNad nagvis-1.1rc2~/nagvis/includes/classes/class.GlobalMainCfg.php nagvi
  		$this->validConfig['paths']['map']['default'] = $base.'nagvis/images/maps/';
  		$this->validConfig['paths']['hovertemplate']['default'] = $base.'nagvis/etc/templates/hover/';
  		$this->validConfig['paths']['headertemplate']['default'] = $base.'nagvis/etc/templates/header/';
-diff -urNad nagvis-1.1rc2~/nagvis/includes/classes/class.NagVisFrontend.php nagvis-1.1rc2/nagvis/includes/classes/class.NagVisFrontend.php
---- nagvis-1.1rc2~/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-12 16:36:44.000000000 +0200
-+++ nagvis-1.1rc2/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/nagvis/includes/classes/class.NagVisFrontend.php nagvis-1.1rc3/nagvis/includes/classes/class.NagVisFrontend.php
+--- nagvis-1.1rc3~/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-11 15:55:47.000000000 +0200
++++ nagvis-1.1rc3/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-24 19:59:28.000000000 +0200
 @@ -25,8 +25,8 @@
  		$this->BACKEND = &$BACKEND;
  		$this->LANG = new GlobalLanguage($MAINCFG,'nagvis:global');
@@ -159,11 +159,11 @@ diff -urNad nagvis-1.1rc2~/nagvis/includes/classes/class.NagVisFrontend.php nagv
 +					  'cssIncludes'=>Array('css/style.css'),
 +					  'jsIncludes'=>Array('js/nagvis.js','js/overlib.js','js/overlib_shadow.js'),
  					  'extHeader'=>Array('<META http-equiv="refresh" CONTENT="'.$this->MAINCFG->getValue('global', 'refreshtime').';'.$this->getNextRotate().'">',
- 					  					'<style type="text/css">.main { background-color: '.$this->MAPCFG->getValue('global',0, 'background_color').'; }</style>'),
+ 					  					'<style type="text/css">body.main { background-color: '.$this->MAPCFG->getValue('global',0, 'background_color').'; }</style>'),
  					  'allowedUsers'=> $this->MAPCFG->getValue('global',0, 'allowed_user'),
-diff -urNad nagvis-1.1rc2~/nagvis/index.php nagvis-1.1rc2/nagvis/index.php
---- nagvis-1.1rc2~/nagvis/index.php	2007-07-12 16:36:49.000000000 +0200
-+++ nagvis-1.1rc2/nagvis/index.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/nagvis/index.php nagvis-1.1rc3/nagvis/index.php
+--- nagvis-1.1rc3~/nagvis/index.php	2007-06-06 16:55:01.000000000 +0200
++++ nagvis-1.1rc3/nagvis/index.php	2007-07-24 19:59:28.000000000 +0200
 @@ -12,20 +12,20 @@
  ## For developer guidlines have a look at http://www.nagvis.org			##
  ##########################################################################
@@ -204,9 +204,9 @@ diff -urNad nagvis-1.1rc2~/nagvis/index.php nagvis-1.1rc2/nagvis/index.php
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/ajax_handler.php nagvis-1.1rc2/wui/ajax_handler.php
---- nagvis-1.1rc2~/wui/ajax_handler.php	2007-07-12 16:37:16.000000000 +0200
-+++ nagvis-1.1rc2/wui/ajax_handler.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/ajax_handler.php nagvis-1.1rc3/wui/ajax_handler.php
+--- nagvis-1.1rc3~/wui/ajax_handler.php	2007-03-24 03:06:52.000000000 +0100
++++ nagvis-1.1rc3/wui/ajax_handler.php	2007-07-24 19:59:28.000000000 +0200
 @@ -1,16 +1,16 @@
  <?php
  
@@ -233,9 +233,9 @@ diff -urNad nagvis-1.1rc2~/wui/ajax_handler.php nagvis-1.1rc2/wui/ajax_handler.p
  
  switch($_GET['action']) {
  	case 'getObjects':
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiAddModify.php nagvis-1.1rc2/wui/includes/classes/class.WuiAddModify.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiAddModify.php	2007-07-12 16:37:47.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiAddModify.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiAddModify.php nagvis-1.1rc3/wui/includes/classes/class.WuiAddModify.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiAddModify.php	2007-07-20 21:02:09.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiAddModify.php	2007-07-24 19:59:28.000000000 +0200
 @@ -29,10 +29,10 @@
  		$this->LANG = new GlobalLanguage($MAINCFG,'wui:addModify');
  		
@@ -251,16 +251,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiAddModify.php nagvis-1.
  					  'extHeader'=>Array(''),
  					  'allowedUsers' => Array('EVERYONE'));
  		parent::GlobalPage($MAINCFG,$prop,'wui:addModify');
-@@ -471,4 +471,4 @@
- 		return $ret;
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiBackendManagement.php nagvis-1.1rc2/wui/includes/classes/class.WuiBackendManagement.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiBackendManagement.php	2007-07-12 16:37:53.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiBackendManagement.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiBackendManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiBackendManagement.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiBackendManagement.php	2007-07-13 20:57:57.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiBackendManagement.php	2007-07-24 19:59:28.000000000 +0200
 @@ -26,10 +26,10 @@
  		$this->LANG = new GlobalLanguage($MAINCFG,'wui:backendManagement');
  		
@@ -283,9 +276,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiBackendManagement.php n
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiBackgroundManagement.php nagvis-1.1rc2/wui/includes/classes/class.WuiBackgroundManagement.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-12 16:37:51.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiBackgroundManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiBackgroundManagement.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-13 20:57:57.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-24 19:59:28.000000000 +0200
 @@ -26,10 +26,10 @@
  		$this->LANG = new GlobalLanguage($MAINCFG,'wui:backgroundManagement');
  		
@@ -308,9 +301,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiBackgroundManagement.ph
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiEditMainCfg.php nagvis-1.1rc2/wui/includes/classes/class.WuiEditMainCfg.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-12 16:37:50.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiEditMainCfg.php nagvis-1.1rc3/wui/includes/classes/class.WuiEditMainCfg.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-13 20:57:57.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-24 19:59:28.000000000 +0200
 @@ -23,8 +23,8 @@
  		$this->LANG = new GlobalLanguage($MAINCFG,'wui:editMainCfg');
  		
@@ -329,9 +322,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiEditMainCfg.php nagvis-
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiFrontend.php nagvis-1.1rc2/wui/includes/classes/class.WuiFrontend.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiFrontend.php	2007-07-12 16:37:51.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiFrontend.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiFrontend.php nagvis-1.1rc3/wui/includes/classes/class.WuiFrontend.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiFrontend.php	2007-07-11 22:54:50.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiFrontend.php	2007-07-24 20:01:38.000000000 +0200
 @@ -24,13 +24,13 @@
  		$this->LANG = new GlobalLanguage($this->MAINCFG,'wui:global');
  		
@@ -343,26 +336,19 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiFrontend.php nagvis-1.1
 -						  './includes/js/jsdomenu.inc.js',
 -						  './includes/js/wz_jsgraphics.js',
 -						  './includes/js/wz_dragdrop.js'),
-+					  'cssIncludes'=>Array('../nagviscss/style.css','css/wui.css','css/office_xp/office_xp.css'),
++					  'cssIncludes'=>Array('../nagvis/css/style.css','css/wui.css','css/office_xp/office_xp.css'),
 +					  'jsIncludes'=>Array('js/wui.js',
 +					  	  'js/ajax.js',
 +						  'js/jsdomenu.js',
 +						  'js/jsdomenu.inc.js',
 +						  'js/wz_jsgraphics.js',
 +						  'js/wz_dragdrop.js'),
- 					  'extHeader'=>Array("<style type=\"text/css\">.main { background-color: ".$this->MAPCFG->getValue('global',0, 'background_color')."; }</style>"),
+ 					  'extHeader'=>Array("<style type=\"text/css\">body.main { background-color: ".$this->MAPCFG->getValue('global',0, 'background_color')."; }</style>"),
  					  'allowedUsers' => $this->MAPCFG->getValue('global', 0,'allowed_for_config'),
  					  'languageRoot' => 'wui:global');
-@@ -63,4 +63,4 @@
- 		if (DEBUG&&DEBUGLEVEL&1) debug('End method WuiFrontend::getMessages()');
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiMap.php nagvis-1.1rc2/wui/includes/classes/class.WuiMap.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiMap.php	2007-07-12 16:37:56.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiMap.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiMap.php nagvis-1.1rc3/wui/includes/classes/class.WuiMap.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiMap.php	2007-07-22 12:25:12.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiMap.php	2007-07-24 19:59:28.000000000 +0200
 @@ -114,7 +114,7 @@
  		$ret = array_merge($ret,$this->parseObjects());
  		$ret = array_merge($ret,$this->parseInvisible());
@@ -372,16 +358,16 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiMap.php nagvis-1.1rc2/w
  		
  		if (DEBUG&&DEBUGLEVEL&1) debug('End method WuiMap::parseMap(): Array(HTML)');
  		return $ret;
-@@ -531,4 +531,4 @@
+@@ -535,4 +535,4 @@
  		if (DEBUG&&DEBUGLEVEL&1) debug('Start method WuiMap::parseInvisible(): Array(HTML)');
  		return $arr;
  	}
 -}
 \ No newline at end of file
 +}
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiMapManagement.php nagvis-1.1rc2/wui/includes/classes/class.WuiMapManagement.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiMapManagement.php	2007-07-12 16:37:53.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiMapManagement.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiMapManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiMapManagement.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiMapManagement.php	2007-07-13 20:57:57.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiMapManagement.php	2007-07-24 19:59:28.000000000 +0200
 @@ -29,10 +29,10 @@
  		$this->LANG = new GlobalLanguage($MAINCFG,'wui:mapManagement');
  		
@@ -404,9 +390,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiMapManagement.php nagvi
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiShapeManagement.php nagvis-1.1rc2/wui/includes/classes/class.WuiShapeManagement.php
---- nagvis-1.1rc2~/wui/includes/classes/class.WuiShapeManagement.php	2007-07-12 16:37:55.000000000 +0200
-+++ nagvis-1.1rc2/wui/includes/classes/class.WuiShapeManagement.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiShapeManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiShapeManagement.php
+--- nagvis-1.1rc3~/wui/includes/classes/class.WuiShapeManagement.php	2007-06-20 18:16:07.000000000 +0200
++++ nagvis-1.1rc3/wui/includes/classes/class.WuiShapeManagement.php	2007-07-24 19:59:28.000000000 +0200
 @@ -21,10 +21,10 @@
          $this->LANG = new GlobalLanguage($MAINCFG,'wui:shapeManagement');
          
@@ -429,9 +415,9 @@ diff -urNad nagvis-1.1rc2~/wui/includes/classes/class.WuiShapeManagement.php nag
 -}
 \ No newline at end of file
 +}
-diff -urNad nagvis-1.1rc2~/wui/index.php nagvis-1.1rc2/wui/index.php
---- nagvis-1.1rc2~/wui/index.php	2007-07-12 16:37:57.000000000 +0200
-+++ nagvis-1.1rc2/wui/index.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/index.php nagvis-1.1rc3/wui/index.php
+--- nagvis-1.1rc3~/wui/index.php	2007-06-08 01:53:59.000000000 +0200
++++ nagvis-1.1rc3/wui/index.php	2007-07-24 19:59:28.000000000 +0200
 @@ -12,18 +12,18 @@
  ## For developer guidlines have a look at http://www.nagvis.org			##
  ##########################################################################
@@ -532,9 +518,9 @@ diff -urNad nagvis-1.1rc2~/wui/index.php nagvis-1.1rc2/wui/index.php
 -?>
 \ No newline at end of file
 +?>
-diff -urNad nagvis-1.1rc2~/wui/wui.function.inc.php nagvis-1.1rc2/wui/wui.function.inc.php
---- nagvis-1.1rc2~/wui/wui.function.inc.php	2007-07-12 16:37:20.000000000 +0200
-+++ nagvis-1.1rc2/wui/wui.function.inc.php	2007-07-13 23:29:59.000000000 +0200
+diff -urNad nagvis-1.1rc3~/wui/wui.function.inc.php nagvis-1.1rc3/wui/wui.function.inc.php
+--- nagvis-1.1rc3~/wui/wui.function.inc.php	2007-07-11 22:30:42.000000000 +0200
++++ nagvis-1.1rc3/wui/wui.function.inc.php	2007-07-24 19:59:28.000000000 +0200
 @@ -9,15 +9,15 @@
  #	http://www.walterzorn.com   												#
  #################################################################################
@@ -559,10 +545,3 @@ diff -urNad nagvis-1.1rc2~/wui/wui.function.inc.php nagvis-1.1rc2/wui/wui.functi
  
  ############################################
  function getArrayFromProperties($properties) {
-@@ -542,4 +542,4 @@
- 		print "<script>window.close();</script>\n";
- 	break;
- }
--?>
-\ No newline at end of file
-+?>
