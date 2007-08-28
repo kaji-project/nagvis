@@ -38,6 +38,8 @@ setperm() { # thx 2 nagios2/debian/nagios2-common.postinst
 		chown "$user":"$group" "$file"
 		chmod "$mode" "$file"
 	fi
+
+		
 }
 
 case "$1" in
@@ -48,6 +50,8 @@ case "$1" in
 	done
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/images/maps
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/etc/maps
+
+	ucf /usr/share/nagvis/debian/apache.conf /etc/nagvis/apache.conf
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

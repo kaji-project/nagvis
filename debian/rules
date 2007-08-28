@@ -64,6 +64,10 @@ install: build
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
 		$(DEST)/demo/nagvis/images/maps/
 	
+	# config templates
+	mkdir -p $(DEST)/usr/share/nagvis/debian
+	cp debian/apache.conf $(DEST)/usr/share/nagvis/debian/
+	
 	dh_installdirs
 	dh_install
 	dh_link

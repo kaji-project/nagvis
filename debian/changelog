@@ -2,6 +2,7 @@ nagvis (1.1rc3-2) unstable; urgency=low
 
   * Moved from misc to net section
   * Removed unneeded stuff in debian/rules
+  * Installed apache.conf with ucf 
 
  -- Hendrik Frenzel <hfrenzel@scunc.net>  Tue, 28 Aug 2007 21:09:01 +0200
 
