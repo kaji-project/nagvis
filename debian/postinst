@@ -48,17 +48,6 @@ case "$1" in
 	done
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/images/maps
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/etc/maps
-
-	#if [ -f /etc/dbconfig-common/ndoutils-mysql.conf ]; then
-	#	dbconfig-load-include -f sh /etc/dbconfig-common/ndoutils-mysql.conf
-	#	dbconfig-generate-include -f template \
-	#		--options 'template_infile=/usr/share/nagvis/debian/config.ini.php.dist' \
-	#		--dbname --dbpass --dbserver --dbport --dbuser \
-	#		--owner www-data:www-data --mode 0600 --ucf \
-	#		/usr/share/nagvis/debian/config.ini.php.dist /etc/nagvis/config.ini.php
-	#else if [ ! -f /etc/nagvis/config.ini.php ]; then
-	#	ucf /usr/share/nagvis/debian/config.ini.php.dist /etc/nagvis/config.ini.php
-	#fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

@@ -1,5 +1,5 @@
 Source: nagvis
-Section: misc
+Section: net
 Priority: extra
 Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
 Build-Depends: debhelper (>= 5), dpatch
