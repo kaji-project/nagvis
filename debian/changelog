@@ -1,3 +1,9 @@
+nagvis (1:1.1-1) UNRELEASED; urgency=low
+
+  * New upstream release
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Thu, 06 Sep 2007 19:59:30 +0200
+
 nagvis (1.1rc3-2) unstable; urgency=low
 
   * Moved from misc to net section

@@ -197,13 +197,6 @@ diff -urNad nagvis-1.1rc3~/nagvis/index.php nagvis-1.1rc3/nagvis/index.php
  
  if(!isset($_GET['map'])) {
  	$_GET['map'] = '';
-@@ -59,4 +59,4 @@
- 	
- 	$FRONTEND->printPage();
- }
--?>
-\ No newline at end of file
-+?>
 diff -urNad nagvis-1.1rc3~/wui/ajax_handler.php nagvis-1.1rc3/wui/ajax_handler.php
 --- nagvis-1.1rc3~/wui/ajax_handler.php	2007-03-24 03:06:52.000000000 +0100
 +++ nagvis-1.1rc3/wui/ajax_handler.php	2007-07-24 19:59:28.000000000 +0200
