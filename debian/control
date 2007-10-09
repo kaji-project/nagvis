@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
 Build-Depends: debhelper (>= 5), dpatch
 Standards-Version: 3.7.2
+XS-Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
 
 Package: nagvis
 Architecture: all
