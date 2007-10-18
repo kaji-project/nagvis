@@ -48,10 +48,13 @@ case "$1" in
 		test -f $f && setperm www-data www-data 0644 $f
 		test -d $f && setperm www-data www-data 0755 $f
 	done
-	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/images/maps
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/etc/maps
 
 	ucf /usr/share/nagvis/debian/apache.conf /etc/nagvis/apache.conf
+	#if ! [ -e /etc/apache2/conf.d/nagvis.conf ]; then
+	#	ln -s /etc/nagvis/apache.conf /etc/apache2/conf.d/nagvis.conf
+	#fi
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

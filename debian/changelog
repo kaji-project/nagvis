@@ -1,3 +1,11 @@
+nagvis (1:1.1-2) unstable; urgency=low
+
+  * Symlinked images/maps and images/tempates to the apropriate directory below
+    /etc/nagvis
+  * Added missing debian/postrm
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Fri, 19 Oct 2007 00:30:05 +0200
+
 nagvis (1:1.1-1) unstable; urgency=low
 
   * New upstream release
