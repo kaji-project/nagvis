@@ -63,6 +63,8 @@ install: build
 	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
 		$(DEST)/demo/nagvis/images/maps/
+	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/templates
+	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps
 	
 	# config templates
 	mkdir -p $(DEST)/usr/share/nagvis/debian
