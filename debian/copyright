@@ -35,3 +35,42 @@ Public License can be found in `/usr/share/common-licenses/GPL'.
 The Debian packaging is (C) 2007, Hendrik Frenzel <hfrenzel@scunc.net> and
 is licensed under the GPL, see above.
 
+nagvis/includes/js/overlib*:
+    overLIB 4.17 - You may not remove or change this notice.
+    Copyright Erik Bosrup 1998-2004. All rights reserved.
+    
+    Contributors are listed on the homepage.
+    This file might be old, always check for the latest version at:
+    http://www.bosrup.com/web/overlib/
+    
+    Please read the license agreement (available through the link above)
+    before using overLIB. Direct any licensing questions to erik@bosrup.com.
+    
+    Do not sell this as your own work or remove this copyright notice. 
+    For full details on copying or changing this script please read the
+    license agreement at the link above. Please give credit on sites that
+    use overLIB and submit changes of the script so other people can use
+    them as well.
+
+    The license at the link above states the Artistic license for this
+    software.
+
+    On Debian systems, the complete text of the Artistic License can be
+    found in `/usr/share/common-licenses/Artistic'.
+
+wui/includes/js/wz*:
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License (LGPL) as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+    For more details on the GNU Lesser General Public License,
+    see http://www.gnu.org/copyleft/lesser.html
+
+    On Debian systems, the complete text of the Artistic License can be
+    found in `/usr/share/common-licenses/LGPL'.
+

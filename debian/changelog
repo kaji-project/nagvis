@@ -1,3 +1,11 @@
+nagvis (1:1.1-4) unstable; urgency=low
+
+  * Added licenses of nagvis/includes/js/overlib* (Artistic) and
+    wui/includes/js/wz* (LGPL) to debian/copyright
+  * Fixed Vcs-Svn and Vcs-Browser in debian/control
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Tue, 30 Oct 2007 13:27:11 +0100
+
 nagvis (1:1.1-3) unstable; urgency=low
 
   * Fixed symlinks
