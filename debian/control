@@ -2,6 +2,7 @@ Source: nagvis
 Section: net
 Priority: extra
 Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
+Uploaders: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Build-Depends: debhelper (>= 5), dpatch
 Standards-Version: 3.7.2
 Origin: debian
