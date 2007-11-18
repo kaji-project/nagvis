@@ -1,3 +1,10 @@
+nagvis (1:1.1-5) unstable; urgency=low
+
+  * Rebuild because of hardware failures at ries.debian.org after uploading the
+    package.
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Sun, 18 Nov 2007 21:50:45 +0100
+
 nagvis (1:1.1-4) unstable; urgency=low
 
   * Added licenses of nagvis/includes/js/overlib* (Artistic) and
