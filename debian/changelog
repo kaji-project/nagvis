@@ -1,3 +1,13 @@
+nagvis (1:1.2.1-1) unstable; urgency=low
+
+  * New upstream version
+  * Update Standards-Version to 3.7.3.
+  * Enabled DM-Upload
+  * Removed old Homepage stanza in debian/control
+  * Removed bashism in debian/rules
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Thu, 10 Jan 2008 01:09:06 +0100
+
 nagvis (1:1.1-6) unstable; urgency=low
 
   * fixed lintian redundant-origin-field warning

@@ -4,10 +4,11 @@ Priority: extra
 Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
 Uploaders: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Build-Depends: debhelper (>= 5), dpatch
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 Homepage: http://www.nagvis.org
 Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagvis/trunk/
+Dm-Upload-Allowed: yes
 
 Package: nagvis
 Architecture: all
@@ -25,5 +26,3 @@ Description: Visualization addon for Nagios
   * Define Sub-Map icons wich represent a complete NagVis Map of
     Hosts/Services/Groups in one icon (drill down)
   * Visualization of complete IT Processes using self drawn graphics
- .
-  Homepage: http://www.nagvis.org

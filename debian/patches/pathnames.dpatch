@@ -5,536 +5,219 @@
 ## DP: No description.
 
 @DPATCH@
-diff -urNad nagvis-1.1rc3~/nagvis/draw.php nagvis-1.1rc3/nagvis/draw.php
---- nagvis-1.1rc3~/nagvis/draw.php	2007-04-14 20:56:59.000000000 +0200
-+++ nagvis-1.1rc3/nagvis/draw.php	2007-07-24 19:59:28.000000000 +0200
-@@ -12,20 +12,20 @@
- ## For developer guidlines have a look at http://www.nagvis.org			##
- ##########################################################################
+diff -urNad nagvis-1.2.1~/nagvis/draw.php nagvis-1.2.1/nagvis/draw.php
+--- nagvis-1.2.1~/nagvis/draw.php	2007-10-20 16:28:44.000000000 +0200
++++ nagvis-1.2.1/nagvis/draw.php	2008-01-10 10:31:11.000000000 +0100
+@@ -14,23 +14,23 @@
  
--require("./includes/classes/class.GlobalDebug.php");
--require("./includes/classes/class.GlobalGraphic.php");
--require("./includes/classes/class.GlobalMainCfg.php");
--require("./includes/classes/class.GlobalMapCfg.php");
--require("./includes/classes/class.GlobalMap.php");
--require("./includes/classes/class.GlobalPage.php");
--require("./includes/classes/class.GlobalLanguage.php");
--require("./includes/classes/class.GlobalBackendMgmt.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalDebug.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalGraphic.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMainCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMap.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalPage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalLanguage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalBackendMgmt.php");
+ @session_start();
  
--require("./includes/classes/class.NagVisMap.php");
--require("./includes/classes/class.NagVisBackground.php");
--require("./includes/classes/class.NagVisMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisMap.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisBackground.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisMapCfg.php");
+-require("./includes/defines/global.php");
+-require("./includes/defines/matches.php");
++require("/usr/share/nagvis/includes/defines/global.php");
++require("/usr/share/nagvis/includes/defines/matches.php");
  
--$MAINCFG = new GlobalMainCfg('./etc/config.ini.php');
-+$MAINCFG = new GlobalMainCfg('/etc/nagvis/config.ini.php');
+-require("./includes/functions/debug.php");
++require("/usr/share/nagvis/includes/functions/debug.php");
  
- $MAPCFG = new NagVisMapCfg($MAINCFG,$_GET['map']);
- $MAPCFG->readMapConfig();
-@@ -37,4 +37,4 @@
- $BACKGROUND = new NagVisBackground($MAINCFG,$MAPCFG,$LANG,$BACKEND);
- $BACKGROUND->parseObjects();
- $BACKGROUND->parseMap();
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/nagvis/etc/config.ini.php.dist nagvis-1.1rc3/nagvis/etc/config.ini.php.dist
---- nagvis-1.1rc3~/nagvis/etc/config.ini.php.dist	2007-06-08 14:37:34.000000000 +0200
-+++ nagvis-1.1rc3/nagvis/etc/config.ini.php.dist	2007-07-24 19:59:28.000000000 +0200
-@@ -57,11 +57,11 @@
- ; path options
- [paths]
- ; absolute physical NagVis path
--;base="/usr/local/nagios/share/nagvis/"
-+;base="/usr/share/nagvis/htdocs"
- ; absolute html NagVis path
--;htmlbase="/nagios/nagvis"
-+;htmlbase="/nagios2/nagvis"
- ; absolute html NagVis cgi path
--;htmlcgi="/nagios/cgi-bin"
-+;htmlcgi="/nagios2/cgi-bin"
+-require("./includes/classes/GlobalGraphic.php");
+-require("./includes/classes/GlobalMainCfg.php");
+-require("./includes/classes/GlobalMapCfg.php");
+-require("./includes/classes/GlobalMap.php");
+-require("./includes/classes/GlobalPage.php");
+-require("./includes/classes/GlobalBackground.php");
+-require("./includes/classes/GlobalLanguage.php");
+-require("./includes/classes/GlobalBackendMgmt.php");
++require("/usr/share/nagvis/includes/classes/GlobalGraphic.php");
++require("/usr/share/nagvis/includes/classes/GlobalMainCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalMapCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalMap.php");
++require("/usr/share/nagvis/includes/classes/GlobalPage.php");
++require("/usr/share/nagvis/includes/classes/GlobalBackground.php");
++require("/usr/share/nagvis/includes/classes/GlobalLanguage.php");
++require("/usr/share/nagvis/includes/classes/GlobalBackendMgmt.php");
  
- ; options for the NDO-Backend
- ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
-diff -urNad nagvis-1.1rc3~/nagvis/includes/classes/class.GlobalMainCfg.php nagvis-1.1rc3/nagvis/includes/classes/class.GlobalMainCfg.php
---- nagvis-1.1rc3~/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-24 00:31:44.000000000 +0200
-+++ nagvis-1.1rc3/nagvis/includes/classes/class.GlobalMainCfg.php	2007-07-24 19:59:28.000000000 +0200
-@@ -123,43 +123,43 @@
- 												'type' => 'string'),
- 							'htmlbase' => Array('must' => 1,
- 												 'editable' => 1,
--												'default' => '/nagios/nagvis',
-+												'default' => '/nagios2/nagvis',
- 												'type' => 'string'),
- 							'htmlcgi' => Array('must' => 1,
- 												 'editable' => 1,
--												'default' => '/nagios/cgi-bin',
-+												'default' => '/nagios2/cgi-bin',
- 												'type' => 'string'),
- 							'htmlimages' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/',
-+												'default' => '/nagios2/nagvis/nagvis/images/',
- 												'type' => 'string'),
- 							'htmlhovertemplates' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/etc/templates/hover/',
-+												'default' => '/nagios2/nagvis/nagvis/etc/templates/hover/',
- 												'type' => 'string'),
- 							'htmlheadertemplates' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/etc/templates/header/',
-+												'default' => '/nagios2/nagvis/nagvis/etc/templates/header/',
- 												'type' => 'string'),			
- 							'htmlhovertemplateimages' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/templates/hover/',
-+												'default' => '/nagios2/nagvis/nagvis/images/templates/hover/',
- 												'type' => 'string'),
- 							'htmlheadertemplateimages' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/templates/header/',
-+												'default' => '/nagios2/nagvis/nagvis/images/templates/header/',
- 												'type' => 'string'),
- 							'htmlicon' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/iconsets/',
-+												'default' => '/nagios2/nagvis/nagvis/images/iconsets/',
- 												'type' => 'string'),
- 							'htmlshape' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/shape/',
-+												'default' => '/nagvis/nagvis/images/shape/',
- 												'type' => 'string'),
- 							'htmlmap' => Array('must' => 0,
- 												 'editable' => 0,
--												'default' => '/nagios/nagvis/nagvis/images/maps/',
-+												'default' => '/nagios2/nagvis/nagvis/images/maps/',
- 												'type' => 'string'),
- 							'htmldoku' => Array('must' => 1,
- 												 'editable' => 0,
-@@ -216,7 +216,7 @@
- 																					'type' => 'string'),
- 																'cgi' => Array('must' => 1,
- 																					 'editable' => 1,
--																					'default' => '/usr/local/nagios/sbin/',
-+																					'default' => '/usr/lib/cgi-bin/nagios2/',
- 																					'type' => 'string')))),
- 			'internal' => Array('version' => Array('must' => 1,
- 												 'editable' => 0,
-@@ -251,11 +251,11 @@
- 	 * @author 	Lars Michelsen <lars@vertical-visions.de>
-      */
- 	function setPathsByBase($base,$htmlBase) {
--	    $this->validConfig['paths']['cfg']['default'] = $base.'nagvis/etc/';
-+	    $this->validConfig['paths']['cfg']['default'] = '/etc/nagvis/';
- 		$this->validConfig['paths']['icon']['default'] = $base.'nagvis/images/iconsets/';
- 		$this->validConfig['paths']['shape']['default'] = $base.'nagvis/images/shapes/';
--		$this->validConfig['paths']['language']['default'] = $base.'nagvis/includes/languages/';
--		$this->validConfig['paths']['class']['default'] = $base.'nagvis/includes/classes/';
-+		$this->validConfig['paths']['language']['default'] = $base.'nagvis/languages/';
-+		$this->validConfig['paths']['class']['default'] = '/usr/share/nagvis/includes/classes/';
- 		$this->validConfig['paths']['map']['default'] = $base.'nagvis/images/maps/';
- 		$this->validConfig['paths']['hovertemplate']['default'] = $base.'nagvis/etc/templates/hover/';
- 		$this->validConfig['paths']['headertemplate']['default'] = $base.'nagvis/etc/templates/header/';
-diff -urNad nagvis-1.1rc3~/nagvis/includes/classes/class.NagVisFrontend.php nagvis-1.1rc3/nagvis/includes/classes/class.NagVisFrontend.php
---- nagvis-1.1rc3~/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-11 15:55:47.000000000 +0200
-+++ nagvis-1.1rc3/nagvis/includes/classes/class.NagVisFrontend.php	2007-07-24 19:59:28.000000000 +0200
-@@ -25,8 +25,8 @@
- 		$this->BACKEND = &$BACKEND;
- 		$this->LANG = new GlobalLanguage($MAINCFG,'nagvis:global');
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/style.css'),
--					  'jsIncludes'=>Array('./includes/js/nagvis.js','./includes/js/overlib.js','./includes/js/overlib_shadow.js'),
-+					  'cssIncludes'=>Array('css/style.css'),
-+					  'jsIncludes'=>Array('js/nagvis.js','js/overlib.js','js/overlib_shadow.js'),
- 					  'extHeader'=>Array('<META http-equiv="refresh" CONTENT="'.$this->MAINCFG->getValue('global', 'refreshtime').';'.$this->getNextRotate().'">',
- 					  					'<style type="text/css">body.main { background-color: '.$this->MAPCFG->getValue('global',0, 'background_color').'; }</style>'),
- 					  'allowedUsers'=> $this->MAPCFG->getValue('global',0, 'allowed_user'),
-diff -urNad nagvis-1.1rc3~/nagvis/index.php nagvis-1.1rc3/nagvis/index.php
---- nagvis-1.1rc3~/nagvis/index.php	2007-06-06 16:55:01.000000000 +0200
-+++ nagvis-1.1rc3/nagvis/index.php	2007-07-24 19:59:28.000000000 +0200
-@@ -12,20 +12,20 @@
- ## For developer guidlines have a look at http://www.nagvis.org			##
- ##########################################################################
+-require("./includes/classes/NagVisMap.php");
+-require("./includes/classes/NagVisBackground.php");
+-require("./includes/classes/NagVisMapCfg.php");
++require("/usr/share/nagvis/includes/classes/NagVisMap.php");
++require("/usr/share/nagvis/includes/classes/NagVisBackground.php");
++require("/usr/share/nagvis/includes/classes/NagVisMapCfg.php");
  
--require("./includes/classes/class.GlobalDebug.php");
--require("./includes/classes/class.GlobalMainCfg.php");
--require("./includes/classes/class.GlobalMapCfg.php");
--require("./includes/classes/class.GlobalLanguage.php");
--require("./includes/classes/class.GlobalPage.php");
--require("./includes/classes/class.GlobalMap.php");
--require("./includes/classes/class.GlobalGraphic.php");
--require("./includes/classes/class.GlobalBackendMgmt.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalDebug.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMainCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalLanguage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalPage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMap.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalGraphic.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalBackendMgmt.php");
+ $MAINCFG = new GlobalMainCfg(CONST_MAINCFG);
  
--require("./includes/classes/class.NagVisMapCfg.php");
--require("./includes/classes/class.NagVisMap.php");
--require("./includes/classes/class.NagVisFrontend.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisMap.php");
-+require("/usr/share/nagvis/includes/classes/class.NagVisFrontend.php");
+diff -urNad nagvis-1.2.1~/nagvis/index.php nagvis-1.2.1/nagvis/index.php
+--- nagvis-1.2.1~/nagvis/index.php	2007-12-13 08:50:14.000000000 +0100
++++ nagvis-1.2.1/nagvis/index.php	2008-01-10 10:28:50.000000000 +0100
+@@ -14,23 +14,23 @@
  
--$MAINCFG = new GlobalMainCfg('./etc/config.ini.php');
-+$MAINCFG = new GlobalMainCfg('/etc/nagvis/config.ini.php');
+ @session_start();
  
- if(!isset($_GET['map'])) {
- 	$_GET['map'] = '';
-diff -urNad nagvis-1.1rc3~/wui/ajax_handler.php nagvis-1.1rc3/wui/ajax_handler.php
---- nagvis-1.1rc3~/wui/ajax_handler.php	2007-03-24 03:06:52.000000000 +0100
-+++ nagvis-1.1rc3/wui/ajax_handler.php	2007-07-24 19:59:28.000000000 +0200
-@@ -1,16 +1,16 @@
- <?php
+-require("./includes/defines/global.php");
+-require("./includes/defines/matches.php");
++require("/usr/share/nagvis/includes/defines/global.php");
++require("/usr/share/nagvis/includes/defines/matches.php");
  
--require("../nagvis/includes/classes/class.GlobalDebug.php");
--require("../nagvis/includes/classes/class.GlobalMainCfg.php");
--require("../nagvis/includes/classes/class.GlobalMapCfg.php");
--require("../nagvis/includes/classes/class.GlobalLanguage.php");
--require("../nagvis/includes/classes/class.GlobalPage.php");
--require("../nagvis/includes/classes/class.GlobalBackendMgmt.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalDebug.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMainCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalLanguage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalPage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalBackendMgmt.php");
+-require("./includes/functions/debug.php");
++require("/usr/share/nagvis/includes/functions/debug.php");
  
--require("./includes/classes/class.WuiMainCfg.php");
--require("./includes/classes/class.WuiMapCfg.php");
-+require("/usr/share/nagvis/wui/includes/classes/class.WuiMainCfg.php");
-+require("/usr/share/nagvis/wui/includes/classes/class.WuiMapCfg.php");
+-require("./includes/classes/GlobalMainCfg.php");
+-require("./includes/classes/GlobalMapCfg.php");
+-require("./includes/classes/GlobalLanguage.php");
+-require("./includes/classes/GlobalPage.php");
+-require("./includes/classes/GlobalMap.php");
+-require("./includes/classes/GlobalBackground.php");
+-require("./includes/classes/GlobalGraphic.php");
+-require("./includes/classes/GlobalBackendMgmt.php");
++require("/usr/share/nagvis/includes/classes/GlobalMainCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalMapCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalLanguage.php");
++require("/usr/share/nagvis/includes/classes/GlobalPage.php");
++require("/usr/share/nagvis/includes/classes/GlobalMap.php");
++require("/usr/share/nagvis/includes/classes/GlobalBackground.php");
++require("/usr/share/nagvis/includes/classes/GlobalGraphic.php");
++require("/usr/share/nagvis/includes/classes/GlobalBackendMgmt.php");
  
--$MAINCFG = new WuiMainCfg('../nagvis/etc/config.ini.php');
-+$MAINCFG = new WuiMainCfg('/etc/nagvis/config.ini.php');
+-require("./includes/classes/NagVisMapCfg.php");
+-require("./includes/classes/NagVisMap.php");
+-require("./includes/classes/NagVisFrontend.php");
++require("/usr/share/nagvis/includes/classes/NagVisMapCfg.php");
++require("/usr/share/nagvis/includes/classes/NagVisMap.php");
++require("/usr/share/nagvis/includes/classes/NagVisFrontend.php");
  
- switch($_GET['action']) {
- 	case 'getObjects':
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiAddModify.php nagvis-1.1rc3/wui/includes/classes/class.WuiAddModify.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiAddModify.php	2007-07-20 21:02:09.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiAddModify.php	2007-07-24 19:59:28.000000000 +0200
-@@ -29,10 +29,10 @@
- 		$this->LANG = new GlobalLanguage($MAINCFG,'wui:addModify');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/wui.css'),
--					  'jsIncludes'=>Array('./includes/js/addmodify.js',
--					  					  './includes/js/ajax.js',
--					  					  './includes/js/wui.js'),
-+					  'cssIncludes'=>Array('css/wui.css'),
-+					  'jsIncludes'=>Array('js/addmodify.js',
-+					  					  'js/ajax.js',
-+					  					  'js/wui.js'),
- 					  'extHeader'=>Array(''),
- 					  'allowedUsers' => Array('EVERYONE'));
- 		parent::GlobalPage($MAINCFG,$prop,'wui:addModify');
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiBackendManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiBackendManagement.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiBackendManagement.php	2007-07-13 20:57:57.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiBackendManagement.php	2007-07-24 19:59:28.000000000 +0200
-@@ -26,10 +26,10 @@
- 		$this->LANG = new GlobalLanguage($MAINCFG,'wui:backendManagement');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/wui.css'),
--					  'jsIncludes'=>Array('./includes/js/wui.js',
--					  						'./includes/js/BackendManagement.js',
--					  						'./includes/js/ajax.js'),
-+					  'cssIncludes'=>Array('css/wui.css'),
-+					  'jsIncludes'=>Array('js/wui.js',
-+					  						'js/BackendManagement.js',
-+					  						'js/ajax.js'),
- 					  'extHeader'=>Array(''),
- 					  'allowedUsers' => Array('EVERYONE'),
- 					  'languageRoot' => 'wui:backendManagement');
-@@ -277,4 +277,4 @@
- 		return $ret;	
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiBackgroundManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiBackgroundManagement.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-13 20:57:57.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiBackgroundManagement.php	2007-07-24 19:59:28.000000000 +0200
-@@ -26,10 +26,10 @@
- 		$this->LANG = new GlobalLanguage($MAINCFG,'wui:backgroundManagement');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/wui.css'),
--					  'jsIncludes'=>Array('./includes/js/BackgroundManagement.js',
--					  						'./includes/js/ajax.js',
--					  						'./includes/js/wui.js'),
-+					  'cssIncludes'=>Array('css/wui.css'),
-+					  'jsIncludes'=>Array('js/BackgroundManagement.js',
-+					  						'js/ajax.js',
-+					  						'js/wui.js'),
- 					  'extHeader'=>Array(''),
- 					  'allowedUsers' => Array('EVERYONE'),
- 					  'languageRoot' => 'wui:backgroundManagement');
-@@ -198,4 +198,4 @@
- 		return $ret;	
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiEditMainCfg.php nagvis-1.1rc3/wui/includes/classes/class.WuiEditMainCfg.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-13 20:57:57.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiEditMainCfg.php	2007-07-24 19:59:28.000000000 +0200
-@@ -23,8 +23,8 @@
- 		$this->LANG = new GlobalLanguage($MAINCFG,'wui:editMainCfg');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/wui.css'),
--					  'jsIncludes'=>Array('./includes/js/wui.js'),
-+					  'cssIncludes'=>Array('css/wui.css'),
-+					  'jsIncludes'=>Array('js/wui.js'),
- 					  'extHeader'=>Array(''),
- 					  'allowedUsers' => Array('EVERYONE'),
- 					  'languageRoot' => 'wui:editMainCfg');
-@@ -289,4 +289,4 @@
- 		return $ret;	
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiFrontend.php nagvis-1.1rc3/wui/includes/classes/class.WuiFrontend.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiFrontend.php	2007-07-11 22:54:50.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiFrontend.php	2007-07-24 20:01:38.000000000 +0200
-@@ -24,13 +24,13 @@
- 		$this->LANG = new GlobalLanguage($this->MAINCFG,'wui:global');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('../nagvis/includes/css/style.css','./includes/css/wui.css','./includes/css/office_xp/office_xp.css'),
--					  'jsIncludes'=>Array('./includes/js/wui.js',
--					  	  './includes/js/ajax.js',
--						  './includes/js/jsdomenu.js',
--						  './includes/js/jsdomenu.inc.js',
--						  './includes/js/wz_jsgraphics.js',
--						  './includes/js/wz_dragdrop.js'),
-+					  'cssIncludes'=>Array('../nagvis/css/style.css','css/wui.css','css/office_xp/office_xp.css'),
-+					  'jsIncludes'=>Array('js/wui.js',
-+					  	  'js/ajax.js',
-+						  'js/jsdomenu.js',
-+						  'js/jsdomenu.inc.js',
-+						  'js/wz_jsgraphics.js',
-+						  'js/wz_dragdrop.js'),
- 					  'extHeader'=>Array("<style type=\"text/css\">body.main { background-color: ".$this->MAPCFG->getValue('global',0, 'background_color')."; }</style>"),
- 					  'allowedUsers' => $this->MAPCFG->getValue('global', 0,'allowed_for_config'),
- 					  'languageRoot' => 'wui:global');
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiMap.php nagvis-1.1rc3/wui/includes/classes/class.WuiMap.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiMap.php	2007-07-22 12:25:12.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiMap.php	2007-07-24 19:59:28.000000000 +0200
-@@ -114,7 +114,7 @@
- 		$ret = array_merge($ret,$this->parseObjects());
- 		$ret = array_merge($ret,$this->parseInvisible());
- 		$ret = array_merge($ret,$this->makeObjectsMoveable());
--		$ret = array_merge($ret,Array("<script type=\"text/javascript\" src=\"./includes/js/wz_tooltip.js\"></script>"));
-+		$ret = array_merge($ret,Array("<script type=\"text/javascript\" src=\"js/wz_tooltip.js\"></script>"));
- 		
- 		if (DEBUG&&DEBUGLEVEL&1) debug('End method WuiMap::parseMap(): Array(HTML)');
- 		return $ret;
-@@ -535,4 +535,4 @@
- 		if (DEBUG&&DEBUGLEVEL&1) debug('Start method WuiMap::parseInvisible(): Array(HTML)');
- 		return $arr;
- 	}
--}
-\ No newline at end of file
-+}
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiMapManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiMapManagement.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiMapManagement.php	2007-07-13 20:57:57.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiMapManagement.php	2007-07-24 19:59:28.000000000 +0200
-@@ -29,10 +29,10 @@
- 		$this->LANG = new GlobalLanguage($MAINCFG,'wui:mapManagement');
- 		
- 		$prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--					  'cssIncludes'=>Array('./includes/css/wui.css'),
--					  'jsIncludes'=>Array('./includes/js/map_management.js',
--					  						'./includes/js/ajax.js',
--					  						'./includes/js/wui.js'),
-+					  'cssIncludes'=>Array('css/wui.css'),
-+					  'jsIncludes'=>Array('js/map_management.js',
-+					  						'js/ajax.js',
-+					  						'js/wui.js'),
- 					  'extHeader'=>Array(''),
- 					  'allowedUsers' => Array('EVERYONE'),
- 					  'languageRoot' => 'wui:mapManagement');
-@@ -340,4 +340,4 @@
- 		return array_merge($FORM->getSubmitLine($label),$FORM->closeForm());
- 	}
- }
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/wui/includes/classes/class.WuiShapeManagement.php nagvis-1.1rc3/wui/includes/classes/class.WuiShapeManagement.php
---- nagvis-1.1rc3~/wui/includes/classes/class.WuiShapeManagement.php	2007-06-20 18:16:07.000000000 +0200
-+++ nagvis-1.1rc3/wui/includes/classes/class.WuiShapeManagement.php	2007-07-24 19:59:28.000000000 +0200
-@@ -21,10 +21,10 @@
-         $this->LANG = new GlobalLanguage($MAINCFG,'wui:shapeManagement');
-         
-         $prop = Array('title'=>$MAINCFG->getValue('internal', 'title'),
--                    'cssIncludes'=>Array('./includes/css/wui.css'),
--                    'jsIncludes'=>Array('./includes/js/ShapeManagement.js',
--                        './includes/js/ajax.js',
--                        './includes/js/wui.js'),
-+                    'cssIncludes'=>Array('css/wui.css'),
-+                    'jsIncludes'=>Array('js/ShapeManagement.js',
-+                        'js/ajax.js',
-+                        'js/wui.js'),
-                     'extHeader'=>Array(''),
-                     'allowedUsers' => Array('EVERYONE'),
-                     'languageRoot' => 'wui:shapeManagement');
-@@ -155,4 +155,4 @@
-         if (DEBUG&&DEBUGLEVEL&1) debug('End method WuiShapeManagement::getJsLang(): Array(JS)');
-         return $ret;
-     }
--}
-\ No newline at end of file
-+}
-diff -urNad nagvis-1.1rc3~/wui/index.php nagvis-1.1rc3/wui/index.php
---- nagvis-1.1rc3~/wui/index.php	2007-06-08 01:53:59.000000000 +0200
-+++ nagvis-1.1rc3/wui/index.php	2007-07-24 19:59:28.000000000 +0200
-@@ -12,18 +12,18 @@
- ## For developer guidlines have a look at http://www.nagvis.org			##
- ##########################################################################
+ $MAINCFG = new GlobalMainCfg(CONST_MAINCFG);
  
--require("../nagvis/includes/classes/class.GlobalDebug.php");
--require("../nagvis/includes/classes/class.GlobalMainCfg.php");
--require("../nagvis/includes/classes/class.GlobalMapCfg.php");
--require("../nagvis/includes/classes/class.GlobalLanguage.php");
--require("../nagvis/includes/classes/class.GlobalPage.php");
--require("../nagvis/includes/classes/class.GlobalMap.php");
--require("../nagvis/includes/classes/class.GlobalGraphic.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalDebug.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMainCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMapCfg.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalLanguage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalPage.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalMap.php");
-+require("/usr/share/nagvis/includes/classes/class.GlobalGraphic.php");
+diff -urNad nagvis-1.2.1~/wui/ajax_handler.php nagvis-1.2.1/wui/ajax_handler.php
+--- nagvis-1.2.1~/wui/ajax_handler.php	2007-10-20 16:28:44.000000000 +0200
++++ nagvis-1.2.1/wui/ajax_handler.php	2008-01-10 10:32:43.000000000 +0100
+@@ -2,19 +2,19 @@
  
--require("./includes/classes/class.WuiMainCfg.php");
--require("./includes/classes/class.WuiMapCfg.php");
-+require("/usr/share/nagvis/wui/includes/classes/class.WuiMainCfg.php");
-+require("/usr/share/nagvis/wui/includes/classes/class.WuiMapCfg.php");
+ @session_start();
  
--$MAINCFG = new WuiMainCfg('../nagvis/etc/config.ini.php');
-+$MAINCFG = new WuiMainCfg('/etc/nagvis/config.ini.php');
+-require("../nagvis/includes/defines/global.php");
+-require("../nagvis/includes/defines/matches.php");
++require("/usr/share/nagvis/includes/defines/global.php");
++require("/usr/share/nagvis/includes/defines/matches.php");
  
- // If not set, initialize $_GET['page']
- if(!isset($_GET['page'])) {
-@@ -33,40 +33,40 @@
+-require("../nagvis/includes/functions/debug.php");
++require("/usr/share/nagvis/includes/functions/debug.php");
+ 
+-require("../nagvis/includes/classes/GlobalMainCfg.php");
+-require("../nagvis/includes/classes/GlobalMapCfg.php");
+-require("../nagvis/includes/classes/GlobalLanguage.php");
+-require("../nagvis/includes/classes/GlobalPage.php");
+-require("../nagvis/includes/classes/GlobalBackendMgmt.php");
++require("/usr/share/nagvis/includes/classes/GlobalMainCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalMapCfg.php");
++require("/usr/share/nagvis/includes/classes/GlobalLanguage.php");
++require("/usr/share/nagvis/includes/classes/GlobalPage.php");
++require("/usr/share/nagvis/includes/classes/GlobalBackendMgmt.php");
+ 
+-require("./includes/classes/WuiMainCfg.php");
+-require("./includes/classes/WuiMapCfg.php");
++require("/usr/share/nagvis/wui/includes/classes/WuiMainCfg.php");
++require("/usr/share/nagvis/wui/includes/classes/WuiMapCfg.php");
+ 
+ $MAINCFG = new WuiMainCfg(CONST_MAINCFG);
+ 
+diff -urNad nagvis-1.2.1~/wui/index.php nagvis-1.2.1/wui/index.php
+--- nagvis-1.2.1~/wui/index.php	2007-10-20 16:28:44.000000000 +0200
++++ nagvis-1.2.1/wui/index.php	2008-01-10 10:36:36.000000000 +0100
+@@ -14,21 +14,21 @@
+ 
+ @session_start();
+ 
+-require("../nagvis/includes/defines/global.php");
+-require("../nagvis/includes/defines/matches.php");
++require("/usr/share/nagvis/nagvis/includes/defines/global.php");
++require("/usr/share/nagvis/nagvis/includes/defines/matches.php");
+ 
+-require("../nagvis/includes/functions/debug.php");
++require("/usr/share/nagvis/nagvis/includes/functions/debug.php");
+ 
+-require("../nagvis/includes/classes/GlobalMainCfg.php");
+-require("../nagvis/includes/classes/GlobalMapCfg.php");
+-require("../nagvis/includes/classes/GlobalLanguage.php");
+-require("../nagvis/includes/classes/GlobalPage.php");
+-require("../nagvis/includes/classes/GlobalMap.php");
+-require("../nagvis/includes/classes/GlobalBackground.php");
+-require("../nagvis/includes/classes/GlobalGraphic.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalMainCfg.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalMapCfg.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalLanguage.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalPage.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalMap.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalBackground.php");
++require("/usr/share/nagvis/nagvis/includes/classes/GlobalGraphic.php");
+ 
+-require("./includes/classes/WuiMainCfg.php");
+-require("./includes/classes/WuiMapCfg.php");
++require("/usr/share/nagvis/wui/includes/classes/WuiMainCfg.php");
++require("/usr/share/nagvis/wui/includes/classes/WuiMapCfg.php");
+ 
+ $MAINCFG = new WuiMainCfg(CONST_MAINCFG);
+ 
+@@ -40,40 +40,40 @@
  // Display the wanted page, if nothing is set, display the map
  switch($_GET['page']) {
  	case 'edit_config':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiEditMainCfg.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiEditMainCfg.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiEditMainCfg.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui//includes/classes/WuiEditMainCfg.php");
  		
  		$FRONTEND = new WuiEditMainCfg($MAINCFG);
  		$FRONTEND->getForm();
  		$FRONTEND->printPage();
  	break;
  	case 'shape_management':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiShapeManagement.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiShapeManagement.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiShapeManagement.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiShapeManagement.php");
  		$FRONTEND = new WuiShapeManagement($MAINCFG);
  		$FRONTEND->getForm();
  	break;
  	case 'background_management':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiBackgroundManagement.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiBackgroundManagement.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiBackgroundManagement.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiBackgroundManagement.php");
  		$FRONTEND = new WuiBackgroundManagement($MAINCFG);
  		$FRONTEND->getForm();
  	break;
  	case 'map_management':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiMapManagement.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiMapManagement.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiMapManagement.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiMapManagement.php");
  		$FRONTEND = new WuiMapManagement($MAINCFG);
  		$FRONTEND->getForm();
  	break;
  	case 'backend_management':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiBackendManagement.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiBackendManagement.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiBackendManagement.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiBackendManagement.php");
  		$FRONTEND = new WuiBackendManagement($MAINCFG);
  		$FRONTEND->getForm();
  	break;
  	case 'addmodify':
--		require("../nagvis/includes/classes/class.GlobalForm.php");
--		require("./includes/classes/class.WuiAddModify.php");
-+		require("/usr/share/nagvis/includes/classes/class.GlobalForm.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiAddModify.php");
+-		require("../nagvis/includes/classes/GlobalForm.php");
+-		require("./includes/classes/WuiAddModify.php");
++		require("/usr/share/nagvis/includes/classes/GlobalForm.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiAddModify.php");
  		
  		$MAPCFG = new WuiMapCfg($MAINCFG,$_GET['map']);
  		$MAPCFG->readMapConfig();
-@@ -85,8 +85,8 @@
+@@ -92,8 +92,8 @@
  		$FRONTEND->getForm();
  	break;
  	default:
--		require("./includes/classes/class.WuiFrontend.php");
--		require("./includes/classes/class.WuiMap.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiFrontend.php");
-+		require("/usr/share/nagvis/wui/includes/classes/class.WuiMap.php");
+-		require("./includes/classes/WuiFrontend.php");
+-		require("./includes/classes/WuiMap.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiFrontend.php");
++		require("/usr/share/nagvis/wui/includes/classes/WuiMap.php");
  		
  		if(!isset($_GET['map'])) {
  			$_GET['map'] = '';	
-@@ -118,4 +118,4 @@
- 		
- // print the HTML page
- $FRONTEND->printPage();
--?>
-\ No newline at end of file
-+?>
-diff -urNad nagvis-1.1rc3~/wui/wui.function.inc.php nagvis-1.1rc3/wui/wui.function.inc.php
---- nagvis-1.1rc3~/wui/wui.function.inc.php	2007-07-11 22:30:42.000000000 +0200
-+++ nagvis-1.1rc3/wui/wui.function.inc.php	2007-07-24 19:59:28.000000000 +0200
-@@ -9,15 +9,15 @@
- #	http://www.walterzorn.com   												#
- #################################################################################
- 
--require('../nagvis/includes/classes/class.GlobalDebug.php');
--require('../nagvis/includes/classes/class.GlobalLanguage.php');
--require('../nagvis/includes/classes/class.GlobalMainCfg.php');
--require('../nagvis/includes/classes/class.GlobalPage.php');
--require('../nagvis/includes/classes/class.GlobalMapCfg.php');
--require('./includes/classes/class.WuiMainCfg.php');
--require('./includes/classes/class.WuiMapCfg.php');
-+require('/usr/share/nagvis/includes/classes/class.GlobalDebug.php');
-+require('/usr/share/nagvis/includes/classes/class.GlobalLanguage.php');
-+require('/usr/share/nagvis/includes/classes/class.GlobalMainCfg.php');
-+require('/usr/share/nagvis/includes/classes/class.GlobalPage.php');
-+require('/usr/share/nagvis/includes/classes/class.GlobalMapCfg.php');
-+require('/usr/share/nagvis/wui/includes/classes/class.WuiMainCfg.php');
-+require('/usr/share/nagvis/wui/includes/classes/class.WuiMapCfg.php');
- 
--$MAINCFG = new WuiMainCfg('../nagvis/etc/config.ini.php');
-+$MAINCFG = new WuiMainCfg('/etc/nagvis/config.ini.php');
- 
- ############################################
- function getArrayFromProperties($properties) {

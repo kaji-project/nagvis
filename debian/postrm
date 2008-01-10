@@ -39,7 +39,7 @@ case "$1" in
 esac
 
 if [ "$1" = "purge" ]; then
-	for file in apache.conf config.ini.php; do
+	for file in apache.conf nagvis.ini.php; do
 		rm -f /etc/nagvis/$file
 		ucf --purge /etc/nagvis/$file
 	done
