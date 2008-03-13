@@ -1,4 +1,4 @@
-nagvis (1:1.2.2-2) UNRELEASED; urgency=low
+nagvis (1:1.2.2-2) unstable; urgency=low
 
   * debian/rules
     + packed missing directories (Closes: #470635: nagvis deb package is not
