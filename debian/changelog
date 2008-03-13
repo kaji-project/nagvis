@@ -1,3 +1,13 @@
+nagvis (1:1.2.2-2) UNRELEASED; urgency=low
+
+  * debian/rules
+    + packed missing directories (Closes: #470635: nagvis deb package is not
+      complete)
+  * postinst:
+    + moved debconfs db_stop after ucf is executed
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Wed, 12 Mar 2008 16:45:22 +0100
+
 nagvis (1:1.2.2-1) unstable; urgency=low
 
   * New upstream release with major bugfixes:
