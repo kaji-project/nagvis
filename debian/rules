@@ -48,13 +48,15 @@ install: build
 	 mv $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample.new \
 	    $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample
 	
-	for dir in classes defines functions languages; do \
+	for dir in classes defines functions; do \
 		cp -a nagvis/includes/$$dir $(DEST)/usr/share/nagvis/includes/; \
 	done
 	
 	cp -a nagvis/images $(DEST)/usr/share/nagvis/htdocs/nagvis/
-	cp -a nagvis/includes/css $(DEST)/usr/share/nagvis/htdocs/nagvis/
-	cp -a nagvis/includes/js $(DEST)/usr/share/nagvis/htdocs/nagvis/
+	mkdir -p $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
+	cp -a nagvis/includes/css $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
+	cp -a nagvis/includes/js $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
+	cp -a nagvis/includes/languages $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	
 	cp -a nagvis/*.php $(DEST)/usr/share/nagvis/htdocs/nagvis/
 	

@@ -1,4 +1,10 @@
-nagvis (1:1.2.2-2) unstable; urgency=low
+nagvis (1:1.2.2-3) unstable; urgency=low
+
+  * fixed path of languages
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Fri, 14 Mar 2008 13:32:53 +0100
+
+nagvis (1:1.2.2-2) UNRELEASED; urgency=low
 
   * debian/rules
     + packed missing directories (Closes: #470635: nagvis deb package is not
