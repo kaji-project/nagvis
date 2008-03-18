@@ -67,6 +67,9 @@ install: build
 	cp -a wui/*.php $(DEST)/usr/share/nagvis/htdocs/wui/
 	cp -a *.php $(DEST)/usr/share/nagvis/htdocs/
 	
+	mkdir -p $(DEST)/etc/nagvis/templates/
+	cp -a nagvis/templates/* $(DEST)/etc/nagvis/templates/
+	
 	# demo site
 	mkdir -p $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
 	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/

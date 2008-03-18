@@ -1,10 +1,25 @@
+nagvis (1:1.2.2-4) unstable; urgency=low
+
+  * debian/changelog:
+    + changed wrong UNRELEASED tag of 1:1.2.2-2 to unstable
+  * nagvis/includes/defines/global.php:
+    + fixed CONST_MAINCFG to point to the right nagvis.ini.php
+  * debian/postinst:
+    + insert commented debconf-common variables if they are empty
+  * nagvis.ini.php-sample:
+    + changed variables base, htmlbase and htmlcgi defaults to fit the current
+      installation paths
+  * change pathnames of included/required files in some nagvis scripts
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Mon, 17 Mar 2008 14:36:03 +0100
+
 nagvis (1:1.2.2-3) unstable; urgency=low
 
   * fixed path of languages
 
  -- Hendrik Frenzel <hfrenzel@scunc.net>  Fri, 14 Mar 2008 13:32:53 +0100
 
-nagvis (1:1.2.2-2) UNRELEASED; urgency=low
+nagvis (1:1.2.2-2) unstable; urgency=low
 
   * debian/rules
     + packed missing directories (Closes: #470635: nagvis deb package is not
