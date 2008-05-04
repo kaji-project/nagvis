@@ -32,8 +32,12 @@ install: build
 	dh_testroot
 	dh_clean -k
 	
-	mkdir -p $(DEST)/etc/nagvis $(DEST)/usr/share/nagvis/debian/ $(DEST)/usr/share/nagvis/htdocs/nagvis/ \
-		$(DEST)/usr/share/nagvis/htdocs/wui/ $(DEST)/usr/share/nagvis/includes $(DEST)/usr/share/nagvis/wui/includes
+	install -d $(DEST)/etc/nagvis \
+			$(DEST)/usr/share/nagvis/debian/ \
+			$(DEST)/usr/share/nagvis/htdocs/nagvis/ \
+			$(DEST)/usr/share/nagvis/htdocs/wui/ \
+			$(DEST)/usr/share/nagvis/includes\
+			$(DEST)/usr/share/nagvis/wui/includes
 	
 	cp -a etc/* $(DEST)/etc/nagvis
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
@@ -53,7 +57,7 @@ install: build
 	done
 	
 	cp -a nagvis/images $(DEST)/usr/share/nagvis/htdocs/nagvis/
-	mkdir -p $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
+	install -d $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	cp -a nagvis/includes/css $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	cp -a nagvis/includes/js $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	cp -a nagvis/includes/languages $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
@@ -67,11 +71,11 @@ install: build
 	cp -a wui/*.php $(DEST)/usr/share/nagvis/htdocs/wui/
 	cp -a *.php $(DEST)/usr/share/nagvis/htdocs/
 	
-	mkdir -p $(DEST)/etc/nagvis/templates/
+	install -d $(DEST)/etc/nagvis/templates/
 	cp -a nagvis/templates/* $(DEST)/etc/nagvis/templates/
 	
 	# demo site
-	mkdir -p $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
+	install -d $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
 	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
 		$(DEST)/demo/nagvis/images/maps/
@@ -79,8 +83,12 @@ install: build
 	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps
 	
 	# config templates
-	mkdir -p $(DEST)/usr/share/nagvis/debian
-	cp debian/apache.conf $(DEST)/usr/share/nagvis/debian/
+	install -m 755 -d $(DEST)/usr/share/nagvis/debian
+	install -m 644 debian/apache.conf $(DEST)/usr/share/nagvis/debian/
+	
+	# lintian overrides
+	install -m 755 -d $(DEST)/usr/share/lintian/overrides
+	install -m 644 debian/overrides $(DEST)/usr/share/lintian/overrides/nagvis
 	
 	dh_installdirs
 	dh_install

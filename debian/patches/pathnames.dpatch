@@ -16,10 +16,10 @@ diff -urNad nagvis-1.2.2~/etc/nagvis.ini.php-sample nagvis-1.2.2/etc/nagvis.ini.
 +;base="/usr/share/nagvis/"
  ; absolute html NagVis path
 -;htmlbase="/nagios/nagvis"
-+;htmlbase="/nagios2/nagvis"
++;htmlbase="/nagios3/nagvis"
  ; absolute html NagVis cgi path
 -;htmlcgi="/nagios/cgi-bin"
-+;htmlcgi="/nagios2/cgi-bin"
++;htmlcgi="/nagios3/cgi-bin"
  
  ; options for the NDO-Backend
  ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
@@ -28,7 +28,7 @@ diff -urNad nagvis-1.2.2~/etc/nagvis.ini.php-sample nagvis-1.2.2/etc/nagvis.ini.
  ;maxtimewithoutupdate=180
  ; path to the cgi-bin of this backend
 -;htmlcgi="/nagios/cgi-bin"
-+;htmlcgi="/nagios2/cgi-bin"
++;htmlcgi="/nagios3/cgi-bin"
  
  ; map rotation pools
  ; in this example the browser switches between the maps demo and demo2 every 15
@@ -81,52 +81,52 @@ diff -urNad nagvis-1.2.2~/nagvis/includes/classes/GlobalMainCfg.php nagvis-1.2.2
  				'htmlbase' => Array('must' => 1,
  					'editable' => 1,
 -					'default' => '/nagios/nagvis',
-+					'default' => '/nagios2/nagvis',
++					'default' => '/nagios3/nagvis',
  					'match' => MATCH_STRING_PATH),
  				'htmlcgi' => Array('must' => 1,
  					'editable' => 1,
 -					'default' => '/nagios/cgi-bin',
-+					'default' => '/nagios2/cgi-bin',
++					'default' => '/nagios3/cgi-bin',
  					'match' => MATCH_STRING_PATH),
  				'htmlimages' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/',
-+					'default' => '/nagios2/nagvis/nagvis/images/',
++					'default' => '/nagios3/nagvis/nagvis/images/',
  					'match' => MATCH_STRING_PATH),
  				'htmlhovertemplates' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/etc/templates/hover/',
-+					'default' => '/nagios2/nagvis/nagvis/etc/templates/hover/',
++					'default' => '/nagios3/nagvis/nagvis/etc/templates/hover/',
  					'match' => MATCH_STRING_PATH),
  				'htmlheadertemplates' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/etc/templates/header/',
-+					'default' => '/nagios2/nagvis/nagvis/etc/templates/header/',
++					'default' => '/nagios3/nagvis/nagvis/etc/templates/header/',
  					'match' => MATCH_STRING_PATH),			
  				'htmlhovertemplateimages' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/templates/hover/',
-+					'default' => '/nagios2/nagvis/nagvis/images/templates/hover/',
++					'default' => '/nagios3/nagvis/nagvis/images/templates/hover/',
  					'match' => MATCH_STRING_PATH),
  				'htmlheadertemplateimages' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/templates/header/',
-+					'default' => '/nagios2/nagvis/nagvis/images/templates/header/',
++					'default' => '/nagios3/nagvis/nagvis/images/templates/header/',
  					'match' => MATCH_STRING_PATH),
  				'htmlicon' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/iconsets/',
-+					'default' => '/nagios2/nagvis/nagvis/images/iconsets/',
++					'default' => '/nagios3/nagvis/nagvis/images/iconsets/',
  					'match' => MATCH_STRING_PATH),
  				'htmlshape' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/shape/',
-+					'default' => '/nagios2/nagvis/nagvis/images/shape/',
++					'default' => '/nagios3/nagvis/nagvis/images/shape/',
  					'match' => MATCH_STRING_PATH),
  				'htmlmap' => Array('must' => 0,
  					'editable' => 0,
 -					'default' => '/nagios/nagvis/nagvis/images/maps/',
-+					'default' => '/nagios2/nagvis/nagvis/images/maps/',
++					'default' => '/nagios3/nagvis/nagvis/images/maps/',
  					'match' => MATCH_STRING_PATH)),
  			'backend' => Array(
  				'backendtype' => Array('must' => 1,
@@ -135,7 +135,7 @@ diff -urNad nagvis-1.2.2~/nagvis/includes/classes/GlobalMainCfg.php nagvis-1.2.2
  						'cgi' => Array('must' => 1,
  							'editable' => 1,
 -							'default' => '/usr/local/nagios/sbin/',
-+							'default' => '/usr/lib/cgi-bin/nagios2/',
++							'default' => '/usr/lib/cgi-bin/nagios3/',
  							'match' => MATCH_STRING_PATH)))),
  			'rotation' => Array('rotationid' => Array('must' => 1,
  				'editable' => 1,

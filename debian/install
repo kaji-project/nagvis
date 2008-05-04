@@ -1,3 +1,4 @@
 debian/tmp/etc/nagvis
 debian/tmp/etc/nagvis/maps
 debian/tmp/usr/share/nagvis
+debian/tmp/usr/share/lintian/overrides

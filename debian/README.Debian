@@ -8,7 +8,7 @@ fine. NagVis uses the database account of ndoutils to connect to the database. I
 you change this account with reconfiguring ndoutils, don't forget to
 dpkg-reconfigure nagvis too to get the new configuration.
 
-If you got still errors of not working NDOUtils, check your /etc/nagios2/nagios.cfg
+If you got still errors of not working NDOUtils, check your /etc/nagios3/nagios.cfg
 if the broker module ndomod.o is enabled and check_external_commands=1 is set to
 get the table <prefix>_programstatus updated.
 (See http://www.nagvis.org/docs/general/often_reported_errors#nagiosnotrunning)

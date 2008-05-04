@@ -2,4 +2,4 @@ etc/nagvis/maps usr/share/nagvis/htdocs/nagvis/etc/maps
 etc/nagvis/maps usr/share/nagvis/htdocs/nagvis/images/maps
 etc/nagvis/templates usr/share/nagvis/htdocs/nagvis/etc/templates
 etc/nagvis/templates usr/share/nagvis/htdocs/nagvis/images/templates
-usr/share/nagvis/htdocs usr/share/nagios2/htdocs/nagvis
+usr/share/nagvis/htdocs usr/share/nagios3/htdocs/nagvis

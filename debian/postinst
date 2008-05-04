@@ -26,7 +26,7 @@ fi
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-setperm() { # thx 2 nagios2/debian/nagios2-common.postinst
+setperm() { 
 	local user="$1"
 	local group="$2"
 	local mode="$3"
@@ -50,9 +50,9 @@ case "$1" in
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/etc/maps
 
 	ucf /usr/share/nagvis/debian/apache.conf /etc/nagvis/apache.conf
-	#if ! [ -e /etc/apache2/conf.d/nagvis.conf ]; then
-	#	ln -s /etc/nagvis/apache.conf /etc/apache2/conf.d/nagvis.conf
-	#fi
+	if [ ! -f /etc/apache2/conf.d/nagvis.conf ]; then
+		ln -s /etc/nagvis/apache.conf /etc/apache2/conf.d/nagvis.conf
+	fi
 
     ;;
 
