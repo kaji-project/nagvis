@@ -1,6 +1,5 @@
-nagvis (1:1.2.2-5) UNRELEASED; urgency=low
+nagvis (1:1.2.2-5) unstable; urgency=low
 
-  * NOT RELEASED YET
   * changed from nagios2 to nagios3 support (Closes: 479290)
   * debian/rules:
     + used install instead of mkdir or cp
@@ -9,8 +8,11 @@ nagvis (1:1.2.2-5) UNRELEASED; urgency=low
   debian/control:
     + added libapache2-mod-php5 to Depends
   * override lintian warning package-contains-empty-directory
+  * debian/copyright
+    + switched to format as proposed on
+      http://wiki.debian.org/Proposals/CopyrightFormat
 
- -- Hendrik Frenzel <hfrenzel@scunc.net>  Tue, 18 Mar 2008 19:12:30 +0100
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Mon, 19 May 2008 22:51:09 +0200
 
 nagvis (1:1.2.2-4) unstable; urgency=low
 

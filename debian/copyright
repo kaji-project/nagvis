@@ -1,78 +1,68 @@
-This package was debianized by Hendrik Frenzel <hfrenzel@scunc.net> on
-Wed, 11 Jul 2007 21:50:31 +0200.
+This package was debianized by Hendrik Frenzel <hfrenzel@scunc.net>
 
-It was downloaded from http://www.nagvis.org
-
-Upstream Authors: 
-
-    Lars Michelsen <lars@vertical-visions.de>
-    Michael Luebben <mickey2002@nagios-wiki.de>
-
-Copyright: 
-
-    Copyright (C) 2007 Lars Michelsen
-    Copyright (C) 2007 Michael Luebben
-
+Files: *
+Copyright:
+ © 2007 Lars Michelsen <lars@vertical-visions.de>
+ © 2007 Michael Luebben <mickey2002@nagios-wiki.de>
 License:
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this package; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-    This package is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
- 
-    This package is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
-    You should have received a copy of the GNU General Public License
-    along with this package; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+Files: nagvis/includes/js/overlib*
+License: Artistic
+ overLIB 4.17 - You may not remove or change this notice.
+ Copyright Erik Bosrup 1998-2004. All rights reserved.
+ .    
+ Contributors are listed on the homepage.
+ This file might be old, always check for the latest version at:
+ http://www.bosrup.com/web/overlib/
+ .   
+ Please read the license agreement (available through the link above)
+ before using overLIB. Direct any licensing questions to erik@bosrup.com.
+ .   
+ Do not sell this as your own work or remove this copyright notice. 
+ For full details on copying or changing this script please read the
+ license agreement at the link above. Please give credit on sites that
+ use overLIB and submit changes of the script so other people can use
+ them as well.
+ .
+ The license at the link above states the Artistic license for this
+ software.
+ .
+ On Debian systems, the complete text of the Artistic License can be found in
+`/usr/share/common-licenses/Artistic'.
 
-On Debian systems, the complete text of the GNU General
-Public License can be found in `/usr/share/common-licenses/GPL'.
+Files: wui/includes/js/wz*
+Copyright © 2002-2003 Walter Zorn.
+License: LGPL-2.1
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License (LGPL) as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ .
+ On Debian systems, the complete text of the GNU Lesser
+ General Public License can be found in `/usr/share/common-licenses/LGPL'.
 
-The Debian packaging is (C) 2007, Hendrik Frenzel <hfrenzel@scunc.net> and
-is licensed under the GPL, see above.
-
-nagvis/includes/js/overlib*:
-    overLIB 4.17 - You may not remove or change this notice.
-    Copyright Erik Bosrup 1998-2004. All rights reserved.
-    
-    Contributors are listed on the homepage.
-    This file might be old, always check for the latest version at:
-    http://www.bosrup.com/web/overlib/
-    
-    Please read the license agreement (available through the link above)
-    before using overLIB. Direct any licensing questions to erik@bosrup.com.
-    
-    Do not sell this as your own work or remove this copyright notice. 
-    For full details on copying or changing this script please read the
-    license agreement at the link above. Please give credit on sites that
-    use overLIB and submit changes of the script so other people can use
-    them as well.
-
-    The license at the link above states the Artistic license for this
-    software.
-
-    On Debian systems, the complete text of the Artistic License can be
-    found in `/usr/share/common-licenses/Artistic'.
-
-wui/includes/js/wz*:
-    Copyright (c) 2002-2003 Walter Zorn. All rights reserved.
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License (LGPL) as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-    For more details on the GNU Lesser General Public License,
-    see http://www.gnu.org/copyleft/lesser.html
-
-    On Debian systems, the complete text of the Artistic License can be
-    found in `/usr/share/common-licenses/LGPL'.
+Files: debian/*
+Copyright: © 2007-2008 Hendrik Frenzel <hfrenzel@scunc.net>
+License: GPL-2+
+ The Debian packaging information is under the GPL, version 2 or later.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL'.
 
