@@ -1,3 +1,12 @@
+nagvis (1:1.3.1-1) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+  * New upstream version with many new features and bugfixes
+    + See http://docs.nagvis.org/1.3/en_US/changelog.html for more info.
+    + added graphviz to Depends
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Sat, 27 Sep 2008 12:04:13 +0200
+
 nagvis (1:1.2.2-5) unstable; urgency=low
 
   * changed from nagios2 to nagios3 support (Closes: 479290)

@@ -48,11 +48,12 @@ case "$1" in
 		test -d $f && setperm www-data www-data 0755 $f
 	done
 	setperm www-data www-data 0775 /usr/share/nagvis/htdocs/nagvis/etc/maps
+	setperm www-data www-data 0755 /var/lib/nagvis
 
 	ucf /usr/share/nagvis/debian/apache.conf /etc/nagvis/apache.conf
-	if [ ! -f /etc/apache2/conf.d/nagvis.conf ]; then
-		ln -s /etc/nagvis/apache.conf /etc/apache2/conf.d/nagvis.conf
-	fi
+	#if [ ! -f /etc/apache2/conf.d/nagvis.conf ]; then
+	#	ln -s /etc/nagvis/apache.conf /etc/apache2/conf.d/nagvis.conf
+	#fi
 
     ;;
 
