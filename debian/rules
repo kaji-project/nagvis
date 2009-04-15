@@ -68,6 +68,7 @@ install: build
 	cp -a wui/includes/classes $(DEST)/usr/share/nagvis/wui/includes/
 	cp -a wui/includes/css $(DEST)/usr/share/nagvis/htdocs/wui/
 	cp -a wui/includes/js $(DEST)/usr/share/nagvis/htdocs/wui/
+	cp -a wui/includes/functions $(DEST)/usr/share/nagvis/htdocs/wui/includes/
 	cp -a wui/*.php $(DEST)/usr/share/nagvis/htdocs/wui/
 	cp -a *.php $(DEST)/usr/share/nagvis/htdocs/
 	
