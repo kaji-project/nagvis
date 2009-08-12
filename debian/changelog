@@ -1,5 +1,13 @@
+nagvis (1:1.3.1-3) unstable; urgency=low
+
+  * adjust pathnames.dpatch to form_handler.php from correct location, thanks
+    Andreas Steinel (Closes: #522296)
+  * add myself to Uploaders
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 12 Aug 2009 12:49:27 +0200
+
 nagvis (1:1.3.1-2) unstable; urgency=low
-  
+
   * Added --debconf-ok to debian/post{inst,rm} (Closes: 522172)
   * Copy wui/includes/functions to the right directory (Closes: 522296)
 
@@ -19,7 +27,7 @@ nagvis (1:1.2.2-5) unstable; urgency=low
   * debian/rules:
     + used install instead of mkdir or cp
   * debian/postinst:
-    + added nagvis apache.conf symlink in /etc/apache2/conf.d 
+    + added nagvis apache.conf symlink in /etc/apache2/conf.d
   debian/control:
     + added libapache2-mod-php5 to Depends
   * override lintian warning package-contains-empty-directory
