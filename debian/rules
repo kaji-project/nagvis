@@ -57,6 +57,7 @@ install: build
 	done
 	
 	cp -a nagvis/images $(DEST)/usr/share/nagvis/htdocs/nagvis/
+	chmod -x $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/*
 	install -d $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	cp -a nagvis/includes/css $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
 	cp -a nagvis/includes/js $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
