@@ -4,7 +4,11 @@ nagvis (1:1.3.1-4) UNRELEASED; urgency=low
   [ Hendrik Frenzel ]
   * fixed include path names in nagvis/ajax_handler.php
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 16 Aug 2009 00:33:01 +0200
+  [ Jan Wagner ]
+  * Updating standards version to 3.8.3
+    - Add README.source
+
+ -- Jan Wagner <waja@cyconet.org>  Sat, 29 Aug 2009 16:47:01 +0200
 
 nagvis (1:1.3.1-3) unstable; urgency=low
 

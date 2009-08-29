@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Hendrik Frenzel <hfrenzel@scunc.net>
 Uploaders: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>, Jan Wagner <waja@cyconet.org>
 Build-Depends: debhelper (>= 5), dpatch
-Standards-Version: 3.8.2
+Standards-Version: 3.8.3
 Homepage: http://www.nagvis.org
 Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagvis/trunk/
