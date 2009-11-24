@@ -1,4 +1,4 @@
-nagvis (1:1.3.1-4) UNRELEASED; urgency=low
+nagvis (1:1.4.4-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   [ Hendrik Frenzel ]
@@ -8,7 +8,11 @@ nagvis (1:1.3.1-4) UNRELEASED; urgency=low
   * Updating standards version to 3.8.3
     - Add README.source
 
- -- Jan Wagner <waja@cyconet.org>  Sat, 29 Aug 2009 16:47:01 +0200
+  [ Alexander Wirt ]
+  * New upstream version 
+  * Add myself to uploaders
+
+ -- Alexander Wirt <formorer@debian.org>  Tue, 24 Nov 2009 08:45:37 +0100
 
 nagvis (1:1.3.1-3) unstable; urgency=low
 
