@@ -1,0 +1,96 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_pathnames.dpatch by Wolfgang Barth <wob@swobspace.net>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
+--- trunk~/etc/nagvis.ini.php-sample	2009-11-27 16:41:36.000000000 +0100
++++ trunk/etc/nagvis.ini.php-sample	2009-11-27 18:35:57.000000000 +0100
+@@ -24,17 +24,20 @@
+ 
+ ; Path definitions
+ [paths]
+-; absolute physical NagVis path
+-;base="/usr/local/nagios/share/nagvis/"
++base="/usr/share/nagvis/htdocs/"
++cfg="/etc/nagvis/"
++var="/var/cache/nagvis/"
++map="/var/lib/nagvis/images/maps/"
++mapcfg="/etc/nagvis/maps/"
+ ; absolute html NagVis path
+-;htmlbase="/nagios/nagvis"
++htmlbase="/nagvis"
+ ; absolute html NagVis cgi path
+-;htmlcgi="/nagios/cgi-bin"
++htmlcgi="/nagios3/cgi-bin"
+ 
+ ; Default values which get inherited to the maps and its objects
+ [defaults]
+ ; default backend (id of the default backend)
+-;backend="ndomy_1"
++backend="ndomy_1"
+ ; background color of maps
+ ;backgroundcolor="#fff"
+ ; Enable/Disable the context menu on map objects. With the context menu you are
+@@ -123,7 +126,7 @@
+ ; Default root host (NagVis uses this if it can't detect it via NDO)
+ ;defaultroot=""
+ ; Path to the graphviz binaries (dot,neato,...); Only needed if not in ENV PATH
+-;graphvizpath="/usr/bin/"
++graphvizpath="/usr/bin"
+ ; Show the automap in the lists (Map index and dropdown menu in header)
+ ;showinlists=1
+ 
+@@ -158,8 +161,8 @@
+ ; ----------------------------
+ 
+ ; Example definition of a livestatus backend. In this case the backend_id is live_1
+-[backend_live_1]
+-backendtype="mklivestatus"
++;[backend_live_1]
++;backendtype="mklivestatus"
+ ;socket="unix:/usr/local/nagios/var/rw/live"
+ 
+ ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
+@@ -186,9 +189,9 @@
+ ;htmlcgi="/nagios/cgi-bin"
+ 
+ ; in this example the ID of the Backend is "ndo2fs_1" you can define another ID.
+-[backend_ndo2fs_1]
++;[backend_ndo2fs_1]
+ ; type of backend - MUST be set
+-backendtype="ndo2fs"
++;backendtype="ndo2fs"
+ ; Path to the ndo2fs var directory where the VOLATILE and PERSISTENT directories are
+ ;path="/usr/local/ndo2fs/var"
+ ; Name of the instance to get the data from
+@@ -199,9 +202,9 @@
+ ;htmlcgi="/nagios/cgi-bin"
+ 
+ ; in this example the ID of the Backend is "merlinmy_1" you can define another ID.
+-[backend_merlinmy_1]
++;[backend_merlinmy_1]
+ ; type of backend - MUST be set
+-backendtype="merlinmy"
++;backendtype="merlinmy"
+ ; hostname for Merlin db
+ ;dbhost="localhost"
+ ; portname for Merlin db
+@@ -223,12 +226,12 @@
+ 
+ ; in this example the browser switches between the maps demo and demo2 every 15
+ ; seconds, the rotation is enabled by url: index.php?rotation=demo
+-[rotation_demo]
++;[rotation_demo]
+ ; These steps are rotated. The "Demo2:" is a label which is being displayed in
+ ; the index pages rotation list.
+-maps="demo,Demo2:demo2"
++;maps="demo,Demo2:demo2"
+ ; rotation interval (seconds)
+-interval=15
++;interval=15
+ 
+ ; ------------------------------------------------------------------------------
+ ; Below you find some advanced stuff

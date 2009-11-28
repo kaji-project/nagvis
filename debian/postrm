@@ -47,6 +47,9 @@ if [ "$1" = "purge" ]; then
 	#if [ -e /etc/apache2/conf.d/nagvis.conf ]; then
 	#	rm -f /etc/apache2/conf.d/nagvis.conf
 	#fi
+
+	rm -f /var/cache/nagvis/*
+        rmdir /var/cache/nagvis
 fi
 	
 # dh_installdeb will replace this with shell code automatically

@@ -1,3 +1,4 @@
 etc/nagvis/maps
 etc/nagvis/templates
-var/lib/nagvis
+var/lib/nagvis/images/maps
+var/cache/nagvis

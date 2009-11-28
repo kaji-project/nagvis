@@ -1,7 +1,7 @@
 Source: nagvis
 Section: net
 Priority: extra
-Maintainer: Wolfgang Barth <wob@swobspace.net>
+Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>, Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: debhelper (>= 5), dpatch
 Standards-Version: 3.8.3

@@ -1,4 +1,5 @@
 This package was debianized by Hendrik Frenzel <hfrenzel@scunc.net>
+and updated by Wolfgang Barth <wob@swobspace@net>
 
 Files: *
 Copyright:
@@ -60,6 +61,7 @@ License: LGPL-2.1
 
 Files: debian/*
 Copyright: © 2007-2008 Hendrik Frenzel <hfrenzel@scunc.net>
+and updated 2009 by Wolfgang Barth <wob@swobspace.net>
 License: GPL-2+
  The Debian packaging information is under the GPL, version 2 or later.
  .

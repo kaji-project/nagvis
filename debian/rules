@@ -35,10 +35,13 @@ install: build
 	install -d $(DEST)/etc/nagvis \
 			$(DEST)/usr/share/nagvis/debian/ \
 			$(DEST)/usr/share/nagvis/htdocs/nagvis/ \
-			$(DEST)/usr/share/nagvis/htdocs/wui/ \
-			$(DEST)/usr/share/nagvis/includes\
-			$(DEST)/usr/share/nagvis/wui/includes
+			$(DEST)/usr/share/nagvis/htdocs/wui/
+
+	install -d $(DEST)/var/lib/nagvis/images/maps
+	install -d $(DEST)/var/cache/nagvis
 	
+	[ -x /usr/bin/html2text ] && \
+		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/Changelog
 	cp -a etc/* $(DEST)/etc/nagvis
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
@@ -52,41 +55,30 @@ install: build
 	 mv $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample.new \
 	    $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample
 	
-	for dir in classes defines functions; do \
-		cp -a nagvis/includes/$$dir $(DEST)/usr/share/nagvis/includes/; \
-	done
+	cp -a nagvis/* $(DEST)/usr/share/nagvis/htdocs/nagvis/.
+	#--# install -d $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/.
+	#--# cp -a nagvis/includes/* $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/.
+	#--# cp -a nagvis/*.php $(DEST)/usr/share/nagvis/htdocs/nagvis/.
 	
-	cp -a nagvis/images $(DEST)/usr/share/nagvis/htdocs/nagvis/
-	chmod -x $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/*
-	install -d $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
-	cp -a nagvis/includes/css $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
-	cp -a nagvis/includes/js $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
-	cp -a nagvis/includes/languages $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/
+	cp -a wui/* $(DEST)/usr/share/nagvis/htdocs/wui/.
+
+	cp -a index.php $(DEST)/usr/share/nagvis/htdocs/.
 	
-	cp -a nagvis/*.php $(DEST)/usr/share/nagvis/htdocs/nagvis/
-	
-	cp -a wui/images $(DEST)/usr/share/nagvis/htdocs/wui/
-	cp -a wui/includes/classes $(DEST)/usr/share/nagvis/wui/includes/
-	cp -a wui/includes/css $(DEST)/usr/share/nagvis/htdocs/wui/
-	cp -a wui/includes/js $(DEST)/usr/share/nagvis/htdocs/wui/
-	cp -a wui/includes/functions $(DEST)/usr/share/nagvis/htdocs/wui/includes/
-	cp -a wui/*.php $(DEST)/usr/share/nagvis/htdocs/wui/
-	cp -a *.php $(DEST)/usr/share/nagvis/htdocs/
-	
-	install -d $(DEST)/etc/nagvis/templates/
-	cp -a nagvis/templates/* $(DEST)/etc/nagvis/templates/
+	#--# install -d $(DEST)/etc/nagvis/templates/
+	#--# cp -a nagvis/templates/* $(DEST)/etc/nagvis/templates/
 	
 	# demo site
 	install -d $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
 	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
 		$(DEST)/demo/nagvis/images/maps/
-	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/templates
+	#--# rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/templates
 	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps
 	
 	# config templates
 	install -m 755 -d $(DEST)/usr/share/nagvis/debian
 	install -m 644 debian/apache.conf $(DEST)/usr/share/nagvis/debian/
+	install -m 644 debian/apache.conf $(DEST)/etc/nagvis/
 	
 	# lintian overrides
 	install -m 755 -d $(DEST)/usr/share/lintian/overrides
