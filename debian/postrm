@@ -1,5 +1,5 @@
 #!/bin/sh
-# postrm script for #PACKAGE#
+# postrm script for nagvis
 #
 # see: dh_installdeb(1)
 
@@ -9,7 +9,7 @@ if [ -f /usr/share/debconf/confmodule ]; then
 	. /usr/share/debconf/confmodule
 fi
 
-if [ -f /usr/share/dbconfig-common/dpkg/postrm.@@DB@@ ]; then
+if [ -f /usr/share/dbconfig-common/dpkg/postrm.mysql ]; then
 	. /usr/share/dbconfig-common/dpkg/frontend.postrm.mysql
 	dbc_go nagvis $@
 fi
@@ -48,8 +48,7 @@ if [ "$1" = "purge" ]; then
 	#	rm -f /etc/apache2/conf.d/nagvis.conf
 	#fi
 
-	rm -f /var/cache/nagvis/*
-        rmdir /var/cache/nagvis
+	rm -rf /var/cache/nagvis
 fi
 	
 # dh_installdeb will replace this with shell code automatically
