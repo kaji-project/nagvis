@@ -1,6 +1,17 @@
 nagvis for Debian
 -----------------
 
+Starting with 1.4.5, there are changes from older packages.
+
+* URL and CGI-Path:
+Since nagvis now can be used with other systems like icinga or web interface 
+like ninja, the htdocs path is no longer part of nagios3 directory structure. 
+The new directory for nagvis is now /usr/share/nagvis/htdocs/nagvis. The 
+authentification therefore has to be configured separately. Have a look at 
+/etc/nagvis/apache.conf and edit it for your needs.
+
+ -- Wolfgang Barth <wob@swobspace.net>  Sat, 28 Nov 2009 12:00:00 +0200
+
 Thank you using the NagVis addon for Nagios Network Monitoring System.
 
 To get it work you have to be sure the ndoutils package is installed and works
@@ -19,33 +30,3 @@ its owner and group to be www-data:www-data.
 
  -- Hendrik Frenzel <hfrenzel@scunc.net>  Sat, 14 Jul 2007 11:27:33 +0200
 
-Starting with 1.4.5, there are changes from older packages.
-
-* URL and CGI-Path:
-Since nagvis now can be used with other systems like icinga or web interface 
-like ninja, the htdocs path is no longer part of nagios3 directory structure. 
-The new directory for nagvis is now /usr/share/nagvis/htdocs/nagvis. The 
-authentification therefore has to be configured separately. Have a look at 
-/etc/nagvis/apache.conf and edit it for your needs.
-
-* Templates:
-The template directory /etc/nagvis/templates has moved back to 
-/usr/share/nagvis/htdocs/nagvis/templates, images for templates now located in
-/usr/share/nagvis/htdocs/nagvis/images/templates
-
-If you installed your own templates in /etc/nagvis/templates, proceed the 
-following steps:
-
-- cp /etc/nagios/templates/header/*.png \
-  /usr/share/nagvis/htdocs/nagvis/images/templates/header/
-
-- cp /etc/nagios/templates/hover/*.png \
-  /usr/share/nagvis/htdocs/nagvis/images/templates/hover/
-
-- /etc/nagios/templates/header/*.{css,html}
-  /usr/share/nagvis/htdocs/nagvis/templates/header/
-
-- /etc/nagios/templates/hover/*.{css,html}
-  /usr/share/nagvis/htdocs/nagvis/templates/hover/
-
- -- Wolfgang Barth <wob@swobspace.net>  Sat, 28 Nov 2009 12:00:00 +0200

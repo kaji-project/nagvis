@@ -5,7 +5,7 @@
 #export DH_VERBOSE=1
 
 include /usr/share/dpatch/dpatch.make
-DEST = debian/tmp
+DEST = debian/nagvis
 
 configure: configure-stamp
 configure-stamp:
@@ -31,18 +31,11 @@ install: build
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	
-	install -d $(DEST)/etc/nagvis \
-			$(DEST)/usr/share/nagvis/debian/ \
-			$(DEST)/usr/share/nagvis/htdocs/nagvis/ \
-			$(DEST)/usr/share/nagvis/htdocs/wui/
-
-	install -d $(DEST)/var/lib/nagvis/images/maps
-	install -d $(DEST)/var/cache/nagvis
+	dh_installdirs
+	dh_install
 	
 	[ -x /usr/bin/html2text ] && \
 		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/Changelog
-	cp -a etc/* $(DEST)/etc/nagvis
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
 	sed -e 's/^[; ]*\(\<dbhost\) *=.*$$/\1=_DBC_DBSERVER_/' \
@@ -55,38 +48,15 @@ install: build
 	 mv $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample.new \
 	    $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample
 	
-	cp -a nagvis/* $(DEST)/usr/share/nagvis/htdocs/nagvis/.
-	#--# install -d $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/.
-	#--# cp -a nagvis/includes/* $(DEST)/usr/share/nagvis/htdocs/nagvis/includes/.
-	#--# cp -a nagvis/*.php $(DEST)/usr/share/nagvis/htdocs/nagvis/.
-	
-	cp -a wui/* $(DEST)/usr/share/nagvis/htdocs/wui/.
-
-	cp -a index.php $(DEST)/usr/share/nagvis/htdocs/.
-	
-	#--# install -d $(DEST)/etc/nagvis/templates/
-	#--# cp -a nagvis/templates/* $(DEST)/etc/nagvis/templates/
-	
 	# demo site
 	install -d $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
 	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
 		$(DEST)/demo/nagvis/images/maps/
-	#--# rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/templates
 	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps
 	
-	# config templates
-	install -m 755 -d $(DEST)/usr/share/nagvis/debian
-	install -m 644 debian/apache.conf $(DEST)/usr/share/nagvis/debian/
-	install -m 644 debian/apache.conf $(DEST)/etc/nagvis/
-	
-	# lintian overrides
-	install -m 755 -d $(DEST)/usr/share/lintian/overrides
-	install -m 644 debian/overrides $(DEST)/usr/share/lintian/overrides/nagvis
-	
-	dh_installdirs
-	dh_install
 	dh_link
+	dh_lintian
 
 # Build architecture-dependent files here.
 binary-arch: build install

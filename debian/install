@@ -1,4 +1,6 @@
-debian/tmp/etc/nagvis
-debian/tmp/etc/nagvis/maps
-debian/tmp/usr/share/nagvis
-debian/tmp/usr/share/lintian/overrides
+etc/* /etc/nagvis
+nagvis/* /usr/share/nagvis/htdocs/nagvis
+wui/* /usr/share/nagvis/htdocs/wui
+index.php  /usr/share/nagvis/htdocs
+debian/apache.conf /usr/share/nagvis/debian
+debian/apache.conf /etc/nagvis
