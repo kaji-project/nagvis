@@ -6,6 +6,7 @@
 
 include /usr/share/dpatch/dpatch.make
 DEST = debian/nagvis
+TMP  = debian/tmp
 
 configure: configure-stamp
 configure-stamp:
@@ -33,9 +34,18 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	dh_install
+
+	# -- images to /var 
+	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/* $(DEST)/var/lib/nagvis/images/.
+
+        # -- templates
+	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/templates $(DEST)/etc/nagvis/.
+
+	# -- gadgets
+	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/gadgets $(DEST)/etc/nagvis/.
 	
 	[ -x /usr/bin/html2text ] && \
-		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/Changelog
+		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
 	sed -e 's/^[; ]*\(\<dbhost\) *=.*$$/\1=_DBC_DBSERVER_/' \
@@ -49,11 +59,8 @@ install: build
 	    $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample
 	
 	# demo site
-	install -d $(DEST)/demo/nagvis/images/maps $(DEST)/demo/etc/nagvis/maps
-	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(DEST)/demo/etc/nagvis/maps/
-	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps/nagvis-demo.png \
-		$(DEST)/demo/nagvis/images/maps/
-	rm -rf $(DEST)/usr/share/nagvis/htdocs/nagvis/images/maps
+	install -d $(TMP)/demo/etc/nagvis/maps
+	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(TMP)/demo/etc/nagvis/maps/
 	
 	dh_link
 	dh_lintian

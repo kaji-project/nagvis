@@ -1,2 +1,2 @@
-debian/nagvis/demo
+debian/tmp/demo
 etc/nagvis.ini.php-sample

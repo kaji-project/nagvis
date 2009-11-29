@@ -7,8 +7,8 @@
 @DPATCH@
 diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
 --- trunk~/etc/nagvis.ini.php-sample	2009-11-27 16:41:36.000000000 +0100
-+++ trunk/etc/nagvis.ini.php-sample	2009-11-28 17:20:58.000000000 +0100
-@@ -24,17 +24,20 @@
++++ trunk/etc/nagvis.ini.php-sample	2009-11-29 19:09:27.000000000 +0100
+@@ -24,17 +24,26 @@
  
  ; Path definitions
  [paths]
@@ -17,8 +17,14 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
 +base="/usr/share/nagvis/htdocs/"
 +cfg="/etc/nagvis/"
 +var="/var/cache/nagvis/"
-+map="/var/lib/nagvis/images/maps/"
 +mapcfg="/etc/nagvis/maps/"
++images="/var/lib/nagvis/images/"
++icon="/var/lib/nagvis/images/iconsets/"
++shape="/var/lib/nagvis/images/shapes/"
++map="/var/lib/nagvis/images/maps/"
++headertemplate="/etc/nagvis/templates/header/"
++hovertemplate="/etc/nagvis/templates/hover/"
++contexttemplate="/etc/nagvis/templates/context/"
  ; absolute html NagVis path
 -;htmlbase="/nagios/nagvis"
 +htmlbase="/nagvis"
@@ -34,7 +40,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ; background color of maps
  ;backgroundcolor="#fff"
  ; Enable/Disable the context menu on map objects. With the context menu you are
-@@ -123,7 +126,7 @@
+@@ -123,7 +132,7 @@
  ; Default root host (NagVis uses this if it can't detect it via NDO)
  ;defaultroot=""
  ; Path to the graphviz binaries (dot,neato,...); Only needed if not in ENV PATH
@@ -43,7 +49,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ; Show the automap in the lists (Map index and dropdown menu in header)
  ;showinlists=1
  
-@@ -158,8 +161,8 @@
+@@ -158,8 +167,8 @@
  ; ----------------------------
  
  ; Example definition of a livestatus backend. In this case the backend_id is live_1
@@ -54,7 +60,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ;socket="unix:/usr/local/nagios/var/rw/live"
  
  ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
-@@ -186,9 +189,9 @@
+@@ -186,9 +195,9 @@
  ;htmlcgi="/nagios/cgi-bin"
  
  ; in this example the ID of the Backend is "ndo2fs_1" you can define another ID.
@@ -66,7 +72,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ; Path to the ndo2fs var directory where the VOLATILE and PERSISTENT directories are
  ;path="/usr/local/ndo2fs/var"
  ; Name of the instance to get the data from
-@@ -198,37 +201,18 @@
+@@ -198,37 +207,18 @@
  ; path to the cgi-bin of this backend
  ;htmlcgi="/nagios/cgi-bin"
  

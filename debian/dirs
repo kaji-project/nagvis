@@ -1,5 +1,4 @@
 etc/nagvis/maps
-etc/nagvis/templates
 var/lib/nagvis/images
 var/lib/nagvis/images/maps
 var/cache/nagvis

@@ -1,2 +1,3 @@
 10_pathnames.dpatch
 20_configpath.dpatch
+30_GlobalMainCfg_bugfix.dpatch
