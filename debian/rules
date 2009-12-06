@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
+# debian/rules makefile for nagvis
+# Last modified:
+# $Id$
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -36,6 +38,8 @@ install: build
 	dh_install
 
 	# -- images to /var 
+	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/.gitignore
+	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/*/.gitignore
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/* $(DEST)/var/lib/nagvis/images/.
 
         # -- templates

@@ -7,7 +7,7 @@ Starting with 1.4.5, there are changes from older packages.
 Since nagvis now can be used with other systems like icinga or web interface 
 like ninja, the htdocs path is no longer part of nagios3 directory structure. 
 The new directory for nagvis is now /usr/share/nagvis/htdocs/nagvis. The 
-authentification therefore has to be configured separately. Have a look at 
+authentication therefore has to be configured separately. Have a look at 
 /etc/nagvis/apache.conf and edit it for your needs.
 
  -- Wolfgang Barth <wob@swobspace.net>  Sat, 28 Nov 2009 12:00:00 +0200
