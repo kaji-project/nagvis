@@ -2,7 +2,7 @@ Source: nagvis
 Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
-Uploaders: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>, Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
+Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>, Hendrik Frenzel <hfrenzel@scunc.net>, Wolfgang Barth <wob@swobspace.net> 
 Build-Depends: debhelper (>= 5), dpatch
 Standards-Version: 3.8.3
 Homepage: http://www.nagvis.org
