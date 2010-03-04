@@ -36,15 +36,15 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	dh_install
-
+	
 	# -- images to /var 
 	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/.gitignore
 	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/*/.gitignore
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/* $(DEST)/var/lib/nagvis/images/.
-
-        # -- templates
+	
+	# -- templates
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/templates $(DEST)/etc/nagvis/.
-
+	
 	# -- gadgets
 	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/gadgets $(DEST)/etc/nagvis/.
 	

@@ -5,9 +5,9 @@
 ## DP: No description.
 
 @DPATCH@
-diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
---- trunk~/etc/nagvis.ini.php-sample	2009-11-27 16:41:36.000000000 +0100
-+++ trunk/etc/nagvis.ini.php-sample	2009-11-29 19:09:27.000000000 +0100
+diff -urNad nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.php-sample
+--- nagvis-1.4.6~/etc/nagvis.ini.php-sample	2010-02-04 21:51:13.000000000 +0100
++++ nagvis-1.4.6/etc/nagvis.ini.php-sample	2010-03-01 18:40:01.000000000 +0100
 @@ -24,17 +24,26 @@
  
  ; Path definitions
@@ -40,16 +40,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ; background color of maps
  ;backgroundcolor="#fff"
  ; Enable/Disable the context menu on map objects. With the context menu you are
-@@ -123,7 +132,7 @@
- ; Default root host (NagVis uses this if it can't detect it via NDO)
- ;defaultroot=""
- ; Path to the graphviz binaries (dot,neato,...); Only needed if not in ENV PATH
--;graphvizpath="/usr/bin/"
-+graphvizpath="/usr/bin"
- ; Show the automap in the lists (Map index and dropdown menu in header)
- ;showinlists=1
- 
-@@ -158,8 +167,8 @@
+@@ -158,8 +168,8 @@
  ; ----------------------------
  
  ; Example definition of a livestatus backend. In this case the backend_id is live_1
@@ -60,7 +51,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ;socket="unix:/usr/local/nagios/var/rw/live"
  
  ; in this example the ID of the Backend is "ndomy_1" you can define another ID.
-@@ -186,9 +195,9 @@
+@@ -186,9 +196,9 @@
  ;htmlcgi="/nagios/cgi-bin"
  
  ; in this example the ID of the Backend is "ndo2fs_1" you can define another ID.
@@ -72,32 +63,7 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  ; Path to the ndo2fs var directory where the VOLATILE and PERSISTENT directories are
  ;path="/usr/local/ndo2fs/var"
  ; Name of the instance to get the data from
-@@ -198,37 +207,18 @@
- ; path to the cgi-bin of this backend
- ;htmlcgi="/nagios/cgi-bin"
- 
--; in this example the ID of the Backend is "merlinmy_1" you can define another ID.
--[backend_merlinmy_1]
--; type of backend - MUST be set
--backendtype="merlinmy"
--; hostname for Merlin db
--;dbhost="localhost"
--; portname for Merlin db
--;dbport=3306
--; database name for Merlin db
--;dbname="merlin"
--; username for Merlin db
--;dbuser="merlin"
--; password for Merlin db
--;dbpass="merlin"
--; maximum delay of the Merlin Database in seconds
--;maxtimewithoutupdate=180
--; path to the cgi-bin of this backend
--;htmlcgi="/nagios/cgi-bin"
--
- ; ----------------------------
- ; Rotation pool definitions
- ; ----------------------------
+@@ -223,12 +233,12 @@
  
  ; in this example the browser switches between the maps demo and demo2 every 15
  ; seconds, the rotation is enabled by url: index.php?rotation=demo
@@ -113,3 +79,22 @@ diff -urNad trunk~/etc/nagvis.ini.php-sample trunk/etc/nagvis.ini.php-sample
  
  ; ------------------------------------------------------------------------------
  ; Below you find some advanced stuff
+diff -urNad nagvis-1.4.6~/nagvis/includes/defines/global.php nagvis-1.4.6/nagvis/includes/defines/global.php
+--- nagvis-1.4.6~/nagvis/includes/defines/global.php	2010-02-04 21:51:13.000000000 +0100
++++ nagvis-1.4.6/nagvis/includes/defines/global.php	2010-03-01 18:39:30.000000000 +0100
+@@ -61,13 +61,13 @@
+ define('DEBUGLEVEL', 4);
+ 
+ // Path to the debug file
+-define('DEBUGFILE', '../var/nagvis-debug.log');
++define('DEBUGFILE', '/var/log/nagvis-debug.log');
+ 
+ // NagVis Version
+ define('CONST_VERSION', '1.4.6');
+ 
+ // Path to the main configuration file
+-define('CONST_MAINCFG', '../etc/nagvis.ini.php');
++define('CONST_MAINCFG', '/etc/nagvis/nagvis.ini.php');
+ 
+ // Needed minimal PHP version
+ define('CONST_NEEDED_PHP_VERSION', '5.0');

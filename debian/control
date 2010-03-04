@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>, Hendrik Frenzel <hfrenzel@scunc.net>, Wolfgang Barth <wob@swobspace.net> 
 Build-Depends: debhelper (>= 6.0.7~), dpatch
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://www.nagvis.org
 Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagvis/trunk/
@@ -12,7 +12,7 @@ Dm-Upload-Allowed: yes
 
 Package: nagvis
 Architecture: all
-Depends: ${misc:Depends}, libapache2-mod-php5, php5-mysql, php5-gd, ucf, dbconfig-common, graphviz
+Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-mysql, php5-gd, ucf, dbconfig-common, graphviz
 Recommends: nagios3, ndoutils-mysql
 Description: Visualization addon for Nagios
  NagVis can be used to visualize Nagios Data, e.g. to display IT processes like

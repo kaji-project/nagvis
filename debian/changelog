@@ -1,3 +1,13 @@
+nagvis (1:1.4.6-1) UNRELEASED; urgency=low
+
+  * (NOT RELEASED YET)
+
+  [ Hendrik Frenzel ]
+  * New upstream version
+  * Patched deprecated ereg to preg_match to get them work with php 5.3+
+
+ -- Hendrik Frenzel <hfrenzel@scunc.net>  Fri, 19 Feb 2010 12:33:48 +0100
+
 nagvis (1:1.4.5-1) UNRELEASED; urgency=low
 
   * (NOT RELEASED YET) New upstream release

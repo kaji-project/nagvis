@@ -1,0 +1,39 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## visibility_magic-set-method.dpatch by Hendrik Frenzel <hfrenzel@scunc.net>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad nagvis-1.4.6~/nagvis/includes/classes/validator/GlobalValidatorInteger.php nagvis-1.4.6/nagvis/includes/classes/validator/GlobalValidatorInteger.php
+--- nagvis-1.4.6~/nagvis/includes/classes/validator/GlobalValidatorInteger.php	2010-02-04 21:51:13.000000000 +0100
++++ nagvis-1.4.6/nagvis/includes/classes/validator/GlobalValidatorInteger.php	2010-03-04 15:03:24.000000000 +0100
+@@ -53,10 +53,10 @@
+ 	 *
+ 	 * @param   string   $name    Name from variable
+ 	 * @param            $value   Value for variable
+-	 * @access  private
++	 * @access  public
+ 	 * @author  Michael Luebben <michael_luebben@web.de>
+ 	 */
+-	private function __set($name, $value) {
++	public function __set($name, $value) {
+ 		$this->name = $value;
+ 	}
+ 
+diff -urNad nagvis-1.4.6~/nagvis/includes/classes/validator/GlobalValidatorString.php nagvis-1.4.6/nagvis/includes/classes/validator/GlobalValidatorString.php
+--- nagvis-1.4.6~/nagvis/includes/classes/validator/GlobalValidatorString.php	2010-02-04 21:51:13.000000000 +0100
++++ nagvis-1.4.6/nagvis/includes/classes/validator/GlobalValidatorString.php	2010-03-04 15:04:56.000000000 +0100
+@@ -53,10 +53,10 @@
+ 	 *
+ 	 * @param   string   $name    Name from variable
+ 	 * @param            $value   Value for variable
+-	 * @access  private
++	 * @access  public
+ 	 * @author  Michael Luebben <michael_luebben@web.de>
+ 	 */
+-	private function __set($name, $value) {
++	public function __set($name, $value) {
+ 		$this->name = $value;
+ 	}
+ 
