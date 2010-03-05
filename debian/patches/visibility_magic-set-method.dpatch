@@ -2,7 +2,7 @@
 ## visibility_magic-set-method.dpatch by Hendrik Frenzel <hfrenzel@scunc.net>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: make magicmethod __set public o avoid error
 
 @DPATCH@
 diff -urNad nagvis-1.4.6~/nagvis/includes/classes/validator/GlobalValidatorInteger.php nagvis-1.4.6/nagvis/includes/classes/validator/GlobalValidatorInteger.php

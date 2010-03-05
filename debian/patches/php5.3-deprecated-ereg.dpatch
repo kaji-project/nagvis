@@ -2,7 +2,7 @@
 ## php5.3-deprecated-ereg.dpatch by Hendrik Frenzel <hfrenzel@scunc.net>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: changes deprecated ereg() to preg_match() for use with php >= 5.3
 
 @DPATCH@
 diff -urNad nagvis-1.4.6~/nagvis/includes/classes/GlobalMainCfg.php nagvis-1.4.6/nagvis/includes/classes/GlobalMainCfg.php

@@ -1,8 +1,8 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
-## 10_pathnames.dpatch by Wolfgang Barth <wob@swobspace.net>
+## config.dpatch by Wolfgang Barth <wob@swobspace.net>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
+## DP: changes default configs
 
 @DPATCH@
 diff -urNad nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.php-sample
