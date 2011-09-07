@@ -1,6 +1,7 @@
 nagvis (1:1.4.6-2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Add myself to uploaders
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 13:57:21 +0200
 
