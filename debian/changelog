@@ -2,6 +2,7 @@ nagvis (1:1.4.6-2) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
   * Add myself to uploaders
+  * Acknowledge NMU (Closes: #595313)
   * Only call ucf on purge if it's available (Closes: #620037)
     * Set urgency to medium due to RC bug fix
   * Set Path to gadget files in example configuration (via
