@@ -1,6 +1,14 @@
 nagvis for Debian
 -----------------
 
+Since Version 1:1.4.6-1.1 you may also use nagvis with a remote database.
+However you'll need to configure the Database settings by hand.
+
+Please see /usr/share/nagvis/debian/nagvis.ini.php-sample for an example
+configuration file, and place it at /etc/nagvis/nagvis.ini.php.
+
+ -- Alexander Reichle-Schmehl <tolimar@debian.org> Wed, 13 Oct 2010 15:44:01 +0200
+
 Starting with 1.4.5, there are changes from older packages.
 
 * URL and CGI-Path:
