@@ -8,8 +8,10 @@ nagvis (1:1.4.6-2) UNRELEASED; urgency=medium
     patches/config.dpatch) (Closes: #611909)
   * Properly set "Options FollowSymLinks" in the apache configuration
     (Closes: #632333)
+  * Recommend real ndoutils package instead of the virtual one; no idea why
+    there is a virtual one (Closes: #598953)
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 14:29:16 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 14:57:59 +0200
 
 nagvis (1:1.4.6-1.1) unstable; urgency=low
 

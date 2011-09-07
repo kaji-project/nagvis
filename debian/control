@@ -13,7 +13,7 @@ Dm-Upload-Allowed: yes
 Package: nagvis
 Architecture: all
 Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-mysql, php5-gd, ucf, dbconfig-common, graphviz
-Recommends: nagios3, ndoutils-mysql
+Recommends: nagios3, ndoutils-nagios3-mysql
 Description: Visualization addon for Nagios
  NagVis can be used to visualize Nagios Data, e.g. to display IT processes like
  a mail system or a network infrastructure.
