@@ -15,8 +15,11 @@ configure-stamp:
 	dh_testdir
 	touch configure-stamp
 
-build: build-stamp patch-stamp
-build-stamp: configure-stamp 
+
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
+build-stamp: configure-stamp
 	dh_testdir
 	#$(MAKE)
 	#docbook-to-man debian/nagvis.sgml > nagvis.1
