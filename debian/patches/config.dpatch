@@ -5,10 +5,10 @@
 ## DP: changes default configs
 
 @DPATCH@
-diff -urNad nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.php-sample
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.php-sample
 --- nagvis-1.4.6~/etc/nagvis.ini.php-sample	2010-02-04 21:51:13.000000000 +0100
-+++ nagvis-1.4.6/etc/nagvis.ini.php-sample	2010-03-01 18:40:01.000000000 +0100
-@@ -24,17 +24,26 @@
++++ nagvis-1.4.6/etc/nagvis.ini.php-sample	2011-09-07 14:19:01.000000000 +0200
+@@ -24,17 +24,27 @@
  
  ; Path definitions
  [paths]
@@ -25,6 +25,7 @@ diff -urNad nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.
 +headertemplate="/etc/nagvis/templates/header/"
 +hovertemplate="/etc/nagvis/templates/hover/"
 +contexttemplate="/etc/nagvis/templates/context/"
++gadget="/etc/nagvis/gadgets"
  ; absolute html NagVis path
 -;htmlbase="/nagios/nagvis"
 +htmlbase="/nagvis"
@@ -79,9 +80,9 @@ diff -urNad nagvis-1.4.6~/etc/nagvis.ini.php-sample nagvis-1.4.6/etc/nagvis.ini.
  
  ; ------------------------------------------------------------------------------
  ; Below you find some advanced stuff
-diff -urNad nagvis-1.4.6~/nagvis/includes/defines/global.php nagvis-1.4.6/nagvis/includes/defines/global.php
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagvis-1.4.6~/nagvis/includes/defines/global.php nagvis-1.4.6/nagvis/includes/defines/global.php
 --- nagvis-1.4.6~/nagvis/includes/defines/global.php	2010-02-04 21:51:13.000000000 +0100
-+++ nagvis-1.4.6/nagvis/includes/defines/global.php	2010-03-01 18:39:30.000000000 +0100
++++ nagvis-1.4.6/nagvis/includes/defines/global.php	2011-09-07 14:18:33.000000000 +0200
 @@ -61,13 +61,13 @@
  define('DEBUGLEVEL', 4);
  

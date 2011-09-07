@@ -51,6 +51,8 @@ install: build
 	[ -x /usr/bin/html2text ] && \
 		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
+		$(DEST)/etc/nagvis/nagvis.ini.php
+	cp $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
 	sed -e 's/^[; ]*\(\<dbhost\) *=.*$$/\1=_DBC_DBSERVER_/' \
 	    -e 's/^[; ]*\(\<dbport\) *=.*$$/\1=_DBC_DBPORT_/' \
