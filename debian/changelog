@@ -13,8 +13,9 @@ nagvis (1:1.4.6-2) UNRELEASED; urgency=medium
     there is a virtual one (Closes: #598953)
   * Remove previous maintainers from Uploaders.  Thanks to Hendrik and
     Wolfgang for all their work!
+  * Acutally install the documentation
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 15:23:30 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 16:25:52 +0200
 
 nagvis (1:1.4.6-1.1) unstable; urgency=low
 
