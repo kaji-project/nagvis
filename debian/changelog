@@ -5,8 +5,7 @@ nagvis (1:1.4.6-2) UNRELEASED; urgency=medium
   * Only call ucf on purge if it's available (Closes: #620037)
     * Set urgency to medium due to RC bug fix
   * Set Path to gadget files in example configuration (via
-    patches/config.dpatch) and activate default configuration
-    (Closes: #611909)
+    patches/config.dpatch) (Closes: #611909)
  
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 14:21:29 +0200
 
