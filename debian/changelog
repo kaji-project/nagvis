@@ -6,8 +6,10 @@ nagvis (1:1.4.6-2) UNRELEASED; urgency=medium
     * Set urgency to medium due to RC bug fix
   * Set Path to gadget files in example configuration (via
     patches/config.dpatch) (Closes: #611909)
- 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 14:21:29 +0200
+  * Properly set "Options FollowSymLinks" in the apache configuration
+    (Closes: #632333)
+
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 14:29:16 +0200
 
 nagvis (1:1.4.6-1.1) unstable; urgency=low
 
