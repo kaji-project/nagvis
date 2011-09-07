@@ -41,7 +41,9 @@ esac
 if [ "$1" = "purge" ]; then
 	for file in apache.conf nagvis.ini.php; do
 		rm -f /etc/nagvis/$file
-		ucf --debconf-ok --purge /etc/nagvis/$file
+		if [ -x /usr/bin/ucf ] ; then
+			/usr/bin/ucf --debconf-ok --purge /etc/nagvis/$file
+		fi
 	done
 
 	#if [ -e /etc/apache2/conf.d/nagvis.conf ]; then
