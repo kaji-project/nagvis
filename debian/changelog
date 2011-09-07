@@ -12,7 +12,7 @@ nagvis (1:1.4.6-2) unstable; urgency=medium
     there is a virtual one (Closes: #598953)
   * Remove previous maintainers from Uploaders.  Thanks to Hendrik and
     Wolfgang for all their work!
-  * Acutally install the documentation
+  * Actually install the documentation
   * Bump standards (no changes needed)
   * Add recommended targets to debian/rules
 
