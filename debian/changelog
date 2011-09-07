@@ -1,6 +1,7 @@
 nagvis (1:1.5.10-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Update debian/copyright
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 16:59:51 +0200
 
