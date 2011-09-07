@@ -55,15 +55,6 @@ install: build
 		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
-	sed -e 's/^[; ]*\(\<dbhost\) *=.*$$/\1=_DBC_DBSERVER_/' \
-	    -e 's/^[; ]*\(\<dbport\) *=.*$$/\1=_DBC_DBPORT_/' \
-	    -e 's/^[; ]*\(\<dbname\) *=.*$$/\1=_DBC_DBNAME_/' \
-	    -e 's/^[; ]*\(\<dbuser\) *=.*$$/\1=_DBC_DBUSER_/' \
-	    -e 's/^[; ]*\(\<dbpass\) *=.*$$/\1=_DBC_DBPASS_/' \
-	 < $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample \
-	 > $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample.new && \
-	 mv $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample.new \
-	    $(DEST)/usr/share/nagvis/debian/nagvis.ini.php-sample
 	
 	# demo site
 	install -d $(TMP)/demo/etc/nagvis/maps
