@@ -1,6 +1,8 @@
 nagvis (1:1.5.10-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Update package description:  Now also works with Icinga
+  * Change Package dependencies:  Drop all ndo and mysql related stuff, we want to use mk livestatus
   * Update debian/copyright
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 07 Sep 2011 16:59:51 +0200
