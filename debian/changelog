@@ -6,9 +6,10 @@ nagvis (1:1.5.10-1) UNRELEASED; urgency=low
   * Update debian/copyright
   * Rework post{inst,rm} to not configure database
   * removed patches/php5.3-deprecated-ereg.dpatch; applied upstream
-  * removed patches/fix-get_class-object.dpatch; no longer needed.
+  * removed patches/fix-get_class-object.dpatch; no longer needed
+  * removed patches/visibility_magic-set-method.dpatch; no longer needed
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 26 Sep 2011 15:41:04 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 26 Sep 2011 15:51:49 +0200
 
 nagvis (1:1.4.6-2) unstable; urgency=medium
 
