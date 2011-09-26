@@ -1,4 +1,3 @@
 config
-php5.3-deprecated-ereg
 visibility_magic-set-method
 fix-get_class-object
