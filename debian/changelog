@@ -10,8 +10,9 @@ nagvis (1:1.5.10-1) UNRELEASED; urgency=low
   * removed patches/fix-get_class-object.dpatch; no longer needed
   * removed patches/visibility_magic-set-method.dpatch; no longer needed
   * rework debian/rules and install files
+  * updated debian/config.patch
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 26 Sep 2011 15:51:49 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 26 Sep 2011 16:29:25 +0200
 
 nagvis (1:1.4.6-2) unstable; urgency=medium
 
