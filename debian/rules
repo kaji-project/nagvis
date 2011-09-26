@@ -43,8 +43,8 @@ install: build
 	# -- move user files
 	mv $(DEST)/usr/share/nagvis/htdocs/share/userfiles/ $(DEST)/etc/nagvis/.
 	
-	[ -x /usr/bin/html2text ] && \
-		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
+	#[ -x /usr/bin/html2text ] && \
+	#	 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
 	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
 		$(DEST)/usr/share/nagvis/debian/
 	
