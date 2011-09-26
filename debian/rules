@@ -36,20 +36,12 @@ clean: unpatch
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 	dh_install
 	
-	# -- images to /var 
-	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/.gitignore
-	rm -f $(DEST)/usr/share/nagvis/htdocs/nagvis/images/*/*/.gitignore
-	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/images/* $(DEST)/var/lib/nagvis/images/.
-	
-	# -- templates
-	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/templates $(DEST)/etc/nagvis/.
-	
-	# -- gadgets
-	mv $(DEST)/usr/share/nagvis/htdocs/nagvis/gadgets $(DEST)/etc/nagvis/.
+	# -- move user files
+	mv $(DEST)/usr/share/nagvis/htdocs/share/userfiles/ $(DEST)/etc/nagvis/.
 	
 	[ -x /usr/bin/html2text ] && \
 		 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog

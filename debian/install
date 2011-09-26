@@ -1,7 +1,5 @@
 etc/* /etc/nagvis
-nagvis/* /usr/share/nagvis/htdocs/nagvis
 docs /usr/share/doc/nagvis
-wui/* /usr/share/nagvis/htdocs/wui
-index.php  /usr/share/nagvis/htdocs
+share/ /usr/share/nagvis/htdocs
 debian/apache.conf /usr/share/nagvis/debian
 debian/apache.conf /etc/nagvis
