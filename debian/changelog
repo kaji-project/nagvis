@@ -1,6 +1,7 @@
-nagvis (1:1.5.10-1) UNRELEASED; urgency=low
+nagvis (1:1.6.4-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * New upstream release (Closes: #659723, #638234)
   * Update package description:  Now also works with Icinga
   * Change Package dependencies:  Drop all ndo and mysql related stuff,
     as we want to use mk livestatus
