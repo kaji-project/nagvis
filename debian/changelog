@@ -1,16 +1,16 @@
-nagvis (1:1.6.4-1) UNRELEASED; urgency=low
+nagvis (1:1.6.4-1) experimental; urgency=low
 
-  * NOT RELEASED YET
+  * The "gone with the wind" release.
   * New upstream release (Closes: #659723, #638234)
   * Rework debian/* move to dh and quilt and (hopefully) easier generell
     packaging
   * Update package description:  Now also works with Icinga
   * Change Package dependencies:  Drop all ndo and mysql related stuff,
     as we want to use MK Livestatus
-    * Using MK Livestatus address DB-Configuration (Closes: #626456)
+    * Using MK Livestatus obsoletes the database configuration
+      (Closes: #626456)
     * That's now the best we can do to make NagVis work out of the box
       (Closes: #655064)
-  * Redo packageing from scratch, old stuff was unmaintainable
   * Update debian/copyright
   * removed patches/php5.3-deprecated-ereg.dpatch; applied upstream
   * removed patches/fix-get_class-object.dpatch; no longer needed
