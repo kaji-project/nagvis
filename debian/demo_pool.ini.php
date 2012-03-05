@@ -15,3 +15,10 @@ maps="demo-germany,demo-ham-racks,demo-load,demo-muc-srv1"
 ; rotation interval (seconds)
 interval=5
 
+; This file defines a backend instance of the Test backend
+; which is used by some demo maps. This can be removed when
+; you are not interested in the demo maps.
+
+[backend_demo]
+backendtype=Test
+

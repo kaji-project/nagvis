@@ -1,8 +1,11 @@
 nagvis (1:1.6.4-2) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Fix nagvis-demos: demo backend definition in
+    /etc/nagvis/conf.d/demo.ini.php of nagvis-demos was ignored, works if
+    shipped added to /etc/nagvis/conf.d/demo_pool.ini.php
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 05 Mar 2012 16:02:29 +0100
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 05 Mar 2012 18:37:28 +0100
 
 nagvis (1:1.6.4-1) experimental; urgency=low
 

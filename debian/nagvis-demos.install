@@ -1,5 +1,4 @@
 debian/demo_pool.ini.php etc/nagvis/conf.d/
-etc/conf.d/demo.ini.php etc/nagvis/conf.d/
 etc/automaps/demo-overview.cfg etc/nagvis/automaps/
 etc/maps/demo-ham-racks.cfg etc/nagvis/maps/
 etc/maps/demo-overview.cfg etc/nagvis/maps/
