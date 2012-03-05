@@ -22,7 +22,7 @@ Description: Visualization addon for Nagios or Icinga
   * Display of single Hosts or Services
   * Display the state of a Host dependent on the state of its services
     ("recognize services")
-  * Visualization of Host- oder Servicegroups with one icon
+  * Visualization of Host- or Servicegroups with one icon
   * Define Sub-Map icons wich represent a complete NagVis Map of
     Hosts/Services/Groups in one icon (drill down)
   * Visualization of complete IT Processes using self drawn graphics
@@ -39,7 +39,7 @@ Description: Demo Mapgs for NagVis
   * Display of single Hosts or Services
   * Display the state of a Host dependent on the state of its services
     ("recognize services")
-  * Visualization of Host- oder Servicegroups with one icon
+  * Visualization of Host- or Servicegroups with one icon
   * Define Sub-Map icons wich represent a complete NagVis Map of
     Hosts/Services/Groups in one icon (drill down)
   * Visualization of complete IT Processes using self drawn graphics
