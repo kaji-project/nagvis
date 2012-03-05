@@ -1,0 +1,71 @@
+# NagVis debconf templates translation.
+# Copyright (C) 2007
+# This file is distributed under the same license as the nagvis package.
+# Alexander Reichle-Schmehl <tolimar@debian.org>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nagvis 1:1.6.4-1\n"
+"Report-Msgid-Bugs-To: nagvis@packages.debian.org\n"
+"POT-Creation-Date: 2012-03-05 14:48+0100\n"
+"PO-Revision-Date: 2012-03-05 15:05:50+0100\n"
+"Last-Translator: Alexander Reichle-Schmehl <tolimar@debian.org>\n"
+"Language-Team: German <debian-l10n-german@lists.debian.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Description
+#: ../nagvis.templates:1001
+msgid "For which monitoring suite should NagVis be configured?"
+msgstr "Für welche Monitoring Lösung soll NagVis konfiguriert werden?"
+
+#. Type: select
+#. Description
+#: ../nagvis.templates:1001
+msgid ""
+"This NagVis package supports the monitoring suites Icinga as well as well as "
+"Nagios using the check-mk-live broker backend.  please choose the, "
+"respective entry."
+msgstr ""
+"Dieses NagVis Paket unterstützt über die check-mk-live Broker-Schnitstelle "
+"sowohl die Monitoring Lösungen Icinga als auch Nagios. Bitte wählen Sie "
+"entsprechend aus."
+
+#. Type: select
+#. Description
+#: ../nagvis.templates:1001
+msgid ""
+"If you would like to use NagVis with a different backend or a different "
+"monitoring suite, please choose \"other\".  You'll have to configure it "
+"manually."
+msgstr ""
+"Wenn Sie NagVis mit einem anderen Backend oder einer anderen Monitoring "
+"Lösung benutzen möchten, wählen Sie bitte \"other\". Sie müssen NagVis "
+"dann von Hand konfigurieren."
+
+#. Type: boolean
+#. Description
+#: ../nagvis.templates:2001
+msgid "Should the user created NagVis data be removed?"
+msgstr "Sollen die durch Benutzer erstellten NagVis Daten entfernt werden?"
+
+#. Type: boolean
+#. Description
+#: ../nagvis.templates:2001
+msgid ""
+"During usage NagVis creates some file in /var/cache/nagvis and and /etc/"
+"nagvis (e.g. background images and map files), including a small database "
+"for authentification.  If you don't need any of these files, they can be "
+"removed now, or you may want to keep them and clean up by hand later."
+msgstr ""
+"Während der Nutzung von NagVis werden diverse Dateien in /var/cache/nagvis "
+"und /etc/nagvis erstellt (zum Beispiel Hintergrund-Bilder oder "
+"Karten-Konfigurationen), inklusive einer kleinen Datenbank zur "
+"Authentifizierung. Wenn Sie keine dieser Daten benötigen, können sie "
+"entfernt werden.  Oder sie möchten sie aufheben und später von Hand "
+"aufräumen."
+""
