@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>, Alexander Reichle-Schmehl <tolimar@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), quilt
+Build-Depends: debhelper (>= 7.0.50~), quilt, po-debconf
 Standards-Version: 3.9.2
 Homepage: http://www.nagvis.org
 Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/

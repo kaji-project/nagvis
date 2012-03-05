@@ -55,3 +55,8 @@ override_dh_install:
 
 override_dh_fixperms:
 	dh_fixperms -X /var/cache/nagvis -X /etc/nagvis -X /var/lib/nagvis/userfiles/images
+
+
+override_dh_clean:
+	dh_clean
+	debconf-updatepo

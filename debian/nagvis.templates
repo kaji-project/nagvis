@@ -2,7 +2,7 @@ Template: nagvis/monitoring_system
 Type: select
 Default: icinga
 Choices: icinga, nagios, other
-Description: For which monitoring suite should NagVis be configured?
+_Description: For which monitoring suite should NagVis be configured?
  This NagVis package supports the monitoring suites Icinga as well as
  well as Nagios using the check-mk-live broker backend.  please choose the,
  respective entry.  
@@ -14,7 +14,7 @@ Description: For which monitoring suite should NagVis be configured?
 Template: nagvis/delete_on_purge
 Type: boolean
 Default: false
-Description: Should the user created NagVis data be removed?
+_Description: Should the user created NagVis data be removed?
  During usage NagVis creates some file in /var/cache/nagvis and and
  /etc/nagvis (e.g. background images and map files), including a small
  database for authentification.  If you don't need any of these files,
