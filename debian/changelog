@@ -2,16 +2,20 @@ nagvis (1:1.6.4-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   * New upstream release (Closes: #659723, #638234)
+  * Rework debian/* move to dh and quilt and (hopefully) easier generell
+    packaging
   * Update package description:  Now also works with Icinga
   * Change Package dependencies:  Drop all ndo and mysql related stuff,
-    as we want to use mk livestatus
+    as we want to use MK Livestatus
+    * Using MK Livestatus address DB-Configuration (Closes: #626456)
+    * That's now the best we can do to make NagVis work out of the box
+      (Closes: #655064)
+  * Redo packageing from scratch, old stuff was unmaintainable
   * Update debian/copyright
-  * Rework post{inst,rm} to not configure database
   * removed patches/php5.3-deprecated-ereg.dpatch; applied upstream
   * removed patches/fix-get_class-object.dpatch; no longer needed
   * removed patches/visibility_magic-set-method.dpatch; no longer needed
-  * rework debian/rules and install files
-  * updated debian/config.patch
+  * Move example maps in separate nagvis-demos package
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 26 Sep 2011 16:29:25 +0200
 

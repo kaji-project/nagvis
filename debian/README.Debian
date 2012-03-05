@@ -1,40 +1,83 @@
 nagvis for Debian
------------------
+=================
 
-Since Version 1:1.4.6-1.1 you may also use nagvis with a remote database.
-However you'll need to configure the Database settings by hand.
+As of version 1.6.4-1 nagvis uses the check-mk-livestatus backend as
+default to gather its information, however you'll have to manually activate
+that module in your Nagios or Icinga setup.
 
-Please see /usr/share/nagvis/debian/nagvis.ini.php-sample for an example
-configuration file, and place it at /etc/nagvis/nagvis.ini.php.
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org> Wed, 13 Oct 2010 15:44:01 +0200
+Sadly currently it's not possible to make the package just work out of the
+box.  However, you'll only need to do two steps by hand to get NagVis up
+and running:
+1) Actiate the check-mk-livestatus backend (if not already done).
+2) Grant the www-data User Access to the check-mk-livestatus socket.
 
-Starting with 1.4.5, there are changes from older packages.
+See sections bellow for details.
 
-* URL and CGI-Path:
-Since nagvis now can be used with other systems like icinga or web interface 
-like ninja, the htdocs path is no longer part of nagios3 directory structure. 
-The new directory for nagvis is now /usr/share/nagvis/htdocs/nagvis. The 
-authentication therefore has to be configured separately. Have a look at 
-/etc/nagvis/apache.conf and edit it for your needs.
 
- -- Wolfgang Barth <wob@swobspace.net>  Sat, 28 Nov 2009 12:00:00 +0200
+Passwords
+=========
 
-Thank you using the NagVis addon for Nagios Network Monitoring System.
+After successfull installation you should be able to access NagVis via
+http://$host/nagvis/.  To login you can use the user accoung "admin"
+(password "admin") or "guest" (with password "guest").
 
-To get it work you have to be sure the ndoutils package is installed and works
-fine. NagVis uses the database account of ndoutils to connect to the database. If
-you change this account with reconfiguring ndoutils, don't forget to
-dpkg-reconfigure nagvis too to get the new configuration.
 
-If you got still errors of not working NDOUtils, check your /etc/nagios3/nagios.cfg
-if the broker module ndomod.o is enabled and check_external_commands=1 is set to
-get the table <prefix>_programstatus updated.
-(See http://www.nagvis.org/docs/general/often_reported_errors#nagiosnotrunning)
 
-There are some examples in /usr/share/doc/nagvis/examples/demo to see NagVis 
-functionality. Just copy the files in demo/ to the appropriate location and change
-its owner and group to be www-data:www-data.
+Using NagVis with Icinga:
+=========================
 
- -- Hendrik Frenzel <hfrenzel@scunc.net>  Sat, 14 Jul 2007 11:27:33 +0200
+Add the following line to your /etc/icinga/icinga.cfg file:
 
+--------
+broker_module=/usr/lib/check_mk/livestatus.o /var/lib/icinga/rw/live
+--------
+
+This will activate check-mk-livestatus.  Please see
+/usr/share/doc/check-mk-livestatus/README.Debian for more details and
+further pointers.
+
+You have to grant the www-data user read/write access to MK Livestatus'
+socket.  This may be done by runninf the following commands:
+
+--------
+/etc/init.d/icinga stop
+dpkg-statoverride --update --add nagios www-data 2710 /var/lib/icinga/rw
+dpkg-statoverride --update --add nagios nagios 751 /var/lib/icinga
+/etc/init.d/icinga start
+--------
+
+This will also enable support for external commands.  Please see
+/usr/share/doc/icinga/README.Debian section "External Commands" for further
+details and implications.
+
+
+Using NagVis with Nagios:
+=========================
+
+Add the following line to your /etc/nagios3/nagios.cfg file:
+
+--------
+broker_module=/usr/lib/check_mk/livestatus.o /var/lib/nagios3/rw/live
+--------
+
+This will activate check-mk-livestatus.  Please see
+/usr/share/doc/check-mk-livestatus/README.Debian for more details and
+further pointers.
+
+You have to grant the www-data user read/write access to MK Livestatus'
+socket.  This may be done by runninf the following commands:
+
+--------
+/etc/init.d/nagios3 stop
+dpkg-statoverride --update --add nagios www-data 2710 /var/lib/nagios3/rw
+dpkg-statoverride --update --add nagios nagios 751 /var/lib/nagios3
+/etc/init.d/nagios3 start
+--------
+
+This will also enable support for external commands.  Please see
+/usr/share/doc/nagios3/README.Debian section "External Commands" for further
+details and implications.
+
+
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 22 Feb 2012 15:22:51 +0100

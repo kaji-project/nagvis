@@ -1,79 +1,57 @@
 #!/usr/bin/make -f
-# debian/rules makefile for nagvis
-# Last modified:
-# $Id$
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
 
-include /usr/share/dpatch/dpatch.make
-DEST = debian/nagvis
-TMP  = debian/tmp
+%:
+	dh --with quilt $@ 
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	touch configure-stamp
-
-
-build: build-arch build-indep
-build-arch: build-stamp
-build-indep: build-stamp
-build-stamp: configure-stamp
-	dh_testdir
-	#$(MAKE)
-	#docbook-to-man debian/nagvis.sgml > nagvis.1
-	touch $@
-
-clean: unpatch
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
-	# Add here commands to clean up after the build process.
-	#-$(MAKE) clean
-	dh_clean 
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
+override_dh_install:
 	dh_install
-	
-	# -- move user files
-	mv $(DEST)/usr/share/nagvis/htdocs/share/userfiles/ $(DEST)/etc/nagvis/.
-	
-	#[ -x /usr/bin/html2text ] && \
-	#	 /usr/bin/html2text -ascii -nobs < docs/en_US/changelog.html > docs/changelog
-	mv $(DEST)/etc/nagvis/nagvis.ini.php-sample \
-		$(DEST)/usr/share/nagvis/debian/
-	
-	# demo site
-	install -d $(TMP)/demo/etc/nagvis/maps
-	mv $(DEST)/etc/nagvis/maps/demo*.cfg $(TMP)/demo/etc/nagvis/maps/
-	
-	dh_link
-	dh_lintian
+	# these files are shipped in the nagvis-demo package; but are installed in a more general rule for dh_install
+	# remove them from the nagvis package here
+	rm -f debian/nagvis/etc/nagvis/conf.d/demo.ini.php \
+		debian/nagvis/etc/nagvis/automaps/demo-overview.cfg \
+		debian/nagvis/etc/nagvis/maps/demo-ham-racks.cfg \
+		debian/nagvis/etc/nagvis/maps/demo-overview.cfg \
+		debian/nagvis/etc/nagvis/maps/demo-germany.cfg \
+		debian/nagvis/etc/nagvis/maps/demo-load.cfg \
+		debian/nagvis/etc/nagvis/maps/demo-muc-srv1.cfg \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-germany.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-host.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-overview.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-ham-racks.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-load.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo_traffic_load_legend.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo-wan-cloud.png
+	# these files are shiped in /var/cache/nagvis/userfiles
+	# they are installed by the more general copy of the content of
+	# /usr/share/nagvis/share
+	rm -rf debian/nagvis/usr/share/nagvis/share/userfiles/
+	# We use the external php-gettext lib to avoid copy copies
+	rm -rf debian/nagvis/usr/share/nagvis/share/server/core/ext/php-gettext-1.0.9
+	# correct directory permissions
+	chown www-data:www-data debian/nagvis/etc/nagvis
+	chown -R www-data:www-data debian/nagvis/etc/nagvis/maps
+	chown -R www-data:www-data debian/nagvis/etc/nagvis/automaps
+	chown -R www-data:www-data debian/nagvis/etc/nagvis/profiles
+	chown -R www-data:www-data debian/nagvis/var/cache/nagvis
+	# Fixing some lintian issues
+	rm -f debian/nagvis/usr/share/nagvis/share/frontend/nagvis-js/ext/dwoo-1.1.0/LICENSE \
+		debian/nagvis/var/cache/nagvis/userfiles/images/gadgets/.gitignore \
+		debian/nagvis/var/cache/nagvis/userfiles/styles/.gitignore
+	# remove example configuration files (they are already installed to
+	# /usr/share/doc/nagvis)
+	rm -f debian/nagvis/etc/nagvis/apache2-nagvis.conf-sample
+	rm -f debian/nagvis/etc/nagvis/nagvis.ini.php-sample
 
-# Build architecture-dependent files here.
-binary-arch: build install
-# We have nothing to do by default.
 
-# Build architecture-independent files here.
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
-	dh_installdebconf	
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+override_dh_fixperms:
+	dh_fixperms -X /var/cache/nagvis -X /etc/nagvis -X /var/lib/nagvis/userfiles/images

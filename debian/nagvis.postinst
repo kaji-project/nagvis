@@ -1,0 +1,120 @@
+#!/bin/sh
+# postinst script for nagvis
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+
+case "$1" in
+    configure)
+        # Source debconf library.
+        . /usr/share/debconf/confmodule
+        db_get nagvis/monitoring_system
+        MONITORING="$RET"
+	case "$MONITORING" in
+	    "icinga")
+                ## Creating Configuration file for Nagvis
+                nagvis_tmp=$(mktemp)
+                zcat /usr/share/doc/nagvis/nagvis.ini.php-sample.gz | sed \
+                  -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
+                  -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
+                  -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
+                  -e "s#;htmlbase=\"/nagvis\"#htmlbase=\"/nagvis\"#" \
+                  -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/icinga/cgi-bin\"#" \
+                  -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/icinga/rw/live\"#" \
+                  -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
+                  -e "s#interval=15#;interval=15#" \
+                  -e "s#maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#;maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#" \
+                  > "$nagvis_tmp"
+                chgrp www-data "$nagvis_tmp"
+                chmod g+rw "$nagvis_tmp"
+                ucf --debconf-ok "$nagvis_tmp" /etc/nagvis/nagvis.ini.php
+                ucfr nagvis /etc/nagvis/nagvis.ini.php
+                rm -f "$nagvis_tmp"
+                ## Creating Configuration snipplet for Apache
+		apache_tmp=$(mktemp)
+                sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
+                  -e "s#@NAGVIS_WEB@#/nagvis#g" \
+                  -e "s#@NAGIOS_PATH@/etc#/etc/icinga#g" \
+                  < /usr/share/doc/nagvis/apache2-nagvis.conf-sample \
+                  > "$apache_tmp"
+                chmod go+r "$apache_tmp"
+                ucf --debconf-ok "$apache_tmp" /etc/apache2/conf.d/nagvis.conf
+                ucfr nagvis /etc/apache2/conf.d/nagvis.conf
+                rm -f "$apache_tmp"
+                # When the use removed the configuration file, we don't
+                # have to reload apache; might confuse users (or even fail)
+                if [ -f /etc/apache2/conf.d/nagvis.conf ] ; then 
+                    invoke-rc.d apache2 reload
+                fi
+            ;;
+            "nagios")
+                ## Creating Configuration file for Nagvis
+                nagvis_tmp=$(mktemp)
+                zcat /usr/share/doc/nagvis/nagvis.ini.php-sample.gz | sed \
+                  -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
+                  -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
+                  -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
+                  -e "s#;htmlbase=\"/nagvis\"#htmlbase=\"/nagvis\"#" \
+                  -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
+                  -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#" \
+                  -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
+                  -e "s#interval=15#;interval=15#" \
+                  -e "s#maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#;maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#" \
+                  > "$nagvis_tmp"
+                chgrp www-data "$nagvis_tmp"
+                chmod g+rw "$nagvis_tmp"
+                ucf --debconf-ok "$nagvis_tmp" /etc/nagvis/nagvis.ini.php
+                ucfr nagvis /etc/nagvis/nagvis.ini.php
+                rm -f "$nagvis_tmp"
+                ## Creating Configuration snipplet for Apache
+		apache_tmp=$(mktemp)
+                sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
+                  -e "s#@NAGVIS_WEB@#/nagvis#g" \
+                  -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g" \
+                  < /usr/share/doc/nagvis/apache2-nagvis.conf-sample \
+                  > "$apache_tmp"
+                chmod go+r "$apache_tmp"
+                ucf --debconf-ok "$apache_tmp" /etc/apache2/conf.d/nagvis.conf
+                ucfr nagvis /etc/apache2/conf.d/nagvis.conf
+                rm -f "$apache_tmp"
+                # When the use removed the configuration file, we don't
+                # have to reload apache; might confuse users (or even fail)
+                if [ -f /etc/apache2/conf.d/nagvis.conf ] ; then 
+                    invoke-rc.d apache2 reload
+                fi
+            ;;
+            "other")
+                 # nothing to be done for others
+            ;;
+        esac
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+# dh_installdeb will replace this with shell code automatically
+# generated by other debhelper scripts.
+
+#DEBHELPER#
+
+exit 0

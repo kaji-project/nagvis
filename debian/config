@@ -1,9 +1,0 @@
-#!/bin/sh
-set -e
-
-. /usr/share/debconf/confmodule
-
-db_input high nagvis/monitoring_system || true
-db_go || true
-
-

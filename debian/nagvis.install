@@ -1,0 +1,4 @@
+share/userfiles/ var/cache/nagvis
+share/ usr/share/nagvis
+docs/ usr/share/nagvis
+etc/* etc/nagvis

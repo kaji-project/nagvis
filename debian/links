@@ -1,6 +1,0 @@
-etc/nagvis/maps usr/share/nagvis/htdocs/nagvis/etc/maps
-var/lib/nagvis/images/maps usr/share/nagvis/htdocs/nagvis/images/maps
-var/cache/nagvis usr/share/nagvis/htdocs/var
-etc/nagvis/apache.conf etc/apache2/conf.d/nagvis.conf 
-usr/share/nagios/htdocs/images/logos/logos /var/lib/nagvis/images/shapes/logos
-usr/share/nagios/htdocs/images/logos/base /var/lib/nagvis/images/shapes/base

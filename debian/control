@@ -3,16 +3,16 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>, Alexander Reichle-Schmehl <tolimar@debian.org>
-Build-Depends: debhelper (>= 6.0.7~), dpatch
+Build-Depends: debhelper (>= 7.0.50~), quilt
 Standards-Version: 3.9.2
 Homepage: http://www.nagvis.org
 Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagvis/trunk/
-Dm-Upload-Allowed: yes
 
 Package: nagvis
 Architecture: all
-Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-gd, ucf, graphviz, php5-sqlite, php-net-socket, check-mk-livestatus
+Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-gd, ucf, graphviz, php5-sqlite, php-net-socket, php-gettext, check-mk-livestatus
+Suggests: nagvis-demos
 Description: Visualization addon for Nagios or Icinga
  NagVis can be used to visualize Nagios or Icinga Data, e.g. to display IT
  processes like  a mail system or a network infrastructure.
@@ -26,3 +26,23 @@ Description: Visualization addon for Nagios or Icinga
   * Define Sub-Map icons wich represent a complete NagVis Map of
     Hosts/Services/Groups in one icon (drill down)
   * Visualization of complete IT Processes using self drawn graphics
+
+Package: nagvis-demos
+Architecture: all
+Depends: ${misc:Depends}, nagvis (= ${source:Version})
+Description: Demo Mapgs for NagVis
+ NagVis can be used to visualize Nagios or Icinga Data, e.g. to display IT
+ processes like  a mail system or a network infrastructure.
+ .
+ Key features are:
+ .
+  * Display of single Hosts or Services
+  * Display the state of a Host dependent on the state of its services
+    ("recognize services")
+  * Visualization of Host- oder Servicegroups with one icon
+  * Define Sub-Map icons wich represent a complete NagVis Map of
+    Hosts/Services/Groups in one icon (drill down)
+  * Visualization of complete IT Processes using self drawn graphics
+  .
+  This package contains some demonstration maps.
+

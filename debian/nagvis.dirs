@@ -1,0 +1,5 @@
+var/cache/nagvis
+var/cache/nagvis/tmpl/cache
+var/cache/nagvis/tmpl/compile
+etc/nagvis/profiles
+etc/apache2/conf.d/

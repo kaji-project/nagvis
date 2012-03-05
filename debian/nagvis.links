@@ -1,0 +1,6 @@
+/var/cache/nagvis/userfiles /usr/share/nagvis/share/userfiles
+/usr/share/nagvis/docs /usr/share/doc/nagvis/html
+/usr/share/nagvis/docs /usr/share/nagvis/share/docs
+/etc/nagvis	/usr/share/nagvis/etc
+/var/cache/nagvis /usr/share/nagvis/var
+/usr/share/php/php-gettext /usr/share/nagvis/share/server/core/ext/php-gettext-1.0.9

@@ -1,3 +1,9 @@
-We use dpatch for patch handling inside our package(s).  Please see
-/usr/share/doc/dpatch/README.source.gz (if you have installed dpatch) for
-documentation about dpatch.
+nagvis for Debian
+-----------------
+
+This package uses quilt as patch management.  More details on its usage may
+be found in /usr/share/doc/quilt/README.source after installing the quilt
+package.
+
+
+
