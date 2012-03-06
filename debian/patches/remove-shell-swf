@@ -1,0 +1,45 @@
+--- a/share/frontend/nagvis-js/js/frontend.js
++++ b/share/frontend/nagvis-js/js/frontend.js
+@@ -1432,8 +1432,8 @@ function parseOverviewGeomap() {
+         oTr.appendChild(oTd);
+ 
+         // Link
+-        var oLink = document.createElement('a');
+-        oLink.href = oGeneralProperties.path_base+'/netmap/shell.html';
++//        var oLink = document.createElement('a');
++//        oLink.href = oGeneralProperties.path_base+'/netmap/shell.html';
+ 
+         // Status image
+         var oImg = document.createElement('img');
+@@ -1441,17 +1441,17 @@ function parseOverviewGeomap() {
+         oImg.src = oGeneralProperties.path_iconsets+'std_small_unknown.png';
+         oImg.alt = 'geomap';
+ 
+-        oLink.appendChild(oImg);
++//        oLink.appendChild(oImg);
+         oImg = null;
+ 
+         // Title
+         var h2 = document.createElement('h2');
+         h2.appendChild(document.createTextNode('Geomap'));
+-        oLink.appendChild(h2);
++//        oLink.appendChild(h2);
+         h2 = null;
+ 
+         var br = document.createElement('br');
+-        oLink.appendChild(br);
++//        oLink.appendChild(br);
+         br = null;
+ 
+         // Only show map thumb when configured
+@@ -1464,8 +1464,8 @@ function parseOverviewGeomap() {
+             oImg = null;
+         }
+ 
+-        oTd.appendChild(oLink);
+-        oLink = null;
++//        oTd.appendChild(oLink);
++//        oLink = null;
+ 
+         oTd = null;
+ 
