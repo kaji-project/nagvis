@@ -60,3 +60,15 @@ override_dh_fixperms:
 override_dh_clean:
 	dh_clean
 	debconf-updatepo
+
+get-orig-source:
+	$(eval TMP := $(shell mktemp -d))
+	wget -q -O $(TMP)/nagvis-1.6.4.tar.gz "http://downloads.sourceforge.net/project/nagvis/NagVis%201.6/nagvis-1.6.4.tar.gz"
+	tar --directory $(TMP) -xzf $(TMP)/nagvis-1.6.4.tar.gz
+	rm -rf $(TMP)/nagvis-1.6.4/uifx/
+	rm -rf $(TMP)/nagvis-1.6.4/share/netmap/shell.swf
+	rm -rf $(TMP)/nagvis-1.6.4/share/netmap/shell.html
+	rm -rf $(TMP)/nagvis-1.6.4/share/netmap/modules/gmap/
+	mv $(TMP)/nagvis-1.6.4 $(TMP)/nagvis-1.6.4.dfsg.1
+	tar --directory $(TMP) -czf nagvis_1.6.4.dfsg.1.orig.tar.gz nagvis-1.6.4.dfsg.1
+	rm -rf $(TMP)
