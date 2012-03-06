@@ -8,8 +8,9 @@ nagvis (1:1.6.4.dfsg.1-1) UNRELEASED; urgency=low
   * Remove unbuildable swf files
     * Add patches/remove-shell-swf to don't use it
     * Add get-orig-source target to debian/rules
+    * Add version mangle to watchfile
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Tue, 06 Mar 2012 16:07:30 +0100
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Tue, 06 Mar 2012 16:09:19 +0100
 
 nagvis (1:1.6.4-1) experimental; urgency=low
 
