@@ -1,12 +1,14 @@
-nagvis (1:1.6.4-2) UNRELEASED; urgency=low
+nagvis (1:1.6.4.dfsg.1-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
   * Fix nagvis-demos: demo backend definition in
     /etc/nagvis/conf.d/demo.ini.php of nagvis-demos was ignored, works if
     shipped added to /etc/nagvis/conf.d/demo_pool.ini.php
   * Fix "Germish" in package description
+  * Remove unbuildable swf files
+    * Add patches/remove-shell-swf to don't use it
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 05 Mar 2012 21:58:48 +0100
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Tue, 06 Mar 2012 14:30:34 +0100
 
 nagvis (1:1.6.4-1) experimental; urgency=low
 
