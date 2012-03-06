@@ -35,6 +35,20 @@ On Debian systems, the complete text of the GNU General
 Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
 
 
+Removed files:
+
+  The original upstream tarball contains some swf files, for which the
+  source is present, but for which we miss the needed tools to build them
+  from source.
+  
+  We therefore had to remove the following files from the upstream tarball:
+  
+  uifx/
+  share/netmap/shell.swf
+  share/netmap/shell.html (referencing shell.swf and otherwise emmpty)
+  share/netmap/modules/gmap/
+
+
 Files: share/frontend/nagvis-js/ext/dwoo-1.1.0/*
 Copyright: (c) 2008, Jordi Boggiano
 License: BSD
