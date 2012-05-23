@@ -1,8 +1,8 @@
-nagvis (1:1.6.4.dfsg.1-2) UNRELEASED; urgency=low
+nagvis (1:1.6.4.dfsg.1-2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Upload to unstable, after no upgrade issues have been reported
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Tue, 06 Mar 2012 16:21:14 +0100
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 23 May 2012 12:16:25 +0200
 
 nagvis (1:1.6.4.dfsg.1-1) experimental; urgency=low
 
