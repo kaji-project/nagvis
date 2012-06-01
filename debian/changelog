@@ -1,6 +1,8 @@
 nagvis (1:1.6.4.dfsg.1-3) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * Add patch from Christian Perrier and his gang to improve package
+    description and templates (first step of closing #674859)
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 23 May 2012 12:31:33 +0200
 
