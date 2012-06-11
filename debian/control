@@ -13,29 +13,36 @@ Package: nagvis
 Architecture: all
 Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-gd, ucf, graphviz, php5-sqlite, php-net-socket, php-gettext, check-mk-livestatus
 Suggests: nagvis-demos
-Description: visualization addon for Nagios or Icinga
- NagVis can be used to visualize Nagios or Icinga data, for instance
- to display network traffic or IT services such as email.
+Description: Visualization addon for Nagios or Icinga
+ NagVis can be used to visualize Nagios or Icinga Data, e.g. to display IT
+ processes like  a mail system or a network infrastructure.
  .
- Its key features are:
-  * Display of single hosts or services;
-  * Representation of a host dependent on the state of its services;
-  * Visualization of complete host- or servicegroups with one icon;
-  * Organization of hosts/services/groups into Sub-Map icons;
-  * Graphical representation of complete IT systems.
+ Key features are:
+ .
+  * Display of single Hosts or Services
+  * Display the state of a Host dependent on the state of its services
+    ("recognize services")
+  * Visualization of Host- or Servicegroups with one icon
+  * Define Sub-Map icons wich represent a complete NagVis Map of
+    Hosts/Services/Groups in one icon (drill down)
+  * Visualization of complete IT Processes using self drawn graphics
 
 Package: nagvis-demos
 Architecture: all
 Depends: ${misc:Depends}, nagvis (= ${source:Version})
-Description: visualization addon for Nagios or Icinga - demo maps
- NagVis can be used to visualize Nagios or Icinga data, for instance
- to display network traffic or IT services such as email.
+Description: Demo Mapgs for NagVis
+ NagVis can be used to visualize Nagios or Icinga Data, e.g. to display IT
+ processes like  a mail system or a network infrastructure.
  .
- Its key features are:
-  * Display of single hosts or services;
-  * Representation of a host dependent on the state of its services;
-  * Visualization of complete host- or servicegroups with one icon;
-  * Organization of hosts/services/groups into Sub-Map icons;
-  * Graphical representation of complete IT systems.
+ Key features are:
  .
- This package provides some demonstration maps.
+  * Display of single Hosts or Services
+  * Display the state of a Host dependent on the state of its services
+    ("recognize services")
+  * Visualization of Host- or Servicegroups with one icon
+  * Define Sub-Map icons wich represent a complete NagVis Map of
+    Hosts/Services/Groups in one icon (drill down)
+  * Visualization of complete IT Processes using self drawn graphics
+  .
+  This package contains some demonstration maps.
+

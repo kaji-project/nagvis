@@ -4,8 +4,6 @@ nagvis (1:1.6.6+dfsg.1-1) UNRELEASED; urgency=low
   * New upstream release
   * Adjust versioning scheme to lintian's recommendation
     * Also adjust debian/watch
-  * Add patch from Christian Perrier and his gang to improve package
-    description and templates (first step of closing #674859)
   * Fix debian/watch to not track beta versions
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 23 May 2012 12:31:33 +0200
