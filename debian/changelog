@@ -1,5 +1,6 @@
-nagvis (1:1.6.6+dfsg.1-2) UNRELEASED; urgency=low
+nagvis (1:1.6.6+dfsg.1-2) unstable; urgency=low
 
+  [ The "missed upload by 12 minutes" release ]
   * Debconf templates and debian/control reviewed by the debian-l10n-
     english team as part of the Smith review project. Closes: #674859
   * [Debconf translation updates]
