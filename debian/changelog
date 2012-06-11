@@ -1,12 +1,11 @@
-nagvis (1:1.6.6+dfsg.1-1) UNRELEASED; urgency=low
+nagvis (1:1.6.6+dfsg.1-1) unstable; urgency=low
 
-  * NOT RELEASED YET
   * New upstream release
   * Adjust versioning scheme to lintian's recommendation
     * Also adjust debian/watch
   * Fix debian/watch to not track beta versions
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 23 May 2012 12:31:33 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 11 Jun 2012 17:47:22 +0200
 
 nagvis (1:1.6.4.dfsg.1-2) unstable; urgency=low
 
