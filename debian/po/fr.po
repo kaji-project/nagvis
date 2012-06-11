@@ -1,32 +1,35 @@
-# GERMAN TRANSLATION OF THE NAGVIS PO FILE.
-# Copyright (C) 2012 Erik Pfannenstein
+# French translation for nagvis debconf templates
+# Copyright (C) 2012 Debian French translation team <debian-l10n-french@lists.debian.org>
 # This file is distributed under the same license as the nagvis package.
-# Erik Pfannenstein <debianignatz@gmx.de>, 2012.
 #
+# Translators:
+# Jean-Christophe GARNIER <jc.garnier4@orange.fr>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: nagvis 1:1.6.4.dfsg.1-3\n"
+"Project-Id-Version: nagvis\n"
 "Report-Msgid-Bugs-To: nagvis@packages.debian.org\n"
 "POT-Creation-Date: 2012-06-03 19:19+0200\n"
-"PO-Revision-Date: 2012-06-04 18:12+0200\n"
-"Last-Translator: Erik Pfannenstein <debianignatz@gmx.de>\n"
-"Language-Team: de <debian-l10n-german@lists.debian.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2012-06-03 21:27+0100\n"
+"Last-Translator: Jean-Christophe GARNIER <jc.garnier4@orange.fr>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: Fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
 
 #. Type: select
 #. Choices
 #: ../nagvis.templates:2001
 msgid "other"
-msgstr "Andere"
+msgstr "Autre"
 
 #. Type: select
 #. Description
 #: ../nagvis.templates:2002
 msgid "Monitoring suite used with NagVis:"
-msgstr "Monitoring-Suite zur Verwendung mit NagVis:"
+msgstr "Interface de supervision utilisée avec NagVis : "
 
 #. Type: select
 #. Description
@@ -35,8 +38,8 @@ msgid ""
 "The NagVis package supports Icinga as well as Nagios, using the check-mk-"
 "live broker backend."
 msgstr ""
-"Das NagVis-Paket unterstützt sowohl Icinga als auch Nagios und benutzt das "
-"check-mk-live-Vermittlungs-Backend."
+"Le paquet NagVis gère aussi bien Icinga que Nagios, en utilisant l'interface "
+"« chek-mk-live »."
 
 #. Type: select
 #. Description
@@ -46,16 +49,15 @@ msgid ""
 "monitoring suite, please choose \"other\". You'll have to configure it "
 "manually."
 msgstr ""
-"Wenn Sie NagVis mit einem anderen Backend oder einer anderen Monitoring-"
-"Suite verwenden wollen, wählen Sie bitte »Andere«. Sie werden es allerdings "
-"per Hand konfigurieren müssen."
+"Si vous souhaitez utiliser Nagvis avec une autre interface de configuration "
+"ou un autre logiciel de supervision, veuillez choisir « Autre ». Vous devrez "
+"alors configurer NagVis vous-même."
 
 #. Type: boolean
 #. Description
 #: ../nagvis.templates:3001
 msgid "Delete NagVis data when purging the package?"
-msgstr ""
-"NagVis-Daten beim vollständigen Entfernen des Pakets ebenfalls löschen?"
+msgstr "Faut-il effacer les données de NagVis lors de la purge du paquet ?"
 
 #. Type: boolean
 #. Description
@@ -66,8 +68,8 @@ msgid ""
 "authentification. If you don't need any of these files, they can be removed "
 "now, or you may want to keep them and clean up by hand later."
 msgstr ""
-"NagVis erstellt Dateien in /var/cache/nagvis und /etc/nagvis (beispielsweise "
-"für Hintergründe und Kartendateien), einschließlich einer kleinen Datenbank "
-"für die Authentifizierung. Wenn Sie keine dieser Dateien benötigen, können "
-"sie jetzt gelöscht werden. Sie können sie auch behalten und später selbst "
-"per Hand entfernen."
+"NagVis crée des fichiers de données dans /var/cache/nagvis et /etc/nagvis "
+"(pour les images d'arrière-plan et les cartes en cours), y compris une "
+"petite base de données pour l'authentification. Si vous n'avez pas besoin de "
+"ces fichiers, ils peuvent être effacés maintenant ou vous pouvez les "
+"conserver et les supprimer manuellement plus tard."

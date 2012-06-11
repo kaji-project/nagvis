@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: nagvis\n"
 "Report-Msgid-Bugs-To: nagvis@packages.debian.org\n"
-"POT-Creation-Date: 2012-03-05 14:48+0100\n"
+"POT-Creation-Date: 2012-06-03 19:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,41 +18,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: select
-#. Description
-#: ../nagvis.templates:1001
-msgid "For which monitoring suite should NagVis be configured?"
+#. Choices
+#: ../nagvis.templates:2001
+msgid "other"
 msgstr ""
 
 #. Type: select
 #. Description
-#: ../nagvis.templates:1001
+#: ../nagvis.templates:2002
+msgid "Monitoring suite used with NagVis:"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../nagvis.templates:2002
 msgid ""
-"This NagVis package supports the monitoring suites Icinga as well as well as "
-"Nagios using the check-mk-live broker backend.  please choose the, "
-"respective entry."
+"The NagVis package supports Icinga as well as Nagios, using the check-mk-"
+"live broker backend."
 msgstr ""
 
 #. Type: select
 #. Description
-#: ../nagvis.templates:1001
+#: ../nagvis.templates:2002
 msgid ""
 "If you would like to use NagVis with a different backend or a different "
-"monitoring suite, please choose \"other\".  You'll have to configure it "
+"monitoring suite, please choose \"other\". You'll have to configure it "
 "manually."
 msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../nagvis.templates:2001
-msgid "Should the user created NagVis data be removed?"
+#: ../nagvis.templates:3001
+msgid "Delete NagVis data when purging the package?"
 msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../nagvis.templates:2001
+#: ../nagvis.templates:3001
 msgid ""
-"During usage NagVis creates some file in /var/cache/nagvis and and /etc/"
-"nagvis (e.g. background images and map files), including a small database "
-"for authentification.  If you don't need any of these files, they can be "
-"removed now, or you may want to keep them and clean up by hand later."
+"NagVis creates files in /var/cache/nagvis and /etc/nagvis (for instance "
+"background images and map files), including a small database for "
+"authentification. If you don't need any of these files, they can be removed "
+"now, or you may want to keep them and clean up by hand later."
 msgstr ""

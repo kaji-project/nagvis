@@ -1,22 +1,31 @@
+# These templates have been reviewed by the debian-l10n-english
+# team
+#
+# If modifications/additions/rewording are needed, please ask
+# debian-l10n-english@lists.debian.org for advice.
+#
+# Even minor modifications require translation updates and such
+# changes should be coordinated with translators and reviewers.
+
 Template: nagvis/monitoring_system
 Type: select
 Default: icinga
-Choices: icinga, nagios, other
-_Description: For which monitoring suite should NagVis be configured?
- This NagVis package supports the monitoring suites Icinga as well as
- well as Nagios using the check-mk-live broker backend.  please choose the,
- respective entry.  
+#flag:translate:3
+__Choices: icinga, nagios, other
+_Description: Monitoring suite used with NagVis:
+ The NagVis package supports Icinga as well as
+ Nagios, using the check-mk-live broker backend.
  .
  If you would like to use NagVis with a different backend or a different
- monitoring suite, please choose "other".  You'll have to configure it
+ monitoring suite, please choose "other". You'll have to configure it
  manually.
 
 Template: nagvis/delete_on_purge
 Type: boolean
 Default: false
-_Description: Should the user created NagVis data be removed?
- During usage NagVis creates some file in /var/cache/nagvis and and
- /etc/nagvis (e.g. background images and map files), including a small
- database for authentification.  If you don't need any of these files,
+_Description: Delete NagVis data when purging the package?
+ NagVis creates files in /var/cache/nagvis and
+ /etc/nagvis (for instance background images and map files), including a small
+ database for authentification. If you don't need any of these files,
  they can be removed now, or you may want to keep them and clean up by hand
  later.

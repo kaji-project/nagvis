@@ -1,6 +1,21 @@
 nagvis (1:1.6.6+dfsg.1-2) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Debconf templates and debian/control reviewed by the debian-l10n-
+    english team as part of the Smith review project. Closes: #674859
+  * [Debconf translation updates]
+  * Danish (Joe Hansen).  Closes: #675774
+  * Dutch; (Jeroen Schot).  Closes: #675957
+  * Czech (Michal Simunek).  Closes: #675975
+  * Swedish (Martin Bagge / brother).  Closes: #675993
+  * Danish (Joe Hansen).  Closes: #675774
+  * Russian (Yuri Kozlov).  Closes: #676249
+  * German (Erik Pfannenstein).  Closes: #676412
+  * Portuguese (Pedro Ribeiro).  Closes: #676493
+  * Polish (Michał Kułach).  Closes: #676512
+  * Italian (Beatrice Torracca).  Closes: #676525
+  * French (Jean-Christophe GARNIER).  Closes: #676599
+  * Spanish; (Camaleón).  Closes: #676601
+  * Thanks to Christian Perrier for coordination
 
  -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 11 Jun 2012 17:59:57 +0200
 
