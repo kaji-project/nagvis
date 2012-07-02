@@ -1,8 +1,8 @@
-nagvis (1:1.6.6+dfsg.1-3~bpo60+1) squeeze-backports; urgency=low
+nagvis (1:1.6.6+dfsg.1-3~bpo60+2) UNRELEASED; urgency=low
 
-  * Rebuild for squeeze-backports.
+  * NOT RELEASED YET
 
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 02 Jul 2012 12:29:26 +0200
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Mon, 02 Jul 2012 12:46:07 +0200
 
 nagvis (1:1.6.6+dfsg.1-2) unstable; urgency=low
 
