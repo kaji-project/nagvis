@@ -1,0 +1,498 @@
+This is a small file for storing quick thoughts about new features and needed changes:
+===============================================================================
+
+Probleme:
+  - Warnings anzeigen, wenn Funktionen aus oldPhpVersionFixes.php angezogen werden
+  - Zu viele audit_log Meldungn (Bei jedem HTTP-Request?)
+
+Relative Koordinaten:
+  - Wie funktionieren Linien zu Linien Referenzen? Geht das überhaupt?
+- Sidebar Folder auf/zu klappbar
+- In Sidebar/Dropdown die aktuelle Map highlighten
+
+- Zeige Rotations in Sidebar
+- Während die Index Seite lädt
+  - Header Menu sollte funktionieren während die Index Seite lädt
+  - Einzelne Maps sollten schon aufbauen
+
+-------------------------------------------------------------------------------
+
+- Make stateless lines or other single part lines splittable
+
+- Weathermap Line Parser pro Check-Kommando behandeln - Das sollte den Code wesentlich sauberer machen
+
+- SQLite/MySQL Handling/Update abstrahieren und wesentliche Dinge an zentraler Stelle definieren
+
+- NagVis Multisite Snapin optional als Baum
+
+- Backends:
+ - Zusätzlich beliebige Variablen vom Backend holen lassen
+   Pro Objekt "Custom Vars" für Context- und Hover-Menus einbauen. Diese werden dann pro Objekt
+   u.U. sogar in separaten Queries an das Backend abgefragt und in Hover- und Context-Menus
+   als spezielle Macros angeboten.
+
+Installer:
+ - Der Installer sollte beim Update headermenu, headertemplate aus [wui] Sektion entfernen.
+   Leider ist das nicht ganz so einfach, wie bei den anderen Attributen, da in anderen Sektionen
+   diese Optionen noch erlaubt sind.
+
+*** NagVis Featureitis ***
+
+- Plattform zum Vorschlagen von Features
+  - Pro Features können Kosten angeben werden
+  - Öffentlich sind Prozentzahlen sichtbar wieviel von einem Feature schon finanziert ist
+- Features können von anonymen und eingeloggten Nutzern vorgeschlagen werden
+  - Bei anonymen Nutzern muss moderiert werden
+  - Für neue Features werden Mails generiert
+- Ein/Mehrere "Supporter" können sich mit Beträgen zu den einzelnen Features melden
+  - Per Default werden nur die Anzahl der Supporter angezeigt
+  - Ein Supporter kann optional seinen Namen und seinen Betrag öffentlich machen
+
+*** Linien (Auch für neue Automap wichtig!) ***
+ - Pfeilspitzen konfigurierbar machen
+   - Größe
+   - Stil
+   - Farbe (?)
+ - Offset zum Ziel
+
+*** Cleanups ***
+  - Variablen nach int/boolean casten, wenn sinnvoll
+  - Objekte klonen wieder implementieren
+  - Weathermap Linien Perfdata Berechnungen nach check_command aufräumen
+  - ajax Funktionen aufräumen/konsolidieren
+  - OMD Tests
+
+*** Icon Koordinaten zentrieren ***
+
+Die Icon Koordinaten beziehen sich momentan auf die linke obere Ecke der Icons.
+Eine Änderung auf einen Bezug zum Zentrum eines Objekts würde mehrere Vorteile
+mit sich bringen. Beispielsweise könnten die Icons innerhalb eines Iconsets
+verschiedene Größen haben.
+
+Wie soll das bei Textboxen gehen? Eventuell muss man bei jedem neu Rendern die
+Maße des Objektes ermitteln und prüfen, ob es neu positioniert werden muss.
+
+Eine Nebenwirkung könnte sein, dass die Entfernungen der Controls und die anderer
+relativ positionierten Objekte nicht automatisch mitskaliert werden.
+
+*** Nicht kompletter Reload bei veränderter Map Konfiguration ***
+
+Der Trend geht an einigen Stellen stark richtung dynamische Map Konfigurationen.
+Dem sollte man irgendwie begegnen. Momentan wird die Seite vom JS Frontend
+komplett neu geladen. Der bessere Weg wäre, wenn das Frontend irgendwie die Differenz
+zwischen der aktuell geladenen Konfiguration und der aktuellen Konfigurationsdatei
+ermitteln könnte und dann anhand dessen einzelne Objekte hinzufügt/aktualisiert/entfernt.
+
+Fälle:
+
+1. Neues Objekt
+   - Neues Objekt in oMapObjecs erzeugen
+   - Neues Objekt malen .parse()
+2. Gelöschtes Objekt
+   - Objekt von Map entfernen .remove()
+   - Objekt aus oMapObjects entfernen
+3. Geändertes Objekt
+   - Objekt .conf aktualisieren
+   - Objekt von Map entfernen .remove()
+   - Objekt neu malen .parse()
+4. Geänderte Hauptkonfiguration
+5. Geändertes Global-Objekt
+   - mapProperties neu laded
+     - setMapBasics()
+     - setMapBackgroundImage()
+     - FIXME: Was wird noch aus den mapProperties abgeleitet?
+   - .conf bei allen Objekten aktualisieren
+   - Objekte von Map entfernen .remove()
+   - Objekte neu malen .parse()
+
+So. Und wie erkennen wir das nun? Wie wäre es bei einer geänderten Konfiguration
+einfach die aktuellen mapObjects laden (getMapObjects) und dann die Differenz zum
+aktuell geladenen oMapObjects Objekt ermitteln? So kann man dann im JS frontend genau
+ermitteln welche Dinge sich geändert haben.
+
+*** Dynamische Map Konfiguration ***
+
+Das Format der Map Konfiguration ist in erster Linie dazu da Anfängern die Arbeit mit
+den Konfig-Dateien zu erleichtern. Mit PHP Dateien hat es in der Vergangenheit immer
+wieder Syntaxfehler etc. gegeben.
+
+Nun gibt es aber einige Anwendungsfälle, in denen man anstatt eine Map Konfiguration zu
+parsen lieber eine dynamische Konfiguration erzeugen möchte. In dem Fall ist die Map
+Konfiguration eher hinderlich. Man könnte gleich ein PHP Datenkonstrukt erzeugen.
+
+Beispielsweise auch bei den Automaps wäre dieses Vorgehen denkbar. Dann könnte man die
+Objekte via Backend ermitteln, mit graphviz positionieren und eventuell noch durch
+eine manuelle Konfiguration wieder modifizieren.
+
+Vielleicht könnte man dann in Zukunft die Sonderbehandlungen für Automaps entfernen und
+daraus wieder ganz normale Maps machen.
+Vielleicht kann man in dem Zuge auch realisieren, dass man gewisse Objekte auf der Automap
+manuell positioniert und die anderen Objekte dann mit graphviz positionieren lässt.
+
+Am Beispiel der Automap lässt sich erahnen, dass man pro Map u.U. mehrere dynamische
+Datenquellen anzapfen möchte. Man müsste also pro Map definieren können welche dynamischen
+Komponenten man in welcher Reihenfolge nutzen können möchte.
+
+Was muss an die Dynamischen Datenquellen übergeben werden, was kommt zurück? In der Klasse
+GlobalMapCfg gibt es zwei Arrays, die aus der Map-Konfiguration befüllt werden:
+
+1. mapConfig: Dieses assoziative Array enthält für jedes Map Objekt ein weiteres Array,
+   wobei die Objekt-ID als Schlüssel benutzt wird. Das Array des Objektes enthält pro
+   Konfigurations-Variable jeweils ein Schlüssel-Wert Paar.
+
+2. typeDefaults: Dieses Array enthält für jeden Objekt-Typ ein weiteres Array, in dem die
+   Default Werte für die einzelnen Objekt-Typen aufgelistet sind. Diese Angaben speisen
+   sich aus der Global-Sektion der Map und diese erhält Default-Optionen wiederrum aus
+   der Hauptkonfiguration.
+
+Man könnte die dynamischen Datenquellen auf die Manipulation von Objekten beschränken.
+Dementsprechend würden diese nur das mapConfig Array betreffen.
+
+Eine dynamische Komponente kann z.B. eine Funktion sein, die die aktuelle Map-Konfiguration
+als assoziativen Array übergeben bekommt und eine aktualisierte Version von diesem Array
+zurückgeben kann. Darüber hinaus sollte man der Funktion auch noch den Namen der aktuellen
+Map und eine Möglichkeit zum Backend-Zugriff geben.
+
+Bei solchen dynamischen Konfigurationen muss man nur dem JS Frontend irgendwie mitteilen,
+wenn es Änderungen gibt. Vielleicht wäre eine Möglichkeit die Map auf Basis von Zeit als
+Dirty zu betrachten. Oder aber man prüft Serverseitig in festgelegten Intervallen, ob
+die endgültige Map-Konfiguration sich geändert hat.
+Eine Alternative wäre, dass in jeder *.php Datei einer Map auch eine changed() Funktion
+deklariert werden muss. Diese gibt einen Unix Timestamp aus, welcher darüber Auskunft gibt,
+ob die Map neu geladen werden muss.
+Diese Funktion wird aufgerufen, wenn das JS frontend den configChanged Poll schickt. Die
+bisherige Methode zur Prüfung der mtime der *.cfg Datei wird um den Zeitstempel der
+changed() Funktion ergänzt. Die Funktion bekommt die angefragte Zeit als Parameter übergeben.
+So kann man auch berechnen, dass eine Map alle X Minuten/Stunden/Tage neu geladen werden muss.
+
+Wie könnte das alles aussehen?
+
+Es gibt ganz normale Map-Konfigurationen, in denen die Global-Sektion und andere Objekte
+definiert werden können. Diese können auch über die GUI editiert werden. Als vorgelagerten 
+Mechanismus kann jede Map optional auch über eine eigene *.php Datei dynamisiert werden.
+Diese PHP-Datei muss mindestens eine render() Funktion deklarieren, welche einen mapConfig
+Array zurückgibt. Dieses Array wird dann als Basis für die Definitionen aus der normalen
+Map-Konfiguration genutzt.
+
+Die map spezifischen *.php Dateien liegen in share/userfiles/mappers/<mapname>.php.
+
+Was gehen muss:
+- Man muss der Render-Funktion Parameter mitgeben können, z.B. aus der Global-Sektion
+  der Map Konfiguration.
+- Außerdem wäre es noch nett, wenn man auch schon die Objekte der Map Konfiguration
+  zur Verfügung hätte. Ja wie jetzt? Ich denke die Map Konfiguration kommt später drauf?
+  z.B. als Initial-Koordinaten für die Automap wäre es interessant die Koordinaten von
+  bestimmten Objekten vorzugeben.
+
+---------------------------------------------
+
+define global {
+  source=fetch_parents(root,levels),dynamic_coords
+}
+
+---------------------------------------------
+<?php
+
+function changed($last_update_time) {
+    // Hier kann man nun entweder irgendwo nachfragen, z.B. beim Nagios die Restart-Time
+    // Oder man rechnet eine relative Zeit aus, ...
+    return $unixTimestamp;
+}
+
+function render($global, ...) {
+    $mapConfig = array();
+    $mapConfig = fetch_parents($mapConfig, $global['root'], $global['maxLayers']);
+    $mapConfig = dynamic_coords($mapConfig);
+    return $mapConfig;
+}
+
+?>
+---------------------------------------------
+
+Einige weitere Gedankenfetzen:
+
+  Es gibt im Grunde drei Ansätze um das ganze zu vereinfachen:
+  
+  1. Der einfache Ansatz: Einfach ein leichter zu parsendes Format zulassen. z.B. ein
+  JSON Objekte. Dieses Objekt kann in den meißten Sprachen einfach aus einem Objekt
+  erzeugt werden.
+  Das würde das Parsen und wieder Einlesen von Konfigurationen durch externe "Generatoren"
+  vereinfachen.
+  
+  2. Eine Alternative zum Generatoren-Ansatz: Man könnte auch einfach die Mechanismen zum
+  Generieren der Map-Konfiguration in die Map Definitionen verlagern. Dazu braucht man Dateien,
+  in denen man "frei" programmieren kann. Das läuft auf PHP-Dateien hinaus, die am Ende
+  eine Variable mit der Map-Konfiguration füllen. In dem Script kann dann alles erdenkliche
+  gemacht werden.
+  
+  Probleme hierbei:
+  - Immer die Daten abfragen, oder einen/den Cache benutzen?
+    - Wenn Cache: Wie bekommt man mit, dass die Config neu generiert werden muss?
+    - Wie bekommt das JS frontend mit, dass sich etwas geändert hat?
+  
+  3. Es gibt einen neuen Mechanismus der Daten erzeugt, zu denen die normale Map Konfiguration
+  gemergt wird. Dieser Mechanismus generiert eine Konfiguration, erstellt z.B. Hosts Objekte.
+  Die normale Map-Konfiguration kann dann noch Änderungen/Ergänzungen vornehmen.
+
+  Map Aufbau gliedert sich in 2 Phasen
+  1. Was kommt auf die Map? Mögliche Quellen:
+    - Map-Konfiguration
+    - Funktion liefert Datenkostrukt zurück (wird zu Map-Konfiguration gemerged)
+      - Nagios Parents (Automap)
+      - Externe DB
+    - Es könnte auch ein Include auf irgendeine Datei sein
+      - Die Funktion wird nur beim Parsen der Map Konfiguration geladen;
+        Die Daten kommen mit in den Map-Cache
+      - Frage hier: Wie wird der Map-Cache ungültig gemacht?
+      - Die Funktion kann dann z.B. externe Datenbanken/Livestatus oder so anzapfen um
+        von dort automatisch Objekte zu holen
+    - Das Konstrukt kann auch Objekte mit Eigenschaften enthalen, diese könnten dann
+      von der Map Konfiguration überschrieben werden (?)
+
+*** Installer renovieren ***
+
+Der erste Punkt: Die Nutzer Einstellungen für eine Installation sollen gespeichert werden.
+Das kann z.B. in einer Datei im Home-Verzeichnis gespeichert werden. Der Pfad zu dieser
+Datei könnte beispielsweise auch über eine Umgebungsvariable oder einen Parameter verändert
+werden. Dann braucht man auch nicht mehr versuchen eine mögliche Kommandozeile für den
+nächsten Lauf zusammen zu bauen.
+
+Bei den Default-Einstellungen für die einzelnen Optionen gibt es folgende Möglichkeiten:
+
+1. Hart codierte Defaults
+2. Aufrufparameter
+3. In einem vorherigen Lauf eingegebene Optionen
+4. Automatisch ermittelte Optionen
+
+Alle Abfragen genau prüfen, ob diese wirklich abgefragt werden müssen.
+Beim Update eventuell einige Abfrage weglassen. Wie z.B. die Konfiguration der Backends.
+
+Beim automatischen Ermitteln von Pfaden/Nutzern könnte man auch alternativen anbieten, wenn
+mehrere Nagios Prozesse gefunden werden.
+
+Eventuell auf Python umstellen. Das macht die ganze Programmierung um einiges einfacher und
+das ganze Zeug auch wartbarer.
+
+*** Shortcuts einbauen ***
+
+Gerade der Edit-Modus im normalen Frontend sollte Hotkeys haben. Diese sollten
+nach Möglichkeit nicht mit Hotkeys von FF/IE kollidieren.
+
+*** Fehlerbehandlung ***
+  Ajax Schnittstelle umbauen: Kleines Protokoll einbauen, mit Header inkl. Fehlercodes etc.
+  und man muss nicht bei jeder Anfrage immer die Feld-Namen mitsenden (-> weniger Overhead).
+
+  Bessere Fehlerbehandlung z.B. auf Übersichtsseite, wenn Antwort kein gültiges JS ist.
+
+Exception/Error log bauen:
+  PHP Fehler loggen
+	Eventuell sogar Javascript fehler loggen
+
+
+*** Dokumentation ***
+  - Neue Editier-Möglichkeiten in der normalen GUI
+  - Mittleren Teil der Linien festmachen oder positionieren
+  - Relative Koordinaten
+  - Relative Koordinaten via Ctrl setzen und via Shift lösen
+  - Backend Schnittstelle
+
+
+===============================================================================
+# ERLEDIGT
+===============================================================================
+
+*** Redesign main configuration ***
+
+  Momentan können zwei Konfigurationsdateien benutzt werden. Besser wäre ein conf.d
+  Verzeichnis zu haben um die Konfiguration, zumindest optional, modularer aufbauen
+  zu können. Aus diesem Verzeichnis werden die Dateien in alphabetischer Reihenfolge
+  geladen.
+
+  Dabei ist zu beachten, dass die Sektionen Dateiübergreifend gemergt werden können
+  müssen.
+
+  Außerdem ist es wichtig, dass man die Datei weiterhin über die Weboberfläche
+  editieren kann. Das könnte man so lösen, dass man nur eine spezielle Datei via
+  Weboberfläche editierbar macht. Da müsste man beim rendern des Dialogs eben nur die
+  Konfigurationdateien, die vor der Web-Datei kommen, laden und die daraus resultierenden
+  Werte als Default-Wert annehmen.
+
+  Dabei ist wichtig, dass die Optionen, die der Nutzer über die Webgui editiert nur in
+  die eine Datei geschrieben werden, die durch die Webgui kontrolliert wird.
+
+  Reihenfolge:
+
+  conf.d/
+  nagvis.ini.php
+
+  Das conf.d Verzeichnis ist optional. Es muss nicht existieren.
+
+  Die Sektionen müssen gemergt werden können. Das betrifft alle Sektionen, sowohl Backends,
+  als auch die Standard-Sektionen.
+
+  Backends, die in den conf.d/ Verzeichnissen angelegt werden, können nicht per Webgui editiert
+  werden (?). Eventuell kann man das dort irgendwie hervorheben.
+
+  Aktuell gibt es einen Config Parser Cache. Dieser ist dateibasiert programmiert. Es gibt pro
+  Konfigurationsdatei einen eigenen Cache. Bei der Aufteilung in ein conf.d/ Verzeichnis würde
+  es ausreichen einen einzigen Cache für die Gesamte Konfiguration zu halten. Wenn eine Datei
+  neuer ist, als dieser globale Cache, dann werden alle Dateien neu eingelesen.
+  Die Klasse GlobalFileCache müsste optional eine Liste von Dateien mitbekommen können. Die
+  Klasse regelt das Handling mehrerer Dateien dann transparent.
+
+*** Child-Objekte Filtern ***
+
+  - Zwei Möglichkeiten
+    a) Für tatsächliche Verarbeitung (Status Ermittlung + Child Anzeige)
+    b) Nur für Status Ermittlung
+  - Neues Attribut einführen, welches die Definition enthält um Childs zu filtern
+  - Namen könnte exclude_members sein bzw. exclude_member_states
+  - Es können alle Childs gefiltert werden, bei Maps von allen Typen
+  - Gematcht wird auf den Namen des Childs bzw. bei Services auf den Service-Namen
+  - Als Wert könnten Case Insensitive Reguläre Ausdrücke genutzt werden, z.B. exclude_childs="^Uptime$"
+  - Wenn ein Match auf mehrere Elemente nötig ist, z.B. bei Services (Hostname und Service Description),
+    dann werden zwei Reguläre Ausdrücke formuliert, welche durch "~~" getrennt werden.
+    So können auch in Hostgruppen individuelle Services eines Hosts ausgeklammert werden.
+    Beispiel: exclude_childs="^localhost$~~^CPU load$" zum Ausklammern eines bestimmten Dienstes.
+  - Notizen:
+    - CoreBackendMgmt->queue() fasst gleiche Anfragen zu einer Liste zusammen, um die Anzahl
+      der Backend Queries zu reduzieren. z.B. werden Anfragen vom gleichen Typ und mit gleichen
+      Optionen (hardstates, ...) zusammengefasst.
+      Diese werden zusammen mit den objekttyp spezifischen Filtern an das Backend weitergegeben
+      um die richtigen Daten zu holen.
+      Als weiteres Kriterium kommen nun die Objekt individuellen Filter dazu. Diese müssen beim
+      CoreBackendMgmt->queue() auch dazu führen, dass Objekte mit unterschiedlichen Filtern
+      einzeln abgefragt werden.
+      Der Grund ist, dass im Backend eine einzige Anfrage mit einem globalen Filter für alle
+      angefragten Objekte ausgelöst wird.
+  - Verworfen/Zurückgestellt:
+    - Man kann mehrere Pattern angeben. Sobald ein Pattern zutrifft, wird übersprungen
+    - Mehrere Patterns werden durch ; Zeichen getrennt, z.B. exclude_childs="/^Uptime$/;/^PING$/"
+
+
+*** Map Config Redesign ***
+
+Pro Objekttyp können beliebige Variablen zugewiesen werden. Diese werden für den
+Objekttyp registriert und sind unabhängig von den Definitionen der Variablen selbst.
+Bei der Zuweisung handelt es sich um eine einfache Auflistung von Variablen-Namen.
+
+    Definition von Variablen
+
+Die Variablen selbst werden an zentraler Stelle registriert. Jede Option wird als ein
+Eintrag in einem Array registriert. Der Schlüssel ist der Name der Variable. Ein Array
+stellt diese Variable dar. Folgende mögliche Schlüssel sind zu befüllen:
+
+  must       - Muss in jedem Fall gesetzt sein (egal ob vererbt oder nicht).
+  match      - Regex zum validieren des Wertes
+  default    - Vererbter Wert / Default Wert
+
+Folgende optionale Attribute können gesetzt werden:
+
+  deprecated    - Wenn veraltet und nicht berücksichtigt.
+  field_type    - Wenn abweichend von 'text'.
+  depends_on    - Name der "parent" Variable zum Anzeigen im Add/Modify Dialog
+  depends_value - Wert der "parent" Variable
+  list          - Funktionsname zum Erstellen eines Arrays, der für die Dropdown-Felder
+                  die Liste der möglichen Werte zurückliefert.
+
+Es wird das Array $mapConfigVars gefüllt. Die Definitionen werden in Dateien in
+share/server/core/mapcfg/*.php abgelegt. Darin können nicht nur Definitionen erstellt
+werden, sondern auch Funktionen zum Füllen eventueller Listen registriert werden.
+
+    Zuweisung von Variablen
+
+Die Zuweisung von Variablen zu den Objekttypen geschieht über das $mapConfigVarMap Array.
+Das Array ernhält die Objekttypen als Schlüssel und darunter jeweils ein Array mit den
+möglichen Variablen als Schlüssel und "null" oder den Typ spezifischen Namen als Wert.
+
+
+*** Add/Modify Redesign ***
+
+Aufrufe:
+1. Neues Objekt - x/y Koordinaten als Parameter
+  - Parameter: type, x, y
+2. Objekt klonen - Aktuell konfigurierte Parameter + Objekt-ID generieren
+  - Parameter: object_id
+3. Objekt bearbeiten - Aktuell konfigurierte Parameter
+  - object_id
+
+=> Es können beliebige Variablen via POST/GET übergeben werden. Hierbei muss zwischen
+   den Standard-Variablen für das Modul, die Action etc. und den Attributen unterschieden
+   werden.
+
+   1. Default Variablen werden außenvor gelassen und am Anfang der "Action" verarbeitet und
+      gefiltert
+   2. Alle Attribute des Objekt-Typs werden versucht aus den Variablen auszulesen.
+   3. Die übrigen Variablen werden als Hidden-Felder zum Formular hinzugefügt und so
+      durchgeschleust.
+
+Feld-Eigenschaften:
+- Vor jedem Wert ein Kästchen anzeigen, mit welchem dieses Attribut aktiviert wird
+  - Bei nicht angehaktem Kästchen wird der Wert geerbt.
+  - Die Checkbox wird bei Pflichtfeldern nicht angezeigt.
+- Je nach Attribut-Typ verschiedene Felder anzeigen (Text, Select, ...)
+- Abhängige Felder je nach Wert eines anderen Feldes zeigen/verstecken
+- Leere Variablen müssen auch gesetzt werden können
+- Wenn Dropdown wegen Exception nicht befüllt werden kann, diese abfangen und
+  dann anstatt des Feldes die Fehlermeldung anzeigen
+- Wenn bei Dropdowns ein Wert gesetzt ist, der nicht in den Listen vorhanden ist,
+  dann keine Dropdown-Liste anzeigen.
+
+Fehlerbehandlung:
+- Direkt im Dialog: Feldbezogene Fehler direkt unter den Feldern anzeigen
+- Generelle Fehler/Meldungen als über Formular anzeigen
+
+- Validierung/Verarbeitung ohne Javascript, kompletter Dialog wird neu generiert
+  - Beim Abschicken des Formulars den Dialog nicht schließen
+  - Der Dialog muss neu generiert werden, wenn
+    a) Der Wert von Feldern mit Abhängigkeiten geändert wird
+    b) Ein Feld mit Abhängkgeiten von Geerbt auf Konfiguriert geändert wird
+  - Das Formular wird abgeschickt und verarbeitet
+    -> Im Fehlerfall wird die Antwort in den Dialog gemalt,
+       wobei der vorherige Inhalt überschrieben wird
+    -> Bei Erfolg wird der Dialog nach X Sekunden geschlossen,
+       es wird kurz eine Erfolgsmeldung gezeigt. Aktuell muss dann die
+       Seite neu geladen werden
+
+*** Auth redesign ***
+
+Das Ganze ist zu kompliziert! Es gibt im Grunde 2 Schritte. Wobei der erste
+Schritt optional ist.
+
+1. Logindaten abfragen
+   - Formular anbieten
+2. Logindaten einsammeln
+   - $_POST, $_COOKIE, $_SERVER['REMOTE_USER'], ...
+3. Dann das Ganze an AUTH übermitteln
+4. Optional: In Session speichern, wenn das Logon Modul das anfordert
+
+LogonMixed:
+
+1. REMOTE_USER gesetz?
+   -> nehmen und trusted auth machen (Nur Nutzer vorhanden prüfen)
+   -> Direkt angeforderte Seite malen
+   -> Nicht in Session speichern
+2. Wenn nicht, dann Login-Seite direkt malen (keine Weiterleitung)
+3. Formular wird abgeschickt
+   -> Daten prüfen
+      -> ok: direkt die angeforderte Seite malen
+        -> In Session speichern
+      -> nok: Wieder die Login-Seite malen
+
+LogonDialog:
+
+1. Login Dialog zeigen
+2. Formular wird abgeschickt
+   -> Daten prüfen
+      -> ok: direkt die angeforderte Seite malen
+        -> Nicht in Session speichern
+      -> nok: Wieder die Login-Seite malen
+
+LogonMultisite
+
+1. Cookie da?
+2. Cookie prüfen
+   -> ok: direkt die angeforderte Seite malen
+     -> Nicht in Session speichern
+   -> nok: Zur Loginseite umleiten (inkl. _origin)
+

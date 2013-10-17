@@ -1,0 +1,719 @@
+/*****************************************************************************
+ *
+ * style.css - NagVis default theme stylesheet
+ *
+ * Copyright (c) 2004-2011 NagVis Project (Contact: info@nagvis.org)
+ *
+ * License:
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ *****************************************************************************/
+
+/**
+ * @author	Lars Michelsen <lars@vertical-visions.de>
+ */
+body, table, th, td {
+    margin: 0;
+    padding: 0;
+
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    text-decoration: none;
+
+    color: black;
+    font-size: 12pt;
+}
+
+html,body{height:100%;}
+
+table {width:100%}
+div {margin:0;padding:0}
+img {border:0}
+
+/* Global DIVs */
+.main {margin:0;padding:0;background-color:white;color:black}
+.header {position:fixed;top:0;left:0;padding:0;z-index:100;min-width:920px;}
+.headerspacer {width:100%}
+.map {position:relative;top:0;left:0;z-index:98}
+
+/* Welcome page */
+div.welcome {padding:20px;width:600px}
+div.welcome h1 {color:#43B3CF;background:#eee;padding:3px 10px 2px 20px;font-size:24px;line-height:30px;font-weight:normal;-moz-border-radius:8px;-webkit-border-radius:8px;margin-bottom:5px}
+div.welcome p {padding:5px;font-size:12px}
+div.welcome a,div.welcome a:active,div.welcome a:visited {color:#43B3CF}
+div.welcome a:hover {color:#779D2A}
+
+/* Automap */
+#automap {z-index:97}
+#automap shape {z-index:97}
+
+/* Message-Box */
+.messageBox {
+    width: 600px;
+    border: 0px;
+    background-color:  #CCCCCC;
+}
+
+.messageBox th {
+    height: 22px;
+
+    background-color: #CCCCCC;
+
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+}
+
+.messageBox td {
+    height: 200px;
+
+    background-color: #EEEEEE;
+
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Background images */
+#backgroundImage {
+    position: absolute;
+    z-index: 0;
+}
+
+/* icons */
+.icon {
+    position : absolute;
+    border : 0;
+    font-size: 12pt;
+    z-index : 1;
+}
+
+/* lines */
+.line {
+    position : absolute;
+    z-index : 1;
+    border-style : dotted;
+    border-width : 1px;
+    border-color : black;
+}
+
+a.linelink {
+  color: #000000;
+}
+
+/* textbox (object on map) */
+.box {
+    position : absolute;
+    z-index : 1;
+    border: 1px #000 solid;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    padding: 2px;
+    /* tried to solve the off-screen text wrap. This fixes the problem but
+     * results no no linebreak at all: white-space:nowrap; */
+}
+
+/* labels for the objects on the maps */
+.object_label {
+    position : absolute;
+    z-index : 1;
+    border: 1px #000 solid;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    padding: 2px;
+    /* tried to solve the off-screen text wrap. This fixes the problem but
+     * results no no linebreak at all: white-space:nowrap; */
+}
+
+/* control styles */
+div.control {
+  position: absolute;
+  border: 1px #C0C0C0 dotted;
+  /* scale background of controls - hope this works for the important browsers */
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+div.control.drag {
+    background-image: url('../images/templates/default.control_drag.gif');
+}
+
+div.control.delete {
+    background-image: url('../images/templates/default.control_delete.gif');
+}
+
+div.control.modify {
+    background-image: url('../images/templates/default.control_modify.gif');
+}
+
+div.control.togglemid {
+    background-image: url('../images/templates/default.control_togglemid.gif');
+}
+
+/* Style on info pages (index.php?info, index.php) */
+div.infopage {
+    position:relative;
+}
+
+div.infopage > table {
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    width: 800px;
+
+    background-color: #eee;
+    border-collapse:collapse;
+}
+
+div.infopage > table td, div.infopage > table th {
+    border: 1px #a4a4a4 solid;
+    padding: 4px;
+
+    font-size: 11px;
+    color: #43B3CF;
+    vertical-align: top;
+}
+
+div.infopage > table th {
+    text-align: center;
+    background-color: #eee;
+}
+
+div.infopage > table th.head {
+    font-size: 20px;
+}
+
+div.infopage h2 {
+    font-size: 12px;
+    color: #43B3CF;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+}
+
+div.infopage > table td.disabled h2  {
+    color: #a4a4a4;
+}
+
+div.infopage > table td.error h2  {
+    color: #ff0000;
+}
+
+div.infopage a {
+    color: #a4a4a4;
+    text-decoration: none;
+}
+
+div.infopage a:hover {
+    color: #789D2B;
+    text-decoration: none;
+    opacity: .5;
+}
+
+/**
+ *
+ *  Status message dialog
+ *
+ */
+
+#statusMessage {
+  position: absolute;
+  display: none;
+  top: -1px;
+  left: 200px;
+  right: 200px;
+  z-index: 5000;
+  opacity: 0.85;
+}
+
+#statusMessage div {
+  width: 400px;
+  margin: 0px auto;
+  height: 24px;
+  min-height: 24px;
+  padding: 8px 10px 8px 46px;
+}
+
+#statusMessage div.notice {
+  background: url('../../frontend/nagvis-js/images/internal/info.png') 6px 3px no-repeat;
+  background-color: #F7FDCB;
+  border: 1px solid #C2D071;
+}
+
+#statusMessage div.error,
+#statusMessage div.warning {
+  background: url('../../frontend/nagvis-js/images/internal/warning.png') 6px 3px no-repeat;
+  background-color: #EF9398;
+  border: 1px solid #DC5757;
+}
+
+#statusMessage div.confirmation {
+  background: url('../../frontend/nagvis-js/images/internal/confirm.png') 6px 3px no-repeat;
+  background-color: #A6EF7B;
+  border: 1px solid #76C83F;
+}
+
+#statusMessage div.loading {
+  background: url('../../frontend/nagvis-js/images/internal/loading.gif') 6px 3px no-repeat;
+  background-color: #EBEBEB;
+  border: 1px solid #CCCCCC;
+}
+
+/**
+ *
+ *  Message box
+ *
+ */
+
+#messageBoxDiv {
+    position: absolute;
+  left: 50%;
+  top: 50%;
+
+    margin-left: -297px;
+    margin-top: -125px;
+
+    width:594px;
+    height:250px;
+
+    /*margin:20 auto;*/
+    z-index: 1000;
+}
+
+#messageBoxDiv table.error, #messageBoxDiv table.critical, #messageBoxDiv table.down {
+    border:1px solid #F00;
+}
+
+#messageBoxDiv table.error, #messageBoxDiv table.critical, #messageBoxDiv table.down {
+    border:1px solid #F00;
+}
+
+#messageBoxDiv table.warning {
+    border:1px solid #FF0;
+}
+
+#messageBoxDiv table.unknown, #messageBoxDiv table.permission, #messageBoxDiv table.unreachable {
+    border:1px solid #FF9900;
+}
+
+#messageBoxDiv table.ok, #messageBoxDiv table.up {
+    border:1px solid #00B233;
+}
+
+#messageBoxDiv table.note {
+    border:1px solid #00F;
+}
+
+/* Style for the header area */
+
+#messageBoxDiv th {
+    font-style: italic;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    font-size: 26pt;
+}
+
+#messageBoxDiv th.error, #messageBoxDiv th.critical, #messageBoxDiv th.down {
+    background-color: #FF6666;
+}
+
+#messageBoxDiv th.warning {
+    background-color: #FFFF66;
+}
+
+#messageBoxDiv th.unknown, #messageBoxDiv th.permission, #messageBoxDiv th.unreachable {
+    background-color: #FFB200;
+}
+
+#messageBoxDiv th.ok, #messageBoxDiv th.up {
+    background-color: #99FF66;
+}
+
+#messageBoxDiv th.note {
+    background-color: #99CCFF;
+}
+
+/* Style for the message area */
+
+#messageBoxDiv td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 16pt;
+}
+
+#messageBoxDiv td.error, #messageBoxDiv td.critical, #messageBoxDiv td.down {
+    background-color: #FFB2B2;
+}
+
+#messageBoxDiv td.warning {
+    background-color: #FFFFCC;
+}
+
+#messageBoxDiv td.ok, #messageBoxDiv td.up {
+    background-color: #CCFF99;
+}
+
+#messageBoxDiv td.unknown, #messageBoxDiv td.permission, #messageBoxDiv td.unreachable {
+    background-color: #FFE566;
+}
+
+#messageBoxDiv td.note {
+    background-color: #CCE5FF;
+}
+
+#messageBoxDiv code {
+    text-align: left;
+    font-size: 10px;
+}
+
+/*
+ * popupWindow css
+ */
+
+div#popupWindow {
+    z-index: 2000;
+}
+
+/* Popup window master table */
+table#popupWindowMaster {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-collapse: separate;
+
+    margin-left: 8px;
+    padding: 6px 16px 16px 16px;
+    font-weight: normal;
+    -moz-border-radius: 11px;
+    -khtml-border-radius: 11px;
+    -webkit-border-radius: 11px;
+    border-radius: 5px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    -moz-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+    -webkit-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+    -khtml-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+    box-shadow: rgba(200,200,200,1) 0 4px 18px;
+}
+
+table#popupWindowMaster tr th,
+table#popupWindowMaster tr td {
+    background-color: transparent;
+    border: 0;
+
+    font-size: 10px;
+    color: #43B3CF;
+}
+
+/* Title bar */
+table#popupWindowMaster tbody tr th#dragbar {
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Close button */
+table#popupWindowMaster tbody tr th.control {
+    padding: 0;
+    margin: 0;
+    width: 19px;
+    font-size: 16px;
+    text-align: center;
+    color: #43B3CF;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #43B3CF;
+}
+
+/* Content styling */
+td#popupWindowContent {
+    padding-top: 5px;
+}
+
+td#popupWindowContent table.mytable {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-collapse:collapse;
+}
+
+td#popupWindowContent table.mytable tr th,
+td#popupWindowContent table.mytable tr td {
+    font-size: 10px;
+    color: #314455;
+}
+
+td#popupWindowContent label {
+    color: #777;
+    font-size: 13px;
+}
+
+td#popupWindowContent p {
+    margin-bottom: 12px;
+}
+
+td#popupWindowContent table.mytable {border-collapse:collapse;margin-top: 0px;padding: 1px;}
+
+td#popupWindowContent table.mytable td, td#popupWindowContent table.mytable th {padding: 1px;font-size: 10px;color: #314455;}
+
+/* title */
+td#popupWindowContent table.mytable th { border:0;}
+
+td#popupWindowContent table.mytable th h2 {font-size:16px;text-align:center;background:#eee;padding:3px 10px 2px 20px;line-height:20px;font-weight:normal;-moz-border-radius:8px;-webkit-border-radius:8px;text-shadow: 1px 1px 1px #bbbbbb;margin-bottom:5px;}
+
+/* cat */
+td#popupWindowContent table.mytable th.cat {font-size: 12px;}
+
+/* td common */
+td#popupWindowContent table.mytable td {color: #2B5377;}
+
+/* Child rows */
+td#popupWindowContent table.mytable tr.child-row td.tdlabel {padding-left: 20px;}
+
+/* td labels */
+td#popupWindowContent table.mytable td.tdlabel {padding-left: 10px;width: 140px;}
+td#popupWindowContent table.mytable td.tdbox {width: 30px;}
+td#popupWindowContent table.mytable td.tdfield {width: 170px;}
+td#popupWindowContent table.mytable tr td.tdfield input,
+td#popupWindowContent table.mytable tr td.tdfield select {
+    font-size: 10px;
+    background-color: #E4EEF6;
+    border: 1px solid #284279;
+    width:170px;
+}
+td#popupWindowContent table.mytable tr td.tdfield input.upload {
+    width:210px;
+}
+td#popupWindowContent table.mytable tr td.tdfield span {
+    word-wrap: break-word;
+}
+td#popupWindowContent table.mytable tr td.tdfield div.picker input {
+    width:151px;
+    margin-right:2px;
+}
+td#popupWindowContent table.mytable tr td.tdfield div.picker img {
+    vertical-align: middle;
+}
+
+td#popupWindowContent .submit {
+  font-weight: bold;
+  color: #314455;
+  vertical-align: middle;
+}
+
+td#popupWindowContent table.mytable tr.must td {
+    font-weight: bold;
+}
+
+td#popupWindowContent table.mytable tr td.err div {
+    padding: 3px;
+    margin: 0 0 0 20%;
+    width: 80%;
+    border: 1px solid #ff0000;
+    background-color: #ffdddd;
+    color: #000000;
+    -moz-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+td#popupWindowContent div.success {
+    padding: 5px 8px;
+    margin: 10px;
+    border: 1px solid #00ff00;
+    background-color: #ddffdd;
+    color: #000000;
+    -moz-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/* Popup window forms */
+
+td#popupWindowContent fieldset {
+    margin: 1.5em 0 0 0;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #BFBAB0;
+    background-color: #F2EFE9;
+}
+
+td#popupWindowContent legend {
+    margin-left: 1em;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+td#popupWindowContent fieldset.form table {
+    width: 100%;
+}
+
+td#popupWindowContent fieldset.form label {
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+td#popupWindowContent a {color:#43B3CF;text-decoration:none;}
+td#popupWindowContent a:hover {color:#779D2A;text-decoration:underline}
+
+/* Header styling */
+.header {
+    color: #43B3CF;
+    font-size: 0.6em;
+    height: 31px;
+    width: 100%;
+    background-image: url('../images/templates/default.header.png');
+}
+
+#headershow {
+    display: none;
+    width: 9px;
+    min-width: 9px;
+    background-image: none;
+}
+
+.header ul.head {
+    margin: 0;
+    padding: 0;
+
+    background-color: #F5F5F5;
+    background: url('../images/templates/default.header.png');
+
+    height: 31px;
+
+    float:left;
+
+    list-style:none;
+}
+
+.header ul.right {float:right}
+
+.header ul.head li {
+    margin: 0;
+    padding: 0;
+
+    height: 100%;
+
+    float: left;
+}
+
+.header ul.head li.logo {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 2px;
+}
+
+.header ul.head li.logo a, .header ul.head li.logo a:active, .header ul.head li.logo a:visited {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    text-decoration: none;
+}
+
+#editIndicator span {margin:0;padding:0;width:100%;height:31px;padding-left:8px;padding-right:8px;line-height:31px;font-weight:bold;width:90px;color:#ff0000}
+.dropdown span, .header div#refreshCounterHead {display:block;margin:0;padding:0;height:31px;padding-left:8px;padding-right:8px;line-height:31px;width:auto;font-weight:bold;cursor:pointer;background-image:url('../images/templates/default.header.png')}
+.dropdown span:hover {background-image:url('../images/templates/default.header_over.png')}
+.dropdown img {vertical-align:middle;margin-left:10px}
+.dropdown ul {margin:0;padding:0;list-style:none;width:205px;z-index:100;position:absolute;top:31px;display:none}
+.dropdown li {margin:0;padding:0}
+.dropdown li.lvl2 a{padding-left:10px;width:188px}
+.dropdown li.lvl3 a{padding-left:20px;width:178px}
+.dropdown li.lvl4 a{padding-left:30px;width:168px}
+.dropdown li.lvl5 a{padding-left:40px;width:158px}
+.dropdown li.lvl5 a{padding-left:50px;width:148px}
+.dropdown a, .dropdown a:active, .dropdown a:visited, .dropdown li.spacer, .dropdown dl.subdropdown dt {display:block;width:193px;background:#eaf0f2;margin:0;color:#43B3CF;text-decoration:none;border-left:1px solid #a4a4a4;border-right:1px solid #a4a4a4;padding:5px;z-index:100}
+.dropdown a.left, .dropdown a.left:active, .dropdown a.left:visited {float:left;width:152px;border-right:0}
+.dropdown a.right, .dropdown a.right:active, .dropdown a.right:visited {float:right;width:30px;border-left:1px solid #43B3CF}
+.dropdown a.error, .dropdown a.error:active, .dropdown a.error:visited {color:#ff0000}
+.dropdown a:hover {background:#d9e1e4;color:#779D2A}
+.dropdown a.submenu-link:after {float:right;content:">"}
+.dropdown li.spacer {width:203px}
+.dropdown li.spacer hr {width:95%;color:#43B3CF}
+.dropdown .underline {border-bottom:1px solid #a4a4a4}
+.subdropdown {position:relative;}
+.subdropdown .topline {border-top:1px solid #a4a4a4}
+.subdropdown .underline {border-bottom:1px solid #a4a4a4}
+
+/* Styling for the sidebar */
+#sidebar {position:relative;top:0;left:0;float:left;min-height:100%;width:200px;z-index:99;display:none;background-color:#eaf0f2;text-decoration:none;font-size:0.6em;padding-top:10px;border-right:1px solid #a4a4a4;padding-top:32px;}
+#sidebar ul {margin:0;padding:0;display:block;list-style:none}
+#sidebar li {margin:0;padding:0;line-height:25px;}
+#sidebar li.spacerbottom {border-bottom:1px dotted #a4a4a4}
+#sidebar li.spacertop {border-top:1px dotted #a4a4a4}
+#sidebar li a {display:block;padding-left:20px;width:180px;color:#43B3CF;text-decoration:none;}
+#sidebar li.lvl2 a{padding-left:30px;width:170px}
+#sidebar li.lvl3 a{padding-left:40px;width:160px}
+#sidebar li.lvl4 a{padding-left:50px;width:150px}
+#sidebar li.lvl5 a{padding-left:60px;width:140px}
+#sidebar li.lvl6 a{padding-left:70px;width:130px}
+#sidebar li.open a.title {background: url('../images/templates/default.folder_open.gif') no-repeat left #eaf0f2;}
+#sidebar li.closed a.title {background: url('../images/templates/default.folder_closed.gif') no-repeat left #eaf0f2;}
+#sidebar li a:hover {background-color:#d9e1e4;color:#779D2A}
+#sidebar a.error, #sidebar a.error:active, #sidebar a.error:visited {color:#ff0000}
+
+/*
+ * Frontend eventlog styling
+ */
+
+#eventlog {
+	position: fixed;
+	bottom: 0px;
+	right: 20px;
+	z-index: 1000;
+	
+	width: 400px;
+	height: 70px;
+	
+	background-color: #d0d0d0;
+	border: 1px solid #000000;
+	border-bottom: 0;
+	
+	opacity:0.4;
+	/*filter:alpha(opacity=40);*/
+	
+	padding: 2px;
+	
+	font-size: 9px;
+}
+
+#eventlogControl {
+	position: fixed;
+	bottom: 75px;
+	right: 20px;
+	z-index: 1001;
+	
+	width: 10px;
+	height: 10px;
+	
+	background-color: #d0d0d0;
+	border: 1px solid #000000;
+	border-bottom: 0;
+	
+	opacity:0.4;
+	/*filter:alpha(opacity=40);*/
+	
+	padding: 2px;
+	
+	font-size: 9px;
+}

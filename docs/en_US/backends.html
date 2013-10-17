@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+ <head>
+  <title>Backends</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="../general/css/style.css" />
+ </head>
+ <body>
+        <h1>Backends</h1>
+        <h2>General Information</h2>
+        <p>The NagVis code is separated into several layers. One of these layers is
+             the &quot;data layer&quot;. The data layer is used to handle requests for
+             information from third party sources like the socket of MKLivestatus. We
+             call this layer &quot;backend&quot; in general. There are some components
+             inside NagVis to manage these backends which act as the glue between the
+             single backends and the other layers.</p>
+        
+        <h2>Default backend</h2>
+        <p>At the moment there are a few backends delivered with the NagVis core
+             packages: the most important ones are the mklivestatus and ndomy backends. All backend
+             configuration parameters are described in detail on their own pages.</p>
+        
+        <p>The ndomy backend has been the default backend from NagVis 1.0 to NagVis 1.5.
+             It fetches Nagios information from the NDO MySQL database. Since NagVis 1.5
+             the default backend has been switched to MKLivestatus backend.</p>
+        
+        <h2>Backend types</h2>
+
+        <ul>
+            <li><a href=backend_mklivestatus.html>MKLivestatus</a></li>
+            <li><a href=backend_ndomy.html>NDOMy</a></li>
+            <li><a href=backend_nagiosbp.html>NagiosBP</a></li>
+            <li>MerlinMy</li>
+        </ul>
+        
+        <h2>Configuring backends</h2>
+        <p>The backends are defined in the main configuration file. See 
+           <a href="nagvis_config_format_description.html#backend">main configuration format description</a> 
+           on how to define backends.</p>
+    </body>
+</html>
