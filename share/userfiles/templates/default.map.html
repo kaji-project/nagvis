@@ -1,0 +1,22 @@
+<div id="map" class="map"></div>
+
+<script type="text/javascript">
+oGeneralProperties = {$generalProperties};
+oWorkerProperties = {$workerProperties};
+oViewProperties = {$viewProperties};
+oRotationProperties = {$rotationProperties};
+oUserProperties = {$userProperties};
+oStates = {$stateProperties};
+oFileAges = {$fileAges};
+
+// Kick of the worker
+addDOMLoadEvent(function()\{runWorker(0, 'map', '{$mapName}');});
+
+// Parses the grid if a user enabled it
+gridParse();
+
+// This disables the context menu when someone clicked anywhere on the map
+document.onmousedown = contextMouseDown;
+window.onresize = function() { scaleView(); };
+window.onscroll = function() { scaleView(); };
+</script>

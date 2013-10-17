@@ -1,0 +1,400 @@
+1.6.6
+Frontend
+  * Bugfix: Fixed JS error in template object management dialog
+  * Added updated french language files (Thanks to Nicolas Chancereul!)
+
+Core
+  * Installer: Fixed sqlite3 package test on debian systems
+  * Line weathermaps colors definition can now be set as float values
+    (Thanks to Ormi for the patch!)
+  * Bugfix: Made shortly introduced recoding of map config files optional
+  * Bugfix: Fixed stuck icon update on overview page
+
+1.6.5
+Core
+  * Added line_weather_colors option to nagvis.ini.php [defaults] section
+  * Bugfix: Fixed wrong variable in MySQL connect error handler
+  * Bugfix: Fixed bug in 1.6.1 auth db update scripts
+  * Bugfix: Added missing permission for the Url module which is used when
+            having URLs in rotations
+  * Bugfix: Fixed exclude_member_states for map objects
+  * Bugfix: ISO-8859-1 encoded map config files are now converted to UTf-8
+    during parsing the map config file
+
+Frontend
+  * Made hover menus work on stateless lines (Thanks to Oliver Graf)
+  * Bugfix: Fixed cloning shape objects (view_type error message)
+  * Bugfix: Stateless lines - only showing the hover area when it is needed
+  * Bugfix: Fixed dragging of relative labels of relative objects
+  * Bugfix: Fixed javascript error when switching pages while an ajax call is
+    being processed
+
+1.6.4
+Core
+  * Made template objects work again. Added doc note which does not recommend
+    usage of templates and the webbased editor at the same time.
+  * Livestatus Backend: Added 'timeout' parameter to be able to configure the
+    socket timeout while connecting to the livestatus socket
+  * Livestatus Backend: Only try to connect to livestatus once per page load
+  * Bugfix: Fixed wrong computed shape urls which broke all shapes
+  * The label_show parameter can now be configured for the whole installation
+    in the [defaults] section of the main configuration
+  * The audit.log is disabled by default now (can be enabled using the
+    audit_log parameter in [global] section)
+  * NDO Backend: Removed query debug outputs
+
+Frontend
+  * Weathermap line color definitions support usage values above 100% and below 0%
+  * Better error handling during coord parsing
+
+1.6.3
+Core
+  * Bugfix: Made upper/lower case rotation_id/backend_id definitions possible
+  * Added ; and | to allowed signs for urls
+  * Undefined backend in single objects does not prevent whole map loading anymore
+  * Overview page: Better handling of invalid map configuration files
+  * Multisite auth: Redirecting to login page when auth.secret does not exist
+  * Made default gadgets aware of OMD default and local path handling
+
+Frontend
+  * Showing dummy shape image when configured shape does not exist
+  * Added the color picker to background image creation form
+  * Bugfix: Non user-configured (-> conf.d) backends can be configured as
+            default backends using the web GUI; Non user-configurex: Non
+            can not be edited using the web GUI
+  * Bugfix: Preventing loops in relative coords
+  * Bugfix: Preventing JS error when trying to position objects relative but
+            no target object can be found
+  * Bugfix: Fixed file upload input field styling issues (at least in Firefox)
+  * Bugfix: Removed backendtype fields from "Manage Backends" dialog forms
+  * Bugfix: Fixed problem with the hover menu when using the hover_delay parameter
+
+Automap
+  * Handling centron style host links during automap parsing (host_name=)
+  * Bugfix: Added missing view_type=line parameter to automap exported maps
+  * Bugfix: filterByState was always enabled after modifying the automap
+            parameters via web form
+
+1.6.2
+Core
+  * Switched CRITICAL and UNREACHABLE state weights. CRITICAL now overlaps the
+    UNREACHABLE states
+  * Changed multisite authorization module to new WATO auth export API (Needs
+    at least Check_MK 1.1.13i2)
+  * Bugfix: Fixed problem with form based login when opened via link from another webpage
+
+1.6.1
+Core
+  * LogonDialog: Changed _origin parameter to _origtarget to support current multisite
+  * Added nagvis-make-admin helper script to assign the Administrators role to the
+    given user using the command line. This script might help when the admin lost
+    its permissions.
+  * NagVis creates now "omdadmin" user in OMD environments when creating new auth.db files
+  * Bugfix: Added missing default permissions for guest role (viewing demo maps)
+  * Bugfix: Fixed version number format for stable versions like (1.6)
+    
+Frontend
+  * Ajax call for redrawing map objects is not cacheable anymore (prevent strange
+    hopping of icons after unlock -> edit -> lock in some cases.
+  * Context menu: Small spacer row styling (preventing hover effect)
+  * Add the language to the target url when the user requested a specific language
+
+1.6
+Core
+  * Implented conf.d/ directory to have an optional modular main configuration
+  * omd_install.sh deals now correctly with new conf.d directory
+  * Improved the installer a bit: Better directory detections; Less questions
+    during update
+  * Removed all old demo maps and created new ones using an the internal test
+    backend to be able to show a bit more details.
+  * Using [service_description] as default value for label_text attribute
+  * Using z=5 for textboxes and z=1 for shapes again as default values
+  * Added new config option line_label_y_offset to configure the label offset
+    used in weathermap lines which show percentage and absolute bandwidth labels
+  * Added new LogonMultisite module to use the new Check_MK multisite auth cookie
+  * Recoded logon and authentication module interface
+  * Several code cleanups
+  * Made view templates configurable (defaults / view_template)
+  * Bugfix: Correctly adding object_id=0 to global section when creating maps
+  * Bugfix: Adding map/automap type to cache files to prevent confilcts with
+    equal map and automap names
+
+Frontend
+  * Sorting maps by alias in header menu now
+  * Added map name dropdown to parent_map option when editing global map
+    configuration
+  * iconset option is now optional when creating maps using the GUI
+  * Reimplemented the "clone object" functionality in edit mode
+  * Only show the edit links in context menu when permitted to edit the map
+  * long text values with no spaces do not stretch the add/modify dialog anymore
+  * Ignoring right clicks and clicks on the header menu when currently adding
+    an object to the map
+  * Bugfix: Not adding default_params parameter to all maps after editing the
+    global map configuration using the web frontend
+  * Bugfix: Don't enable map_image when not set when editing the global
+    sections of maps
+  * Bugfix: Removing just dragged new lines before opening the add/modify dialog
+  * Bugfix: Not terminating map rename when one map contains a syntax error
+
+Automap
+  * Finally removed the deprecated option maxLayers. Use childLayers instead.
+
+1.6rc4
+Core
+  * Bugfix: Fixed inclusion problem of default settings in some rare cases
+  * Added workaround for the annoying PHP warning which occurs on some systems:
+    It is not safe to rely on the system's timezone settings
+  * Bugfix: Fixed problem with some PHP 5.1.2 installations while reading the
+    map configuration files
+  * Switched mod_rewrite redirects of index pages to php redirect scripts
+
+Frontend
+  * Recoded editing features to be available via context menu of the icons.
+    Removed object controls for moving/editing objects
+  * Added a colorpicker for the color selection fileds in add/modify dialog
+  * Bugfix: Fixed handling of enableHover/enableContext URL options
+  * Bugfix: Fixed object link follow after moving object in edit mode when using IE<8
+  * Bugfix: Fixed javascript several onload javascript errors when using IE<8
+  * Bugfix: Fixed add/modify dialog styling in IE/Chrome
+  * Bugfix: Fixed dragging relative positioned lines
+
+Automap
+  * Improved coord parsing code to make it graphviz-2.6-22.2 compatible
+  * Bugfix: Fixed automap alias on overview page and in lists
+
+1.6rc3
+Core
+  * Bugfix: Fixed problem in summary state detection of downtime (resulted
+    e.g. in wrong icons)
+
+Installer
+  * Bugfix: Installing offline docs correctly again
+
+Frontend
+  * Bugfix: Fixed problem when editing the main configuration file
+
+1.6rc2
+
+Core
+  * Bugfix: Fixed HTTP redirects in installations using omd_install.sh
+  * Bugfix: Removed session cookie domain by default
+  * Bugfix: Installer: Fixed problems copying files with spaces in names during update
+  * Bugfix: SQLite Auth DB: Fixed missing permissions for User/setOption
+  * Bugfix: Fixed missing 'url' attributes for map and servicegroup objects
+  * Added NagiosBP backend to connect directly to NagiosBP using the JSON API
+    Thanks to Bacher Systems (bacher.at) for providing this backend.
+
+Frontend
+  * Bugfix: Added missing list code for header templates (map global section editing)
+  * Bugfix: Don't hide dependent fiels where the master attribute is not available
+  * Bugfix: Fixed map global section editing
+  * Bugfix: IE8 fixing event registration (javascript errors on page loading)
+  * Updating map object information while having the hover menu open does not close 
+    open hover menus anymore
+
+1.6rc1
+
+Core
+  * Bugfix: Fixed SQL syntax error in MySQL auth backend
+  * Bugfix: Fixed login problems in opera (Not setting auth cookie when
+    using ip addresses as host address
+  * Removed option "-B" from installer, it is not needed anymore
+  * Installer skips .gitignore files during installation now
+  * Added exclude_members and exclude_member_states options to stateful
+  objects for excluding specific member objects completely or only during summary
+  state calculations.
+  * Several code cleanups
+  * Cleanup: Consolidated code of main handlers ajax_handler and frontend index
+  * Cleanup: Recoded message class calls to exceptions
+  * omd_install.sh can now be called from other directories
+  * Allowing more unicode signs in e.g. map aliases
+  * Added new icon *_unreachable icon to represent the UNREACHABLE host state
+  * Backends can now override the NagVis summary_output/summary_state algorithms
+    to provide their own custom information
+  * Internal cleanup in map configuration attribute definitions
+
+Frontend
+  * Bugfix: Fixed several umlauts in edit mode warning messages
+  * Bugfix: Fixed 100% sidebar height
+  * Bugfix: Fixed initial positioning of relative positioned gadgets
+  * Bugfix: Fixed dragging handling of relative positioned gadgets
+  * Bugfix: Fixed backendid showing up in host_name field of add/modify dialog
+    in some rare cases
+  * Bugfix: Object positions can never be floats (always integers)
+  * Bugfix: Fixed wrong positions of controls during page load (at least in firefox)
+  * Bugfix: Registering drag stop event globally to prevent dragging problems
+    on slower clients
+  * Bugfix: Fixed javascript error "Error: attempt to run compile-and-go script on a cleared scope"
+    after changed main configuration file in FF4
+  * Bugfix: Fixed hanging controls/labels when dragging objects out of screen
+  * Bugfix: It is now possible to unset backend attributes using the "Edit backend" dialog
+  * Bugfix: It is now possible to choose none as map_image in map options to
+    disable the background image
+  * Bugfix: std_speedometer.php fixed min/max handling (Thanks to foxkilo)
+  * Bugfix: Fixed broken URL handling in e.g. rotation pools
+  * Bugfix: Fixed styling of maps with config errors in sidebar
+  * Bugfix: Fixed X coords when adding new objects with opened sidebar menu
+  * Bugfix: Fixed automap links in header dropdown
+  * Readded the "edit" action to the maps module. In this mode all object are
+    automatically unlocked and changes to the lock state are not persisted
+  * Also disabling the object left click actions in unlocked mode
+  * Icon/Gadget/Shape/Textbox dragging is done by dragging the real icons
+  again, like it was in WUI before. The drag controls for these objects has been removed.
+  * Sorting maps on overview page and in multisite snapin by aliases
+  * Readded the "edit" action to the maps module. In this mode all object are
+    automatically unlocked and changes to the lock state are not persisted
+  * Also disabling the object left click actions in unlocked mode
+  * Icon/Gadget/Shape/Textbox dragging is done by dragging the real icons
+  again, like it was in WUI before. The drag controls for these objects has been removed.
+  * Added [alias] macro to context menus
+  * Header menu handles map parent/child relations correctly
+  * Recoded the add/modify dialog to add/edit map objects
+  * Merged frontendEventlog.css into template css file
+  * Reduced HTTP requests during initial page loading
+  * Updating the editing grid when resizing the browser window
+
+Automap
+  * Bugfix: Made the problem automap work again
+
+1.6b3
+
+Frontend
+  * Frontend hides ajax/json errors now after first successfull action of that
+  type
+  * Header menu does not wrap anymore on small browser windows
+  * Bugfix: Fixed background image positioning with enabled sidebar and small screens
+  * Bugfix: Fixed coloring of two part lines in IE
+  * Bugfix: Fixed drawing of second part in two part lines in IE
+  * Bugfix: Preventing text selections while dragging objects in IE
+  * Bugfix: Fixed undefied var error when having no maps and displaying the overview page
+  * Bugfix: Fixed problem with rotation links in header menu with IE8
+  * Bugfix: A lot of links were not working in IE caused by a broken event handler
+  * Bugfix: Preventing JS errors when dragging objects out of screen
+
+Core
+  * omd_install: Installing missing doc/ dir now; Cleaning cache files on install
+  * Checking read permissions before reading directory contents
+  * Main Config: [paths] "gadget, icon, shape, map" internal options are now
+    deprecated and have been renamed to "gadgets, icons, shapes, backgrounds".
+  * Bugfix: Added backgrounds/styles [paths] options to main cfg definitions
+  * Bugfix: Fixed comment line mixup in main config when using multiple
+    config files
+  * Bugfix: Not storing config options from other config files like the OMD
+    site config in nagvis.ini.php anymore
+
+Automap
+  * Improved coordinate parsing regex to match graphviz output of more versions
+  * Commented out __dummy__ host in sample automap config to prevent
+    confusions with the automaps host urls
+
+
+1.6b2
+
+Core
+  * Added omd_install.sh to install NagVis to the local/ path of OMD sites
+    (ONLY FOR TESTING!!!)
+  * Main Config: [paths] "wuijs" and "htmlwuijs" are now deprecated
+  * Bugfix: MKivestatus backend does correct type casting to integers for stats now
+  * Bugfix: NDO Backend: Fixed wrong SQL syntax in getHostState function
+  * Bugfix: NDO Backend: Fixed wrong hard state handling
+  * Bugfix: Fixed redirects after map add/rename/delete
+  * Bugfix: NDO backend does correct type casting to integers for stats now (Thanks to Oliver Graf)
+  * Bugfix: Fixed false CRITICAL states when using NDO Backend (Thanks to Oliver Graf)
+  * Bugfix: Added missing permissions for User/setOption
+  * Bugfix: Fixed javascript error "getSidebarWidth() not definied" when header menu is disable by config
+
+Automap
+  * Added new context menu action "make root" to automap nodes to change the
+    root of the automap on-the-fly (Thanks to Oliver Graf)
+  * Bugfix: Fixed parent calculation in automap (Thanks to Oliver Graf)
+  * Bugfix: Automap could not be used in IE due to javascript error
+
+Frontend
+  * Labels of objects can now be moved again; The edit mode is affected by the objects lock/unlock state
+  * Labels of lines with line_type=14 have more offset now to look better when using horizontal lines
+  * While objects are unlocked the hover menus are disabled
+  * Controls are now resizable using the config option controls_size in [global] section in nagvis.ini.php
+  * Documentation link in header menu only points to available docs. Fallback is en_US
+  * Bugfix: Added missing controls to services which are displayed as gadgets
+  * Bugfix: Fixed parsing of label_type=14 lines (Thanks to Laurent Lebatard)
+  * Bugfix: Label positioning in case of weathermap lines (Thanks to Laurent Lebatard)
+  * Bugfix: Fixed empty warning popups in map management dialogs
+  * Bugfix: Fixed color selection of weathermap lines (Thanks to Laurent Lebatard)
+
+1.6b1
+
+Core
+  * Default admin credentials for inital auth databases are now: User: admin Password: admin
+    Admin credentials in existing auth databases are not changed.
+  * Added user/role profile config files located in nagvis/etc/profiles/(user|role).profile
+    The profile files can contain user/role specific options like languages and so on
+  * The language of a user is stored in the profile file now
+  * The eventlog hide state is stored in the profile file now and used when the eventlog is enabled for a map
+  * Added new options {file_group} and {file_mode} to global section of nagvis.ini.php.
+    These options are used whenever a file is written by NagVis
+  * Livestatus backend: Better error handling when writing to livestatus socket
+  * Lines can have three coords now to reposition the middle of lines having
+    two arrows
+  * Better handling for map config errors on overview page and map links -
+    no whole screen errors anymore
+  * The check_command parameter is available in NagVis now. NDO and
+    MKLivestatus backends fetch this info from the datasources now
+  * Hostgroup and Servicegroup aliases work again now. It might be neccessary
+    to update livestatus to the newest 1.1.9i* version.
+  * All map objects need to have an object id which needs to be unique on
+    each map. All map objects which have no object id defined will ge one
+    created. This makes migration easier.
+  * Catching ps_files_cleanup_dir error message (strange error debian/ubuntu)
+  * Changed PENDING state for host objects to UNCHECKED; This was needed to
+    prevent mixups with service and host objects
+  * Fixed inconsistence with iconsets when refreshing overview maps/automaps
+  * Cleaned up session auth code (Moved session module code to auth handler)
+  * Bugfix: The installer overwrites the default iconset files on upgrade as expected
+  * Added mechanism to search userfiles in independent structures. This allows
+    usage of the local/ structure in OMD
+  * Bugfix: Fixed section merging in main config when using more than one config file
+  * Using configured permissions on uploaded files (backgrounds, shapes, maps) now
+  * Gadgets: Added gadget_type option which can now be img/html. The value
+  defaults to img which is the default behaviour for all existing gadgets. The
+  html mode assumes that the gadget does not render images as classic gadgets
+  but renders HTML code
+  * Changed redirect scripts index.php/config.php to ignore hosts/ports/proto
+    just care about the paths - should be more robust
+
+Automap
+  * Made automap coord parsing regex resistent against html entities in the URL
+  * Automap params changed via GUI can be made permanent now
+  * The x/y coords don't need to be set as dummy values in automap configs anymore
+
+Backend: Livestatus
+  * Bugfix: PHP error when trying to write to socket while the remote host is not
+    available
+
+Frontend
+  * Completely removed the WUI and merged the functionality into the regular frontend.
+    You can now "lock/unlock" all objects for editing using the "Edit Map" menu.
+  * Added new sidebar for better navigation. It can be opened by clicking on
+    the "Open" label in the header menu. The state of the sidebar and the
+    single nodes is stored in user specific profile files
+  * Added new parameter {parent_map} to map/automap global sections which is
+    used in header/sidebar menus to draw a map hierarchy
+  * Colors and ranges of weathermap lines are now customizable using the
+    object configuration option line_weather_colors
+  * Fixed wrong label for MBit/s in weathermap bandwidth display
+  * It is now possible to lock/unlock objects in regular frontend (with the
+    necessary permissions)
+  * Lines can now be repositioned by dragging the ends using the anchors in unlocked mode
+    in regular frontend
+  * The Line middle position can now be edited using the frontend for lines with two line parts
+  * Added password reset form to user management dialog
+  * Reduced ajax calls on map/automap/overview page load
+  * Several code cleanups; Reduced duplicate code
+  * Made background color in frontend configurable now
+  * The header menu has a minimal width now to prevent broken header menu on small screens
+  * The header menu is now positioned to be shown on the screen all the time
+  * Recoded the header menu submenu code (simplified the HTML and JS code)
+  * Added buttons to show/hide the header menu (state saved per user)
+  * Added new option: event_log_events to define the number of events in the eventlog scrollback
+  * Bugfix: Fixed php error when using custom css files in maps
+  * Bugfix: Fixed css notices in firefox caused by invalid statements
+    (transparency in IE, invalid width values for lines)
