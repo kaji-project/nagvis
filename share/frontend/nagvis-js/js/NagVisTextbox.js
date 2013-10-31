@@ -48,7 +48,7 @@ var NagVisTextbox = NagVisStatelessObject.extend({
         // Create container div
         oContainerDiv = document.createElement('div');
         oContainerDiv.setAttribute('id', this.conf.object_id);
-        oContainerDiv.appendChild(this.parseTextbox());
+        this.parseTextbox(oContainerDiv);
 
         // When this is an update, remove the object first
         this.remove();
@@ -81,11 +81,14 @@ var NagVisTextbox = NagVisStatelessObject.extend({
      * @return	String	String with HTML Code
      * @author	Lars Michelsen <lars@vertical-visions.de>
      */
-    parseTextbox: function () {
-        return drawNagVisTextbox(this.conf.object_id+'-label', 'box',
-                                    this.conf.background_color, this.conf.border_color,
-                        this.parseCoord(this.conf.x, 'x'), this.parseCoord(this.conf.y, 'y'), this.conf.z, this.conf.w,
-                        this.conf.h, this.conf.text, this.conf.style);
+    parseTextbox: function (oContainer) {
+        drawNagVisTextbox(
+            oContainer,
+            this.conf.object_id+'-label', 'box',
+            this.conf.background_color, this.conf.border_color,
+            this.parseCoord(this.conf.x, 'x'), this.parseCoord(this.conf.y, 'y'), this.conf.z, this.conf.w,
+            this.conf.h, this.conf.text, this.conf.style
+        );
     },
 
     parseBoxControls: function () {
@@ -93,15 +96,6 @@ var NagVisTextbox = NagVisStatelessObject.extend({
         oBox.setAttribute('class',     'box resizeMe');
         oBox.setAttribute('className', 'box resizeMe');
         oBox = null;
-
-        //var size = oGeneralProperties['controls_size'];
-        //this.parseControlDelete(0, this.parseCoord(this.conf.x, 'x'),
-        //                           this.parseCoord(this.conf.y, 'y'),
-        //                           5, -size - 5, size);
-        //this.parseControlModify(1, this.parseCoord(this.conf.x, 'x'),
-        //                           this.parseCoord(this.conf.y, 'y'),
-        //                           10 + size, -size - 5, size);
-        //size = null;
 
         // Simply make it dragable. Maybe will be extended in the future...
         makeDragable([this.conf.object_id+'-label'], this.saveObject, this.moveObject);

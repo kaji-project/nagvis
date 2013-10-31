@@ -1,8 +1,12 @@
 #!/bin/bash
 case "$1" in
-    1.6|trunk)
-        V=1.6
+    1.7|master)
+        V=1.7
         BRANCH=master
+    ;;
+    1.6)
+        V=1.6
+        BRANCH=nagvis-1.6
     ;;
     1.5)
         V=1.5
@@ -11,10 +15,15 @@ case "$1" in
     1.4)
         V=1.4
         BRANCH=nagvis-1.4
-		;;
+    ;;
     *)
-        echo "ERROR: No param given."
-        exit 1
+        if [ -z "$1" ]; then
+            echo "ERROR: No param given (master|1.7|1.6|1.5|1.4)."
+            exit 1
+        else
+            V=$1
+            BRANCH=$1
+        fi
     ;;
 esac
 

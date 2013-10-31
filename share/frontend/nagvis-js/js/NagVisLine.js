@@ -65,6 +65,8 @@ var NagVisLine = NagVisStatelessObject.extend({
         // Enable the controls when the object is not locked
         if(!this.bIsLocked) {
             this.parseControls();
+	    if(typeof(this.unlockLabel) == 'function')
+	        this.unlockLabel();
             this.toggleObjectActions(this.bIsLocked);
         }
     },
@@ -102,12 +104,13 @@ var NagVisLine = NagVisStatelessObject.extend({
      *
      * @return	String		HTML code
      * @author	Lars Michelsen <lars@vertical-visions.de>
+     * FIXME: Eliminate duplicate code with NagVisStatefulObject
      */
     drawLine: function() {
         var x = this.parseCoords(this.conf.x, 'x');
         var y = this.parseCoords(this.conf.y, 'y');
 
-        var width = this.conf.line_width;
+        var width = addZoomFactor(this.conf.line_width);
 
         var colorFill = this.conf.line_color;
         var colorBorder = this.conf.line_color_border;

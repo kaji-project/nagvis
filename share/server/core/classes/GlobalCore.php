@@ -36,9 +36,22 @@ class GlobalCore {
     private static $instance = null;
     protected $iconsetTypeCache = Array();
 
+    public $statelessObjectTypes = Array(
+        'textbox'   => true,
+        'shape'     => true,
+        'line'      => true,
+        'container' => true,
+    );
 
-    public $demoMaps = Array('demo-germany', 'demo-ham-racks', 'demo-load', 'demo-muc-srv1', 'demo-overview');
-    public $demoAutomaps = Array('__automap', 'demo-overview');
+    public $demoMaps = Array(
+        'demo-germany',
+        'demo-ham-racks',
+        'demo-load',
+        'demo-muc-srv1',
+        'demo-overview',
+        'demo-geomap',
+        'demo-automap',
+    );
 
     /**
      * Deny construct
@@ -182,6 +195,21 @@ class GlobalCore {
     }
 
     /**
+     * Gets all available custom actions
+     */
+    public function getDefinedCustomActions() {
+        $ret = Array();
+        foreach(self::getMainCfg()->getSections() AS $name) {
+            if(preg_match('/^action_/i', $name)) {
+                $id = self::getMainCfg()->getValue($name, 'action_id');
+                $ret[$id] = $id;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * Reads all languages which are available in NagVis and
      * are enabled by the configuration
      *
@@ -296,6 +324,29 @@ class GlobalCore {
     }
 
     /**
+     * Reads all available sources
+     *
+     * @return	Array hover templates
+     * @author 	Lars Michelsen <lars@vertical-visions.de>
+     */
+    public function getAvailableSources() {
+        return array_merge(
+          self::listDirectory(self::getMainCfg()->getPath('sys', 'global', 'sources'), MATCH_PHP_FILE),
+          self::listDirectory(self::getMainCfg()->getPath('sys', 'local',  'sources'), MATCH_PHP_FILE, null, null, null, null, false)
+        );
+    }
+
+    /**
+     * Returns the list of available custom action files
+     */
+    public function getAvailableCustomActions() {
+        return array_merge(
+          self::listDirectory(self::getMainCfg()->getPath('sys', 'global', 'actions'), MATCH_PHP_FILE),
+          self::listDirectory(self::getMainCfg()->getPath('sys', 'local',  'actions'), MATCH_PHP_FILE, null, null, null, null, false)
+        );
+    }
+
+    /**
      * Returns the filetype of an iconset
      *
      * @param   String  Iconset name
@@ -324,14 +375,10 @@ class GlobalCore {
     }
 
     /**
-     * Reads all automaps in automapcfg path
-     *
-     * @param   String  Regex to match the map name
-     * @return	Array   Array of maps
-     * @author 	Lars Michelsen <lars@vertical-visions.de>
+     * Reads all source files for the geomap in the specified path
      */
-    public function getAvailableAutomaps($strMatch = null, $setKey = null) {
-        return self::listDirectory(self::getMainCfg()->getValue('paths', 'automapcfg'), MATCH_CFG_FILE, null, $strMatch, null, $setKey);
+    public function getAvailableGeomapSourceFiles($strMatch = null, $setKey = null) {
+        return self::listDirectory(self::getMainCfg()->getValue('paths', 'geomap'), MATCH_CSV_FILE, null, $strMatch, null, $setKey);
     }
 
     /**
@@ -369,18 +416,6 @@ class GlobalCore {
             self::listDirectory(self::getMainCfg()->getPath('sys', 'global', 'gadgets'), MATCH_PHP_FILE, Array('gadgets_core.php' => true), null, null, null, true),
             self::listDirectory(self::getMainCfg()->getPath('sys', 'local',  'gadgets'), MATCH_PHP_FILE, Array('gadgets_core.php' => true), null, null, null, false)
         );
-    }
-
-    /**
-     * This method checks if the given map is a automap
-     * This is quite hackish but have no better option at the moment
-     *
-     * @param   String      Name of the map
-     * @return	Boolean		Is Successful?
-     * @author 	Lars Michelsen <lars@vertical-visions.de>
-     */
-    public function checkMapIsAutomap($sMap) {
-        return in_array($sMap, $this->getAvailableAutomaps());
     }
 
     /**
@@ -440,12 +475,27 @@ class GlobalCore {
         return false;
     }
 
+    public function debugPrintCallingFunction () {
+        $file = 'n/a';
+        $func = 'n/a';
+        $line = 'n/a';
+        $debugTrace = debug_backtrace();
+        if (isset($debugTrace[1])) {
+            $file = $debugTrace[1]['file'] ? $debugTrace[1]['file'] : 'n/a';
+            $line = $debugTrace[1]['line'] ? $debugTrace[1]['line'] : 'n/a';
+        }
+        if (isset($debugTrace[2])) $func = $debugTrace[2]['function'] ? $debugTrace[2]['function'] : 'n/a';
+        echo "<pre>\n$file, $func, $line\n</pre>";
+    } 
+
     public function checkReadable($path, $printErr = true) {
         if($path != '' && is_readable($path))
             return true;
 
-        if($printErr)
+        if($printErr) {
+            $this->debugPrintCallingFunction();
             throw new NagVisException(l('The path "[PATH]" is not readable.', Array('PATH' => $path)));
+        }
 
         return false;
     }

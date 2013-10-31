@@ -257,7 +257,7 @@ class GlobalBackendTest implements GlobalBackendInterface {
             'ham-gw1'  => Array('ham-srv1', 'ham-srv2', 'ham-printer1'),
         );
 
-        foreach($this->parents AS $parent => $childs) {
+        foreach($this->childs AS $parent => $childs) {
             foreach($childs AS $child) {
                 if(!isset($this->parents[$child])) {
                     $this->parents[$child] = Array($parent);
@@ -322,6 +322,14 @@ class GlobalBackendTest implements GlobalBackendInterface {
                 }
             }
         }
+    }
+
+    public function getHostNamesInHostgroup($group) {
+        return $this->obj['hostgroup'][$group]['members'];
+    }
+
+    public function getProgramStart() {
+        return -1;
     }
 
     function getAllTypeObjects($type) {
@@ -767,6 +775,29 @@ class GlobalBackendTest implements GlobalBackendInterface {
             return $this->parents[$hostName];
         else
             return Array();
+    }
+
+    /**
+     * PUBLIC getDirectChildDependenciesNamesByHostName()
+     *
+     * @param   String   Hostname
+     * @return  Array    List of hostnames
+     * @author  Thibault Cohen <thibault.cohen@savoirfairelinux.com>
+     */
+    public function getDirectChildDependenciesNamesByHostName($hostName, $min_business_impact=false) {
+        return $this->getDirectChildNamesByHostName($hostName);
+    }
+
+    /*
+     * PUBLIC getDirectParentNamesByHostName()
+     *
+     * @param   String   Hostname
+     * @return  Array    List of hostnames
+   * @author  Mathias Kettner <mk@mathias-kettner.de>
+     * @author  Lars Michelsen <lars@vertical-visions.de>
+     */
+    public function getDirectParentDependenciesNamesByHostName($hostName, $min_business_impact=false) {
+        return $this->getDirectParentNamesByHostName($hostName);
     }
 }
 ?>

@@ -56,7 +56,12 @@ class NagVisOverviewView {
             'stateProperties'   => json_encode($this->CORE->getMainCfg()->getStateWeight()),
             'userProperties'    => $USERCFG->doGetAsJson(),
             'fileAges'          => json_encode(Array(
-                'mainCfg'   => $this->CORE->getMainCfg()->getConfigFileAge(),
+                'maincfg' => $this->CORE->getMainCfg()->getConfigFileAge(),
+            )),
+            'locales'           => json_encode(Array(
+                // FIXME: Duplicated definitions in NagVisMapView.php and NagVisOverviewView.php
+                'more items...' => l('more items...'),
+                'Create Object' => l('Create Object'),
             )),
         );
 

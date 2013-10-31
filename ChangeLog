@@ -1,3 +1,245 @@
+1.7.9
+Core:
+  * Livestatus: Fixed handling of hosts/services without custom variables
+  * Added option to perform privilege switch to a user with less permissions
+    for viewing maps in the context of this user
+  * FIX: Fixed state weight definition parsing
+  * FIX: Fixed demo automap (missing programStart method in demo backend)
+
+Frontend:
+  * FIX: Not adding textboxes to "to be updated list" anymore; This might have
+    lead to objects not being reloaded on maps with many texboxes
+  * FIX: More robust handling of broken/no perfdata handling in weathermap
+         lines of type -->BW+%-><-BW+%--
+
+1.7.8
+Automap:
+  * FIX: Added missing program restarted check to invalidate chaches
+
+Geomap:
+  * FIX: Not providing auth credentials in http requests to proxy when none set
+
+Frontend:
+  * FIX: Fixed "Undefined index" error when changing backend_id of maps
+  * FIX: Fixed hiding of shapes during refresh (enable_refresh=1)
+  * Reverted change from 1.7.5 (Weathermap lines with byte/bit values in 
+    labels should print human) which broke the handling for some plugins
+
+1.7.7
+Core:
+  * Implemented "on demand" maps. Maps which only need a basic configuration
+    of global parameters like automaps and geomaps can now be configured and 
+    created on demand by URL parameters. This mode is reached by simply
+    calling the map URL without "show=" parameter and a bunch of parameters
+    for the global section of the map instead.
+  * Implemented center and bottom as label coordinate values which are
+    automatically calculated depending on the rendered sizes
+
+Automap:
+  * Changed default behaviour of the automap concerning the root host. By
+    default NagVis uses a virtual root node which represents the monitoring
+    core. It adds the parent tree and all nodes which have no parents defined
+    below this node. If no parents are configured, all hosts are rendered
+    below this virtual root node.
+
+1.7.6
+Core:
+  * Improved main configuration parsing code (should not mixup comments
+    and empty lines anymore)
+  * Added shinken business_impact filter to automaps (set shinken_features=1
+    in [global] section in main configuration to enable this feature)
+    Thanks to Thibault Cohen for the patch)
+
+Frontend:
+  * Added support for custom context menu actions like connecting via
+    SSH, RDP, HTTP, ... to the monitored hosts.
+  * FIX: Removed debug output while recalculating bandwidth of weathermap lines
+  * FIX: Fixed height of iframes in Container objects
+
+1.7.5
+Core:
+  * Allowing rgba(255,255,255,0.6) like definitions in e.g. label_style
+  attributes in map configuration files
+
+Frontend:
+  * Hiding all kind of javascript error messages automatically on next
+    successful processing
+  * IE below 9: Fixed invisible lines (z-index was not set)
+  * Weathermap lines with byte/bit values in labels should print human
+    readable traffic now
+
+Automap:
+  * Reimplemented ignore_hosts parameter (Thanks to Thibault Cohen)
+
+1.7.4
+Core:
+  * Extended logon module CoreLogonMultisite to support the
+    new cookie format of Check_MK 1.2.1i2 and newer
+
+Frontend:
+  * Hiding HTTP status error messages automatically on next successful request
+  * Bugfix: Added missing lock/unlock line middle control to BW-lines
+  * Bugfix: Fixed "img" not defined js error in IE8 (Please note: Zoom
+    function does not work in IE8 - IE8 event handling seems to be broken)
+  * Bugfix: Fixed flickering hover menu on overview page when sidebar opened
+  * Bugfix: Fixed background positioning on browser zoomed maps
+  * Bugfix: Fixed javascript error when rotations are disabled
+  * Bugfix: Multisite module is catching single map errors now and show all
+    maps in the list regardless of the error. Maps with errors will be listed
+    as UNKNOWN (orange) in the multisite snapin
+
+Geomap:
+  * New option source_type to configure a csv file or the used backend as
+    datasource. In backend mode, the backend used on the map must support
+    the new geomap functions (currently only livestatus backend). All hosts
+    to be shown need the custom variables _LAT and _LONG. The hosts can
+    optionally be filtered by hostgroups
+  * Bugfix: Always rounding calculated coordinates, fixed negative coords
+  * Bugfix: Also using source_file parameter for cache file names to prevent
+    problems with multiple geomaps
+
+1.7.3
+Core:
+  * Bugfix: Fixed problem in geomap exception handling
+  * Bugfix: Fixed invalid json output on uncached geomap rendering
+  * Livestatus-Backend: Using Columns header instead of the deprecated
+    StatsGroupBy header (maybe you need to update livestatus)
+  * Minor output improvements in installer scripts
+
+Frontend:
+  * Hiding rotations table on overview page when no rotations configured
+  * Better handling of HTTP errors in ajax transactions
+  * Big performance improvment when rendering object in frontend after
+    adding the map zoom feature
+  * Bugfix: Re-added "loading..." message on page redering
+  * Bugfix: Only show enabled grid in "edit mode"
+
+Geomap
+  * Bugfix: Fixed status updates of objects on geomaps
+
+1.7.2
+Core:
+  * Multisite auth module: Removed deprecated permission
+  * Reimplemented automaps hostgroup filter
+  * Bugfix: TestBackend - Fixed parent processing
+  * Bugfix: Fixed parent processing in automap
+
+Frontend:
+  * Improved object refreshing code to take always the oldest objects first
+  * Bugfix: Fixed broken rotation links on overview page
+  * Bugfix: Zoom code: Catching not handleable font-size declarations
+  * Bugfix: Fixed bandwidth calculations for bandwidth weathermap lines
+
+Installer:
+  * Check wether or not rsync is installed (terminating if not)
+
+1.7.1
+Core
+  * Added new object type "container" to render a textbox like object which
+    fetches its contents from a configured URL. Take a look at the docs for
+    details. Thanks to Tiri GmbH (www.tiri.li) for providing this feature.
+
+Frontend
+  * Localized some non localized strings like "more items..." in the hover menu
+  * Bugfix: Fixed javascript error in state change eventhandler on e.g. automaps
+  * Bugfix: Cloning of textbox objects is now possible again
+  * Bugfix: Don't try to flash deleted map objects during eventhandling
+
+1.7
+Core
+  * Added new weathermap line type which shows only the used bandwidth in labels
+  * Bugfix: Geomaps use real generated object_ids instead of hostnames for transactions
+    (prevents problems with spaces in hostnames and so on)
+  * Bugfix: Allowing percentages above 999 in weathermap_line_colors option
+  * Bugfix: Geomap: Fixed validation problem when editin map global options
+
+Frontend
+  * Bugfix: Not showing "acknowledge" link when not permitted to perform this action
+  * Bugfix: Fixed hover menu positioning in scrolled maps
+  * Bugfix: Fixed hover menu positioning in IE
+
+Automap:
+  * Bugfix: Fixed automaps object_id persisting code
+
+1.7b3
+Core
+  * Allowing empty lines in main configuration sections now
+  * Set default http_timeout value to 10
+  * Introduced different icons for different states in downtime/ack state
+    (All iconsets need to be reworked - take a look at the docs for a list of
+     needed icons if you use custom iconsets)
+  * Bugfix: Suppressing debug messages in non debug mode
+  * Bugfix: Better catching of exceptions on nested maps
+  * Bugfix: Map configs can be edited using the GUI even in case of source errors
+  * Bugfix: Fixed re-rendering of geomaps after map source changes
+  * Bugfix: Fixed re-fetching of background image after changed geomap source file
+  * Bugfix: Geomap allows placing only one host on the geomap now (Added geomap_border option)
+  * Bugfix: Fixed PHP error in multisite snapin code
+
+Frontend
+  * Added new map config option (global section) event_on_load to raise frontend events
+    also on page loading
+  * Added new options event_repeat_interval and event_repeat_duration to 
+    configured repeated frontend events
+  * Added rotations to sidebar
+  * Info page shows json_encode/json_decode capability of used PHP
+  * Host/Service problems can now be acknowledged from host/service context menus
+    Options dialog_ack_sticky, dialog_ack_notify, dialog_ack_persist control
+    the preselected checkboxes in this dialog
+  * Bugfix: When releasing relative coordinates the parent object is not highlighted anymore
+  * Bugfix: Fixed bug which suppressed the hover menu on overview page in some cases
+  * Bugfix: Fixed some IE css warning message
+  * Bugfix: Fixed icons not being displayed in IE (version 9 in this case)
+  * Bugfix: Fixed rendering errors in IE (below version 9)
+  * Bugfix: Fixed zoom function problem in Chrome
+  * Bugfix: Fixed PHP error when rendering "General Configuration" dialog in some PHP versions
+
+Installer
+  * Moved javascript compress code to make it available in omd_install script
+
+1.7b2
+Core
+  * Checking conf.d directory modification time to detect removed config files
+    to be able to delete the config cache in this case
+  * Multisite auth: Don't redirect the browser on ajax calls
+
+Frontend
+  * Bugfix: Fixed pre-selected values in map options modify dialog
+
+Installer
+  * Automatically removing showautomaps option from nagvis.ini.php during update
+
+
+1.7b1
+Core
+  * Introducing the "map source" feature. Take a look at the docs for details
+  * Implemented geomaps using the new "map source" feature based on an Open
+    Street Map static map API
+
+Automap
+  * Removed the special map type "automap". The automaps have been replaced by
+    regular maps which use the "automap" source.
+    Migration Notes: We do not migrate the automap config files automatically.
+    if you like to have them migrated please move the files from etc/automaps
+    to etc/maps and add the parameter 'source="automap"' to the global section.
+  * Added new render mode "undirected3" which uses the sfdp binary of graphviz
+    (Thanks to Pedro)
+  * Added new rankdir and overlap options (Thanks to Pedro)
+
+Frontend
+  * Added zoom function in frontend. It can be controlled using the view
+    option "zoom". It is possible to edit zoomed maps but recommended to edit
+    maps with zoom set to 100.
+  * Improved scrolling eventhandler
+  * Bugfix: Fixed page/background scaling on open sidebar menu
+
+Geomap
+  * Added parameter geomap_zoom (Geomap zoom is not given as percentage zoom
+    (http://wiki.openstreetmap.org/wiki/Zoom_levels)
+  * Added main config option geomap_server to configure the url to the mapping
+    webservice (Default is now http://geomap.nagvis.org/)
+  * Default geomap type is now Mapnik (Had problems in the past with others)
+
 1.6.6
 Frontend
   * Bugfix: Fixed JS error in template object management dialog
@@ -37,15 +279,35 @@ Core
     socket timeout while connecting to the livestatus socket
   * Livestatus Backend: Only try to connect to livestatus once per page load
   * Bugfix: Fixed wrong computed shape urls which broke all shapes
+  * Added new iconset std_dot
   * The label_show parameter can now be configured for the whole installation
     in the [defaults] section of the main configuration
   * The audit.log is disabled by default now (can be enabled using the
     audit_log parameter in [global] section)
+  * Bugfix: Fixed problem with not real asynchronous ajax calls caused by
+    locking PHP sessions
+  * Bugfix: Fixed update of states on overview page
   * NDO Backend: Removed query debug outputs
+
+Automap
+  * Added new parameter "margin" to control the offset of the automap to the
+    edge of the map
+  * Recoded all automap parameters. All camel case options have been changed
+    to underscore separated vars (e.g. childLayers -> child_layers). These
+    options are now available in the global section of the automaps.
+  * Removed default_params option from global sections. Use the regular
+    options in global section to define default options.
+  * The option of adding a __dummy__ host to the automap configurations has
+    been removed. It is not supported anymore.
 
 Frontend
   * Weathermap line color definitions support usage values above 100% and below 0%
   * Better error handling during coord parsing
+  * Reduced ajax calls during regular map updating
+  * Switched ajax calls during view rendering to be asynchronous (Prevents
+    locked up browsers during ajax calls)
+  * Suppressing transfer of non set attributes during ajax calls
+  * Bugfix: Always remove the last frontend error message when clicking "close"
 
 1.6.3
 Core

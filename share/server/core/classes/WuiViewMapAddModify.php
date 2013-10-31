@@ -30,18 +30,21 @@ class WuiViewMapAddModify {
     private $attrs       = null;
     private $hiddenAttrs = null;
     private $map         = null;
+    private $mode        = null;
     private $errors      = Array();
     private $cloneId     = null;
 
     /**
      * Class Constructor
      */
-    public function __construct($map) {
+    public function __construct($map, $mode) {
         $this->map  = $map;
+        $this->mode = $mode;
         $this->CORE = GlobalCore::getInstance();
 
         $this->MAPCFG = new GlobalMapCfg($this->CORE, $map);
         try {
+            $this->MAPCFG->skipSourceErrors();
             $this->MAPCFG->readMapConfig();
         } catch(MapCfgInvalid $e) {}
     }
@@ -63,6 +66,10 @@ class WuiViewMapAddModify {
         // The hidden attrs list is cleared by the attrs showd up in the form during getFields() call
         $this->hiddenAttrs = $a;
         $this->hiddenAttrs['update'] = '';
+
+        // Add information about the mode
+        if($this->mode !== null)
+            $this->hiddenAttrs['mode'] = $this->mode;
     }
 
     /**
@@ -83,40 +90,62 @@ class WuiViewMapAddModify {
             $this->cloneId = $cloneId;
 
         $aData = Array(
-            'htmlBase'     => cfg('paths', 'htmlbase'),
-            'show'         => $this->map,
-            'successMsg'   => ($success !== null) ? $success : '',
-            'formContents' => $this->getFields($update),
-            'attrs'        => $this->hiddenAttrs,
-            'langSave'     => l('save'),
+            'htmlBase'      => cfg('paths', 'htmlbase'),
+            'show'          => $this->map,
+            // Seconds timeout to the reload/redirect
+            'reloadTime'    => ($success !== null) ? $success[0] : 0,
+            // Optional: Parameters to add/modify during reload
+            'addParams'     => ($success !== null) ? json_encode($success[1]) : '',
+            // The result message of the dialog
+            'successMsg'    => ($success !== null) ? $success[2] : '',
+            'formContents'  => $this->getFields($update),
+            'attrs'         => $this->hiddenAttrs,
+            'mode'          => $this->mode,
+            'langSave'      => l('save'),
+            'langPermanent' => l('Make Permanent'),
+            'langForAll'    => l('for all users'),
+            'langForYou'    => l('for you'),
         );
 
         // Build page based on the template file and the data array
         return $TMPLSYS->get($TMPL->getTmplFile('default', 'wuiMapAddModify'), $aData);
     }
 
-    private function getAttr($typeDefaults, $update, $attr, $must) {
+    private function getAttr($typeDefaults, $update, $attr, $must, $only_inherited = false) {
+        // update is true during view repaint
+        // only_inherited is true when only asking for inherited value
         $val = '';
         $inherited = false;
         // Use url given values when there is some and remove it from the attr list.
         // The url values left will be added as hidden attributes to the form later
-        if(isset($this->attrs[$attr])) {
+        if(!$only_inherited && isset($this->attrs[$attr])) {
             $val = $this->attrs[$attr];
 
-        } elseif(!$update && isset($this->attrs['object_id'])
+        } elseif(!$update && isset($this->attrs['object_id']) && $this->attrs['object_id'] == 0
+                 && $this->MAPCFG->getSourceParam($attr, true, true) !== null) {
+            // Get the value set by url if there is some set
+            // But don't try this when running in "update" mode
+            //
+            // In case of global sections handle the source parameters which might affect
+            // the shown values
+            $val = $this->MAPCFG->getSourceParam($attr, true, true);
+
+        } elseif(isset($this->attrs['object_id'])
                  && $this->MAPCFG->getValue($this->attrs['object_id'], $attr, true) !== false) {
             // Get the value set in this object if there is some set
-            // But don't try this when running in "update" mode
             $val = $this->MAPCFG->getValue($this->attrs['object_id'], $attr, true);
+            // In view_param mode this is inherited
+            if($this->mode == 'view_params')
+                $inherited = true;
 
-        } elseif(!$update && $this->cloneId !== null
+        } elseif((!$update || $only_inherited) && $this->cloneId !== null
                  && $this->MAPCFG->getValue($this->cloneId, $attr, true) !== false) {
             // Get the value set in the object to be cloned if there is some set
             // But don't try this when running in "update" mode
             $val = $this->MAPCFG->getValue($this->cloneId, $attr, true);
 
         } elseif(!$must && isset($typeDefaults[$attr])) {
-            // Get the inherited value - but only for non-must attributes
+            // Get the inherited value
             $val = $typeDefaults[$attr];
             $inherited = true;
         }
@@ -140,7 +169,28 @@ class WuiViewMapAddModify {
         }
 
         $typeDefaults = $this->MAPCFG->getTypeDefaults($type);
-        $typeDef      = $this->MAPCFG->getValidObjectType($type);
+
+        if($objId == 0) {
+            // Special handling for the global section:
+            // It might allow some source parameters (but not all).
+            // Another speciality ist that the dialog can be opened in "view_params" mode
+            // where only the view params shal be shown.
+            $source_params = $this->MAPCFG->getSourceParams();
+            if($this->mode == 'view_params') {
+                $typeDef = $this->MAPCFG->getSourceParamDefs(array_keys($source_params));
+            } else {
+                $typeDef = $this->MAPCFG->getValidObjectType($type);
+
+                // Filter the typedef list. Only show the valid source params
+                foreach($typeDef as $propname => $prop) {
+                    if(!isset($source_params[$propname]) && isset($prop['source_param'])) {
+                        unset($typeDef[$propname]);
+                    }
+                }
+            }
+        } else {
+            $typeDef = $this->MAPCFG->getValidObjectType($type);
+        }
 
         // loop all valid properties for that object type
         foreach($typeDef as $propname => $prop) {
@@ -194,10 +244,12 @@ class WuiViewMapAddModify {
             if($this->MAPCFG->hasDependants($type, $propname))
                 $onChange = 'document.getElementById(\'update\').value=\'1\';document.getElementById(\'commit\').click();';
             
-            // Add a checkbox to toggle the usage of an attribute. But only add it for non-must
-            // attributes.
+            // Add a checkbox to toggle the usage of an attribute. But only add it for
+            // non-must attributes.
             if(!$prop['must']) {
                 $checked = '';
+                // FIXME: In case of the view_params mode the dialog must select and show the user sele
+                //if($this->mode == 'view_params') {
                 if($inherited === false)
                     $checked = ' checked'; 
                 $ret .= '<input type="checkbox" name="toggle_'.$propname.'"'.$checked.' onclick="toggle_option(\''.$propname.'\');'.$onChange.'" value=on />';
@@ -216,10 +268,13 @@ class WuiViewMapAddModify {
             
             // Prepare translation of value to a nice display string in case of
             // e.g. boolean fields
-            if(isset($typeDefaults[$propname]))
-                $valueTxt = $typeDefaults[$propname];
-            else
+            if($this->mode == 'view_params' || isset($typeDefaults[$propname])) {
+            	$valueTxt = $this->getAttr($typeDefaults, $update, $propname, $prop['must'], true);
+                $valueTxt = $valueTxt[1];
+                //$valueTxt = $typeDefaults[$propname];
+            } else {
                 $valueTxt = '';
+            }
 
             if(isset($prop['array']) && $prop['array']) {
                 if(is_array($valueTxt))
@@ -286,6 +341,9 @@ class WuiViewMapAddModify {
                 case 'color':
                     $ret .= $this->colorSelect($propname, $value, $hideField);
                 break;
+                case 'dimension':
+                    $ret .= $this->inputDimension($propname, $value, $hideField);
+                break;
                 case 'text':
                     $ret .= $this->inputField($propname, $value, $hideField);
                 break;
@@ -301,7 +359,7 @@ class WuiViewMapAddModify {
                 }
             }
 
-            $ret .= '<span id="_txt_'.$propname.'"'.$hideTxt.'>'.$valueTxt.'</span>';
+            $ret .= '<span id="_txt_'.$propname.'"'.$hideTxt.'>'.htmlentities($valueTxt).'</span>';
 
             $ret .= '</td></tr>';
 
@@ -331,6 +389,14 @@ class WuiViewMapAddModify {
               .'<script>var o = document.getElementById("'.$propname.'_inp");'
               .'o.color = new jscolor.color(o, {pickerOnfocus:false,adjust:false,hash:true});'
               .'o = null;</script>';
+    }
+
+    private function inputDimension($propname, $value, $hideField) {
+        return '<div id="'.$propname.'" class=picker'.$hideField.'>'
+              .$this->inputField($propname, $value, '', $propname . '_inp')
+              .'<a href="javascript:void(0);" onClick="pickWindowSize(\''.$propname.'_inp\', \''.$propname.'\');">'
+              .'<img src="'.cfg('paths', 'htmlimages').'internal/dimension.png" alt="'.l('Get current size').'" />'
+              .'</a></div>';
     }
 
     private function inputField($name, $value, $hideField, $id = null) {

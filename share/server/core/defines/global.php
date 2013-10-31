@@ -27,7 +27,7 @@
  */
 
 // NagVis Version
-define('CONST_VERSION', '1.6.6');
+define('CONST_VERSION', '1.7.9');
 
 // Set PHP error handling to standard level
 // Different levels for php versions below 5.1 because PHP 5.1 reports
@@ -43,8 +43,9 @@ else
  */
 set_include_path(
 	get_include_path()
-	.PATH_SEPARATOR.'../../server/core/classes/'
-	.PATH_SEPARATOR.'../../server/core/classes/objects/'
+	.PATH_SEPARATOR.'../../server/core/classes'
+	.PATH_SEPARATOR.'../../server/core/classes/objects'
+	.PATH_SEPARATOR.'../../server/core/ext/php-gettext-1.0.9'
 );
 
 // Enable/Disable profiling of NagVis using xhprof.  To make use of this the

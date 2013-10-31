@@ -98,9 +98,13 @@ function hoverShow(x, y, id) {
 
     // hide the menu first to avoid an "up-then-over" visual effect
     hoverMenu.style.display = 'none';
-    hoverMenu.style.left = x + scrollLeft + hoverSpacer - getSidebarWidth() + 'px';
-    hoverMenu.style.top = y + scrollTop + hoverSpacer - getHeaderHeight() + 'px';
-    hoverMenu.style.width = 'auto';
+    hoverMenu.style.left = (x + scrollLeft + hoverSpacer - getSidebarWidth()) + 'px';
+    hoverMenu.style.top = (y + scrollTop + hoverSpacer - getHeaderHeight()) + 'px';
+    if(isIE) {
+        hoverMenu.style.width = '0px';
+    } else {
+        hoverMenu.style.width = 'auto';
+    }
     hoverMenu.style.display = '';
 
     // Set the width but leave some border at the screens edge
@@ -128,10 +132,11 @@ function hoverShow(x, y, id) {
     // Resizing was not enough so try to reposition the menu now
     if(!hoverPosAndSizeOk) {
         // First reposition by real size or by min width
-        if(hoverMenu.clientWidth < minWidth)
-            hoverMenu.style.left = (x - minWidth - hoverSpacer) + 'px';
-        else
-            hoverMenu.style.left = (x - hoverMenu.clientWidth - hoverSpacer) + 'px';
+        if(hoverMenu.clientWidth < minWidth) {
+            hoverMenu.style.left = (x - minWidth - hoverSpacer + scrollLeft) + 'px';
+        } else {
+            hoverMenu.style.left = (x - hoverMenu.clientWidth - hoverSpacer + scrollLeft) + 'px';
+        }
 
         if(hoverMenuInScreen(hoverMenu, hoverSpacer)) {
             hoverPosAndSizeOk = true;
@@ -154,7 +159,7 @@ function hoverShow(x, y, id) {
     // Only move the menu to the top when the new top will not be
     // out of sight
     if(hoverTop + hoverMenu.clientHeight > pageHeight() && hoverTop - hoverMenu.clientHeight >= 0)
-        hoverMenu.style.top = hoverTop - hoverMenu.clientHeight - hoverSpacer + 'px';
+        hoverMenu.style.top = hoverTop - hoverMenu.clientHeight - hoverSpacer - 5 + 'px';
     hoverTop = null;
 
     // Append to visible menus array
@@ -169,11 +174,26 @@ function hoverMenuInScreen(hoverMenu, hoverSpacer) {
     var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft :
     document.documentElement.scrollLeft;
 
-    if(hoverLeft + hoverMenu.clientWidth >= pageWidth() - scrollLeft)
+    if(hoverLeft < scrollLeft) {
+        //alert('left border is out of viewport');
         return false;
+    }
 
-    if(hoverLeft - hoverSpacer < 0)
+    // The most right px of the hover menu
+    var hoverRight = hoverLeft + hoverMenu.clientWidth - scrollLeft;
+    // The most right px of the viewport
+    var viewRight  = pageWidth();
+
+    if(hoverRight > viewRight) {
+        //alert('right border is out of viewport');
         return false;
+    }
+
+    // There is not enough spacing at the left viewport border
+    if(hoverLeft - hoverSpacer < 0) {
+        // alert('not enough spacing at left viewport border');
+        return false;
+    }
 
     scrollLeft = null;
     hoverLeft = null;

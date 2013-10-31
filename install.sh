@@ -95,6 +95,8 @@ GREP_INCOMPLETE=0
 # Function definitions
 ###############################################################################
 
+. install_lib
+
 # format version string
 fmt_version() {
     V=${1//a/.0.0}
@@ -142,8 +144,6 @@ General Parameters:
 
   -i <BACKENDs> Comma separated list of backends to use:
                   Available backends: mklivestatus, ndo2db, ido2db, merlinmy
-
-  -B <BINARY>   Full path to the Nagios/Icinga binary (DEPRECATED and UNUSED!)
 
 Backend specific parameters:
 
@@ -330,8 +330,8 @@ cat <<EOD
 +------------------------------------------------------------------------------+
 | This script is built to facilitate the NagVis installation and update        |
 | procedure for you. The installer has been tested on the following systems:   |
-| - Debian Etch, Hardy (4.0, 5.0)                                              |
-| - Ubuntu Hardy, Intrepid, Jaunty, Karmic, Lucid (8.04 to 10.04)              |
+| - Debian, since Etch (4.0)                                                   |
+| - Ubuntu, since Hardy (8.04)                                                 |
 | - SuSE Linux Enterprise Server 10 and 11                                     |
 |                                                                              |
 | Similar distributions to the ones mentioned above should work as well.       |
@@ -851,95 +851,6 @@ makedir() {
     fi
 }
 
-cmp() {
-    cat $1 | sed 's#\(var\)\s*\(\S*\)\s*=\s*#\1 \2=#;s#^\s*##;s#\s*$##;s#\t+# #g' | awk '
-    BEGIN { OK=1; braces=0 }
-    {
-        # Remove /* */ one line comments
-        sub(/\/\*[^@]*\*\//,"");
-        # Remove // comments (line beginning)
-        sub(/^\/\/.*/,"");
-        
-        # Count braces
-        anz1 = gsub(/\{/,"{");
-        anz2 = gsub(/}/,"}");
-        
-        if (OK == 1) {
-            braces += anz1;
-            braces -= anz2;
-        }
-    }
-    /\/\*/ {
-        c = gsub(/\/\*[^@]*$/,"");
-        if(c > 0) {
-            OK=0;
-        }
-    }
-    /\*\/$/ {
-        c = gsub(/^[^@]*\*\//,"");
-        if(c > 0) {
-            OK=1;
-        }
-    }
-    {
-        line = $0;
-        #anz = gsub(/function/," function");
-        #ch = substr(line,length(line));
-        if (OK == 1) {
-            if (length(line) > 0) {
-                #if (ch == "}") {
-                #   if (braces == 0) {
-                #       if (length(line) > 0) {
-                #           print line
-                #       }
-                #       line = ""
-                #   }
-                #}
-                #line = line $0;
-                
-                print line;
-            }
-        }
-    }
-    ' >> $OUT
-}
-
-cmp_js() {
-    cd $NAGVIS_PATH/share/frontend/nagvis-js/js/
-    OUT=NagVisCompressed.js
-    >$OUT
-    cmp ExtStacktrace.js
-    cmp nagvis.js
-    cmp edit.js
-    cmp popupWindow.js
-    cmp ExtBase.js
-    cmp frontendMessage.js
-    cmp frontendEventlog.js
-    cmp frontendHover.js
-    cmp hover.js
-    cmp frontendContext.js
-    cmp ajax.js
-    cmp ajaxActions.js
-    cmp dynfavicon.js
-    cmp frontend.js
-    cmp lines.js
-    cmp NagVisObject.js
-    cmp NagVisStatefulObject.js
-    cmp NagVisStatelessObject.js
-    cmp NagVisHost.js
-    cmp NagVisService.js
-    cmp NagVisHostgroup.js
-    cmp NagVisServicegroup.js
-    cmp NagVisMap.js
-    cmp NagVisShape.js
-    cmp NagVisLine.js
-    cmp NagVisTextbox.js
-    cmp NagVisRotation.js
-    cmp ExtWzJsGraphics.js
-    cmp ExtGenericResize.js
-    cmp ExtJSColor.js
-}
-
 # Main program starting
 ###############################################################################
 
@@ -972,13 +883,10 @@ HTML_PATH="/nagvis"
 
 # Process command line options
 if [ $# -gt 0 ]; then
-    while getopts "p:n:B:m:l:w:W:u:b:g:c:i:s:O:a:ohqvFr" options $OPTS; do
+    while getopts "p:n:m:l:w:W:u:b:g:c:i:s:O:a:ohqvFr" options $OPTS; do
         case $options in
             n)
                 NAGIOS_PATH=${OPTARG%/}
-            ;;
-            B)
-                # Deprecated since 1.6x
             ;;
             m)
                 NDO_MOD=$OPTARG
@@ -1017,7 +925,7 @@ if [ $# -gt 0 ]; then
                 NAGVIS_BACKEND=$OPTARG
             ;;
             o)
-                IGNORE_DEMO="demo*cfg demo*png demo*ini.php"
+                IGNORE_DEMO="demo*cfg demo*png demo*ini.php demo-*.csv"
             ;;
             q)
                 INSTALLER_QUIET=1
@@ -1097,6 +1005,11 @@ if [ -z "$PKG" ]; then
 fi
 log "Using packet manager $PKG" $PKG
 SED=`which sed` 
+
+if ! which rsync >/dev/null 2>&1; then
+    log "rsync is not installed. Aborting..."
+    exit 1
+fi
 
 # checking grep option as non-Linux might not support "-r"
 grep -r INSTALLER_VERSION install.sh >/dev/null 2>&1
@@ -1350,7 +1263,7 @@ makedir "$NAGVIS_PATH/etc/profiles"
 copy "README" "$NAGVIS_PATH"
 copy "LICENCE" "$NAGVIS_PATH"
 copy "docs" "$NAGVIS_PATH/share/" "" "*/cleanup_new_notes.sh"
-cmp_js
+cmp_js $NAGVIS_PATH/share/frontend/nagvis-js/js
 
 # Remove demo maps if desired
 if [ "$IGNORE_DEMO" != "" ]; then
@@ -1485,8 +1398,8 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" ]; then
         LINE="Restoring custom map configuration files..."
         restore "etc/maps/" "map configuration files" "/demo*.cfg"
     
-        LINE="Restoring custom automap configuration files..."
-        restore "etc/automaps/" "automap configuration files" "/demo*.cfg"
+        LINE="Restoring custom geomap source files..."
+        restore "etc/geomap/" "geomap source files" "/demo*.csv"
     
         LINE="Restoring user configuration files..."
         if [ -d $NAGVIS_PATH_BACKUP/etc/profiles ]; then
@@ -1508,7 +1421,7 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" ]; then
         restore "$USERFILES_DIR/images/iconsets/" "iconset files" "/20x20.png /std_*_*.png /demo_*.png"
     
         LINE="Restoring custom shapes..."
-        restore "$USERFILES_DIR/images/shapes/" "shapes" "*demo*png /std_dummy.png"
+        restore "$USERFILES_DIR/images/shapes/" "shapes" "*demo*png /std_*"
         
         LINE="Restoring custom templates..."
         restore "$USERFILES_DIR/templates/" "templates" "/default.*"
@@ -1518,6 +1431,11 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" ]; then
 
         LINE="Restoring custom gadgets..."
         restore "$USERFILES_DIR/gadgets/" "gadgets" "/gadgets_core.php /std_*.php"
+
+        if [ -d $NAGVIS_PATH_BACKUP/$USERFILES_DIR/scripts/ ]; then
+            LINE="Restoring custom scripts..."
+            restore "$USERFILES_DIR/scripts/" "scripts" "/std_*.php"
+        fi
         
         LINE="Restoring auth database file..."
         restore "$NAGVIS_AUTH_DB" "auth database file" ""
@@ -1531,7 +1449,7 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" ]; then
         restore "$NAGVIS_CONF" "main configuration file" ""
     
         LINE="Restoring custom map configuration files..."
-        copy_dir_xpath "\/(__automap\.cfg|demo\.cfg|demo2\.cfg|demo-server\.cfg|demo-map\.cfg)$" "etc/maps" "etc/maps" "map configuration files"
+        copy_dir_xpath "\/(demo\.cfg|demo2\.cfg|demo-server\.cfg|demo-map\.cfg)$" "etc/maps" "etc/maps" "map configuration files"
     
         LINE="Restoring custom map images..."
         copy_dir_xpath "\/nagvis-demo\.png$" "nagvis/images/maps" "$USERFILES_DIR/images/maps" "map image files"
@@ -1588,6 +1506,10 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" -a "$INSTA
         sed -i '/^wuijs=/d' $NAGVIS_PATH/etc/nagvis.ini.php
         chk_rc "| Error" "$DONE"
 
+        DONE=`log "Removing showautomaps option from main config..." done`
+        sed -i '/^showautomaps=/d' $NAGVIS_PATH/etc/nagvis.ini.php
+        chk_rc "| Error" "$DONE"
+
         # Remove base and htmlbase path from cross path updated main
         # configuration file
         if [ "$NAGVIS_PATH_OLD" != "$NAGVIS_PATH" ]; then
@@ -1627,16 +1549,6 @@ if [ "$INSTALLER_ACTION" = "update" -a "$NAGVIS_VER_OLD" != "UNKNOWN" -a "$INSTA
         sed -i '/^allowed_user=/d' $NAGVIS_PATH/etc/maps/*.cfg
         chk_rc "| Error" "$DONE"
 
-        DONE=`log "Removing allowed_for_config from automap configs..." done`
-        grep -r '^allowed_for_config=' $NAGVIS_PATH/etc/automaps/*.cfg >> $NAGVIS_PATH/$AUTH_BACKUP
-        sed -i '/^allowed_for_config=/d' $NAGVIS_PATH/etc/automaps/*.cfg
-        chk_rc "| Error" "$DONE"
-
-        DONE=`log "Removing allowed_user from automap configs..." done`
-        grep -r '^allowed_user=' $NAGVIS_PATH/etc/automaps/*.cfg >> $NAGVIS_PATH/$AUTH_BACKUP
-        sed -i '/^allowed_user=/d' $NAGVIS_PATH/etc/automaps/*.cfg
-        chk_rc "| Error" "$DONE"
-
         DONE=`log "Removing hover_timeout from map configs..." done`
         sed -i '/^hover_timeout=/d' $NAGVIS_PATH/etc/maps/*.cfg
         chk_rc "| Error" "$DONE"
@@ -1671,8 +1583,8 @@ chown -R $WEB_USER:$WEB_GROUP $NAGVIS_PATH
 set_perm 775 "$NAGVIS_PATH/etc"
 set_perm 775 "$NAGVIS_PATH/etc/maps"
 set_perm 664 "$NAGVIS_PATH/etc/maps/*"
-set_perm 775 "$NAGVIS_PATH/etc/automaps"
-set_perm 664 "$NAGVIS_PATH/etc/automaps/*"
+set_perm 775 "$NAGVIS_PATH/etc/geomap"
+set_perm 664 "$NAGVIS_PATH/etc/geomap/*"
 set_perm 775 "$NAGVIS_PATH/etc/profiles"
 set_perm 664 "$NAGVIS_PATH/etc/profiles/*"
 set_perm 775 "$NAGVIS_PATH/share/userfiles/images/maps"

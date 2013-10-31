@@ -51,6 +51,7 @@ class CoreModMap extends CoreModule {
             'modifyObject'      => 'edit',
             'createObject'      => 'edit',
             'deleteObject'      => 'edit',
+            'toStaticMap'       => 'edit',
 
             'manageTmpl'        => 'edit',
             'getTmplOpts'       => 'edit',
@@ -73,7 +74,8 @@ class CoreModMap extends CoreModule {
             case 'getTmplOpts':
             case 'addModify':
             case 'checkLinked':
-                $aVals = $this->getCustomOptions(Array('show' => MATCH_MAP_NAME));
+            case 'toStaticMap':
+                $aVals = $this->getCustomOptions(Array('show' => MATCH_MAP_NAME_EMPTY));
                 $this->name = $aVals['show'];
             break;
             // And those have the objecs in the POST var "map"
@@ -119,9 +121,9 @@ class CoreModMap extends CoreModule {
                 break;
                 case 'doAdd':
                     $this->handleResponse('handleResponseAdd', 'doAdd',
-                                            l('The map has been created.'),
-                                                l('The map could not be created.'),
-                                                1, $this->htmlBase.'/frontend/nagvis-js/index.php?mod=Map&act=view&show='.$_POST['map']);
+                                          l('The map has been created.'),
+                                          l('The map could not be created.'),
+                                          1, $this->htmlBase.'/frontend/nagvis-js/index.php?mod=Map&act=view&show='.$_POST['map']);
                 break;
                 case 'doRename':
                     // if renamed map is open, redirect to new name
@@ -134,9 +136,9 @@ class CoreModMap extends CoreModule {
                         $map = $current;
 
                     $this->handleResponse('handleResponseRename', 'doRename',
-                                            l('The map has been renamed.'),
-                                                                l('The map could not be renamed.'),
-                                                                1, $this->htmlBase.'/frontend/nagvis-js/index.php?mod=Map&act=view&show='.$map);
+                                          l('The map has been renamed.'),
+                                          l('The map could not be renamed.'),
+                                          1, $this->htmlBase.'/frontend/nagvis-js/index.php?mod=Map&act=view&show='.$map);
                 break;
                 case 'checkLinked':
                     $sReturn = json_encode($this->checkLinked($this->name));
@@ -152,9 +154,9 @@ class CoreModMap extends CoreModule {
                         $url = $this->htmlBase.'/frontend/nagvis-js/index.php?mod=Map&act=view&show='.$current;
 
                     $this->handleResponse('handleResponseDelete', 'doDelete',
-                                            l('The map has been deleted.'),
-                                                                l('The map could not be deleted.'),
-                                                              1, $url);
+                                          l('The map has been deleted.'),
+                                          l('The map could not be deleted.'),
+                                          1, $url);
                 break;
                 case 'modifyObject':
                     $sReturn = $this->handleResponse('handleResponseModifyObject', 'doModifyObject',
@@ -175,18 +177,34 @@ class CoreModMap extends CoreModule {
                 break;
                 case 'addModify':
                     $aOpts = Array(
-                        'show'     => MATCH_MAP_NAME,
-                        'clone_id' => MATCH_OBJECTID_EMPTY,
-                        'submit'   => MATCH_STRING_EMPTY,
-                        'update'   => MATCH_INTEGER_EMPTY,
+                        'show'      => MATCH_MAP_NAME,
+                        'clone_id'  => MATCH_OBJECTID_EMPTY,
+                        'submit'    => MATCH_STRING_EMPTY,
+                        'update'    => MATCH_INTEGER_EMPTY,
+                        'mode'      => MATCH_STRING_EMPTY,
+                        'perm'      => MATCH_BOOLEAN_EMPTY,
+                        'perm_user' => MATCH_BOOLEAN_EMPTY,
                     );
                     $aVals = $this->getCustomOptions($aOpts, Array(), true);
-                    $attrs = $this->filterMapAttrs($this->getAllOptions($aOpts));
+                    list($attrs, $attrsFiltered) = $this->filterMapAttrs($this->getAllOptions($aOpts));
 
-                    $VIEW = new WuiViewMapAddModify($aVals['show']);
+                    // mode is set to view_params if only the "view parameters" dialog is handled in this request.
+                    // This dialog has less options and is primary saved for the user and not for all users in the
+                    // map configuration
+                    $mode = isset($aVals['mode']) ? $aVals['mode'] : null;
+                    // Tells the handleAddModify handler to store the options permanent
+                    if(isset($aVals['perm']) && $aVals['perm'] == '1') {
+                        $perm = 1;
+                    } elseif(isset($aVals['perm_user']) && $aVals['perm_user'] == '1') {
+                        $perm = 2;
+                    } else {
+                        $perm = null;
+                    }
+
+                    $VIEW = new WuiViewMapAddModify($aVals['show'], $mode);
                     $VIEW->setAttrs($attrs);
-                    
-                    // This tells the follwing handling when the page only needs to be repainted
+
+                    // This tells the following handling when the page only needs to be repainted
                     $update = isset($aVals['update']) && $aVals['update'] == '1';
                     $cloneId = isset($aVals['clone_id']) ? $aVals['clone_id'] : null;
 
@@ -194,8 +212,9 @@ class CoreModMap extends CoreModule {
                     $success = null;
                     // Don't handle submit actions when the 'update' POST attribute is set
                     if(isset($aVals['submit']) && $aVals['submit'] != '' && !$update) {
+                        // The form has been submitted.
                         try {
-                            $success = $this->handleAddModify($aVals['show'], $attrs);
+                            $success = $this->handleAddModify($mode, $perm, $aVals['show'], $attrs, $attrsFiltered);
                         } catch(FieldInputError $e) {
                             $err = $e;
                         }
@@ -254,33 +273,85 @@ class CoreModMap extends CoreModule {
                     if($this->handleResponse('handleResponseDoImportMap', 'doImportMap'))
                         header('Location:'.$_SERVER['HTTP_REFERER']);
                 break;
+                case 'toStaticMap':
+                    if(isset($_POST['target'])) {
+                        // Is called on form submission
+                        $this->toStaticMap();
+                    } else {
+                        $VIEW = new NagVisViewToStaticMap($this->CORE);
+                        $sReturn = json_encode(Array('code' => $VIEW->parse()));
+                    }
+                break;
             }
         }
 
         return $sReturn;
     }
 
+    /**
+     * Converts maps using sources to static maps
+     */
+    private function toStaticMap() {
+        $FHANDLER = new CoreRequestHandler($_POST);
+        if(!$FHANDLER->match('target', MATCH_MAP_NAME)) {
+            throw new NagVisException(l('Invalid target option given.'));
+        }
+
+        $target = $FHANDLER->get('target');
+        // "true" negates the check
+        $this->verifyMapExists($target, true);
+
+        // Read the old config
+        $this->verifyMapExists($this->name);
+        $MAPCFG = new GlobalMapCfg($this->CORE, $this->name);
+        $MAPCFG->readMapConfig();
+
+        // Create a new map config
+        $NEW = new GlobalMapCfg($this->CORE, $target);
+        $NEW->createMapConfig();
+        foreach($MAPCFG->getMapObjects() AS $object_id => $cfg) {
+            // Remove "sources" from the global section. Cause this makes the maps dynamic
+            if($cfg['type'] == 'global') {
+                unset($cfg['sources']);
+            }
+            $NEW->addElement($cfg['type'], $cfg, $perm = true, $object_id);
+        }
+
+        throw new Success(
+            l('The map has been created.'),
+            null,
+            1,
+            cfg('paths','htmlbase').'/frontend/nagvis-js/index.php?mod=Map&show='.$target
+        );
+    }
+
+
     // Filter the attributes using the helper fields
     // Each attribute can have the toggle_* field set. If present
     // use it's value to filter out the attributes
     private function filterMapAttrs($attrs) {
-        $ret = Array();
+        $ret = array();
+        $filtered = array();
         foreach($attrs AS $attr => $val) {
             if(substr($attr, 0, 7) == 'toggle_' || $attr == '_t' || $attr == 'lang' || $attr == 'update')
                 continue;
-            if(isset($attrs['toggle_'.$attr]) && $attrs['toggle_'.$attr] !== 'on')
-                continue;
-            $ret[$attr] = $val;
+
+            if(isset($attrs['toggle_'.$attr]) && $attrs['toggle_'.$attr] !== 'on') {
+                $filtered[$attr] = null;
+            } else {
+                $ret[$attr] = $val;
+            }
         }
-        return $ret;
+        return array($ret, $filtered);
     }
 
     // Validate and process addModify form submissions
-    protected function handleAddModify($map, $attrs) {
+    protected function handleAddModify($mode, $perm, $map, $attrs, $attrsFiltered) {
         $this->verifyMapExists($map);
         $MAPCFG = new GlobalMapCfg($this->CORE, $map);
 
         try {
+            $MAPCFG->skipSourceErrors();
             $MAPCFG->readMapConfig();
         } catch(MapCfgInvalid $e) {}
 
@@ -293,19 +364,50 @@ class CoreModMap extends CoreModule {
             $type  = $MAPCFG->getValue($attrs['object_id'], 'type');
             $objId = $attrs['object_id'];
 
+            // The handler has been called in "view_params" mode. In this case the user has
+            // less options and the options to
+            // 1. modify these parameters only for the current open view
+            // 2. Save the changes for himselfs
+            // 3. Save the changes to the map config (-> Use default code below)
+            if($mode == 'view_params' && $perm != 1 && $perm != 2) {
+                // This is the 1. case -> redirect the user to a well formated url
+                $params = array_merge($attrs, $attrsFiltered);
+                unset($params['object_id']);
+                return array(0, $params, '');
+            }
+
+            if($mode == 'view_params' && $perm == 2) {
+                // This is the 2. case -> saving the options only for the user
+                $USERCFG = new CoreUserCfg();
+                $params = $attrs;
+                unset($params['object_id']);
+                $USERCFG->doSet(array(
+                    'params-' . $map => $params,
+                ));
+                return array(0, '', '');
+            }
+
             if(!$MAPCFG->objExists($objId))
                 throw new NagVisException(l('The object does not exist.'));
 
             $this->validateAttributes($MAPCFG->getValidObjectType($type), $attrs);
 
             // Update the map configuration   
-            $MAPCFG->updateElement($objId, $attrs, true);
+            if($mode == 'view_params') {
+                // Only modify/add the given attributes. Don't remove any
+                // set options in the array
+                foreach($attrs as $key => $val)
+                    $MAPCFG->setValue($attrs['object_id'], $key, $val);
+                $MAPCFG->storeUpdateElement($attrs['object_id']);
+            } else {
+                // add/modify case: Rewrite whole object with the given attributes
+                $MAPCFG->updateElement($objId, $attrs, true);
+            }
 
-            $successMsg = l('The [TYPE] has been modified. Reloading in 2 seconds.',
-                                                               Array('TYPE' => $type));
+            $successMsg = array(2, '', l('The [TYPE] has been modified. Reloading in 2 seconds.',
+                                                               Array('TYPE' => $type)));
         } else {
             // Create the new object
-
             $type  = $attrs['type'];
 
             $this->validateAttributes($MAPCFG->getValidObjectType($type), $attrs);
@@ -313,8 +415,8 @@ class CoreModMap extends CoreModule {
             // append a new object definition to the map configuration
             $MAPCFG->addElement($type, $attrs, true);
 
-            $successMsg = l('The [TYPE] has been added. Reloading in 2 seconds.',
-                                                            Array('TYPE' => $type));
+            $successMsg = array(2, '', l('The [TYPE] has been added. Reloading in 2 seconds.',
+                                                            Array('TYPE' => $type)));
         }
 
         // delete map lock
@@ -901,28 +1003,33 @@ class CoreModMap extends CoreModule {
         $arr['event_scroll']             = $MAPCFG->getValue(0, 'event_scroll');
         $arr['event_sound']              = $MAPCFG->getValue(0, 'event_sound');
         $arr['in_maintenance']           = $MAPCFG->getValue(0, 'in_maintenance');
+        $arr['sources']                  = $MAPCFG->getValue(0, 'sources');
 
         return json_encode($arr);
     }
 
     private function getMapObjects() {
-        // Initialize backends
-        $BACKEND = new CoreBackendMgmt($this->CORE);
-
         $MAPCFG = new NagVisMapCfg($this->CORE, $this->name);
         $MAPCFG->readMapConfig();
 
-        $MAP = new NagVisMap($this->CORE, $MAPCFG, $BACKEND, GET_STATE, IS_VIEW);
+        $MAP = new NagVisMap($this->CORE, $MAPCFG, GET_STATE, IS_VIEW);
         return $MAP->parseObjectsJson();
     }
 
     private function getObjectStates() {
-        $aOpts = Array('ty' => MATCH_GET_OBJECT_TYPE,
-                       'i'  => MATCH_STRING_NO_SPACE_EMPTY);
+        $aOpts = Array(
+            'ty' => MATCH_GET_OBJECT_TYPE,
+            'i'  => MATCH_STRING_NO_SPACE_EMPTY,
+            'f'  => MATCH_STRING_NO_SPACE_EMPTY
+        );
         $aVals = $this->getCustomOptions($aOpts);
 
-        // Initialize backends
-        $BACKEND = new CoreBackendMgmt($this->CORE);
+        // Is this request asked to check file ages?
+        if(isset($aVals['f']) && isset($aVals['f'][0]) && $aVals['f'] != '') {
+            $result = $this->checkFilesChanged($aVals['f']);
+            if($result !== null)
+                return $result;
+        }
 
         // Initialize map configuration (Needed in getMapObjConf)
         $MAPCFG = new NagVisMapCfg($this->CORE, $this->name);
@@ -933,7 +1040,7 @@ class CoreModMap extends CoreModule {
         if($aVals['i'] != '')
             $MAPCFG->filterMapObjects($aVals['i']);
 
-        $MAP = new NagVisMap($this->CORE, $MAPCFG, $BACKEND, GET_STATE, IS_VIEW);
+        $MAP = new NagVisMap($this->CORE, $MAPCFG, GET_STATE, IS_VIEW);
         return $MAP->parseObjectsJson($aVals['ty']);
     }
 

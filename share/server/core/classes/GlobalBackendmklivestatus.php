@@ -220,7 +220,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
      * @author  Mathias Kettner <mk@mathias-kettner.de>
      * @author  Lars Michelsen <lars@vertical-visions.de>
      */
-    private function queryLivestatus($query) {
+    private function queryLivestatus($query, $response = true) {
         // Only connect when no connection opened yet
         if($this->SOCKET === null) {
             $this->connectSocket();
@@ -235,7 +235,8 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
 
         // Query to get a json formated array back
         // Use KeepAlive with fixed16 header
-        $query .= "OutputFormat:json\nKeepAlive: on\nResponseHeader: fixed16\n\n";
+        if($response)
+            $query .= "OutputFormat:json\nKeepAlive: on\nResponseHeader: fixed16\n\n";
         // Disable regular error reporting to suppress php error messages
         $oldLevel = error_reporting(0);
         $write = fwrite($this->SOCKET, $query);
@@ -253,6 +254,10 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
                                                        'SOCKET'    => $this->socketPath,
                                                        'MSG'       => 'Connection terminated.')));
 
+
+        // Return here if no answer is expected
+        if(!$response)
+            return;
 
         // Read 16 bytes to get the status code and body size
         $read = $this->readSocket(16);
@@ -398,6 +403,25 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
         }
 
         return $result;
+    }
+
+    /**
+     * PUBLIC query()
+     * This is a special method which is currently unused within NagVis.
+     * It has been added as interface to the std_lq.php script.
+     */
+    public function query($type, $query) {
+        switch($type) {
+            case 'column':
+                return $this->queryLivestatusSingleColumn($query);
+            break;
+            case 'row':
+                return $this->queryLivestatusSingleRow($query);
+            break;
+            default:
+                return $this->queryLivestatus($query);
+            break;
+        }
     }
 
     /**
@@ -556,7 +580,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
           "current_attempt max_check_attempts last_state_change ".
           "last_hard_state_change statusmap_image perf_data ".
           "acknowledged scheduled_downtime_depth has_been_checked name ".
-          "check_command\n".
+          "check_command custom_variable_names custom_variable_values\n".
           $objFilter;
 
         $l = $this->queryLivestatus($q);
@@ -601,8 +625,11 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
                   'last_hard_state_change' => $e[12],
                   'statusmap_image'        => $e[13],
                   'perfdata'               => $e[14],
-                  'check_command'          => $e[19]
+                  'check_command'          => $e[19],
                 );
+
+                if($e[20] && $e[21])
+                    $arrTmpReturn['custom_variables'] = array_combine($e[20], $e[21]);
 
                 /**
                 * Handle host/service acks
@@ -669,7 +696,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
           "state_type current_attempt max_check_attempts last_state_change ".
           "last_hard_state_change perf_data scheduled_downtime_depth ".
           "acknowledged host_acknowledged host_scheduled_downtime_depth ".
-          "has_been_checked host_name check_command\n");
+          "has_been_checked host_name check_command custom_variable_names custom_variable_values\n");
 
         $arrReturn = Array();
         if(is_array($l) && count($l) > 0) {
@@ -763,6 +790,8 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
                     $arrTmpReturn['last_hard_state_change'] = $e[13];
                     $arrTmpReturn['perfdata'] = $e[14];
                     $arrTmpReturn['check_command'] = $e[21];
+                    if(isset($e[22][0]) && isset($e[23][0]))
+                        $arrTmpReturn['custom_variables'] = array_combine($e[22], $e[23]);
                 }
 
                 if($specific) {
@@ -875,7 +904,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
             "Stats: host_scheduled_downtime_depth > 0\n" .
             "StatsOr: 2\n" .
             "StatsAnd: 2\n" .
-            "StatsGroupBy: host_name host_alias\n");
+            "Columns: host_name host_alias\n");
 
         $arrReturn = Array();
         if(is_array($l) && count($l) > 0) {
@@ -981,7 +1010,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
             "Stats: ".$stateAttr." = 2\n" .
             "Stats: scheduled_downtime_depth > 0\n" .
             "StatsAnd: 2\n".
-            "StatsGroupBy: hostgroup_name hostgroup_alias\n");
+            "Columns: hostgroup_name hostgroup_alias\n");
 
         // If the method should fetch several objects and did not find
         // any object, don't return anything => The message
@@ -1106,7 +1135,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
             "Stats: host_scheduled_downtime_depth > 0\n" .
             "StatsOr: 2\n" .
             "StatsAnd: 2\n".
-            "StatsGroupBy: hostgroup_name\n");
+            "Columns: hostgroup_name\n");
 
         if(is_array($l) && count($l) > 0) {
             foreach($l as $e) {
@@ -1223,7 +1252,7 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
             "Stats: host_scheduled_downtime_depth > 0\n" .
             "StatsOr: 2\n" .
             "StatsAnd: 2\n".
-            "StatsGroupBy: servicegroup_name servicegroup_alias\n");
+            "Columns: servicegroup_name servicegroup_alias\n");
 
         // If the method should fetch several objects and did not find
         // any object, don't return anything => The message
@@ -1309,5 +1338,124 @@ class GlobalBackendmklivestatus implements GlobalBackendInterface {
     public function getDirectParentNamesByHostName($hostName) {
         return $this->queryLivestatusList("GET hosts\nColumns: parents\nFilter: name = ".$hostName."\n");
     }
+
+    public function getHostNamesInHostgroup($name) {
+        $r = $this->queryLivestatusSingleColumn("GET hostgroups\nColumns: members\nFilter: name = ".$name."\n");
+        return $r[0];
+    }
+
+    public function getProgramStart() {
+	$r = $this->queryLivestatusSingleColumn("GET status\nColumns: program_start\n");
+        if(isset($r[0]))
+            return $r[0];
+        else
+            return -1;
+    }
+
+    public function getGeomapHosts($filterHostgroup = null) {
+        $query = "GET hosts\nColumns: name custom_variable_names custom_variable_values alias\n";
+        if($filterHostgroup) {
+            $query .= "Filter: groups >= ".$filterHostgroup."\n";
+        }
+        $r = $this->queryLivestatus($query);
+        $hosts = array();
+        foreach($r AS $row) {
+            if($row[1] && $row[2]) {
+	        $custom_variables = array_combine($row[1], $row[2]);
+                if(isset($custom_variables['LAT']) && isset($custom_variables['LONG'])) {
+                    $hosts[] = array(
+                        'name'  => $row[0],
+                        'lat'   => $custom_variables['LAT'],
+                        'long'  => $custom_variables['LONG'],
+                        'alias' => $row[3],
+                    );
+                }
+            }
+        }
+        return $hosts;
+    }
+
+    private function command($cmd) {
+        return $this->queryLivestatus('COMMAND ['.time().'] '.$cmd."\n", false);
+    }
+
+    /**
+     * Sends acknowledgement command to monitoring core
+     */
+    public function actionAcknowledge($what, $spec, $comment, $sticky, $notify, $persist, $user) {
+        if($what == 'host')
+            $what = 'HOST';
+        elseif($what == 'service')
+            $what = 'SVC';
+        
+        $sticky  = $sticky ? '2' : '0';
+        $notify  = $notify ? '1' : '0';
+        $persist = $notify ? '1' : '0';
+
+        $this->command('ACKNOWLEDGE_'.$what.'_PROBLEM;'.$spec.';'.$sticky.';'.$notify.';'.$persist.';'.$user.';'.$comment);
+    }
+    /**
+     * PUBLIC getDirectChildDependenciesNamesByHostName()
+     *
+     * Queries the livestatus socket for all direct childs dependencies of a host
+     *
+     * @param   String   Hostname
+     * @return  Array    List of hostnames
+     * @author  Thibault Cohen <thibault.cohen@savoirfairelinux.com>
+     */
+    public function getDirectChildDependenciesNamesByHostName($hostName, $min_business_impact=false) {
+        $query = "GET hosts\nColumns: child_dependencies\nFilter: name = ".$hostName."\n";
+        $raw_result = $this->queryLivestatusSingleColumn($query);
+        if ($min_business_impact) {
+            $query = "GET hosts\nColumns:host_name\nFilter: name = $raw_result[0][1]\n";
+            foreach ($raw_result[0] as &$value) {
+                $query = $query . "Filter: name = $value\nOr: 2\n";
+            }
+            $query = $query . "Filter: business_impact >= $min_business_impact\nAnd: 2\n";
+            $result = $this->queryLivestatusSingleColumn($query);
+        }
+        else {
+            $result = array();
+            foreach ($raw_result[0] as &$value) {
+                if (strpos($value, "/") == False) {
+                    array_push($result, $value);
+                }
+            }
+        }
+        return $result;
+    }
+
+    /*
+     * PUBLIC getDirectParentNamesByHostName()
+     *
+     * Queries the livestatus socket for all direct parents of a host
+     *
+     * @param   String   Hostname
+     * @return  Array    List of hostnames
+   * @author  Mathias Kettner <mk@mathias-kettner.de>
+     * @author  Lars Michelsen <lars@vertical-visions.de>
+     */
+    public function getDirectParentDependenciesNamesByHostName($hostName, $min_business_impact=false) {
+        $query = "GET hosts\nColumns: parent_dependencies\nFilter: name = ".$hostName."\n";
+        $raw_result = $this->queryLivestatusSingleColumn($query);
+        if ($min_business_impact) {
+            $query = "GET hosts\nColumns:host_name\nFilter: name = $raw_result[0][1]\n";
+            foreach ($raw_result[0] as &$value) {
+                $query = $query . "Filter: name = $value\nOr: 2\n";
+            }
+            $query = $query . "Filter: business_impact >= $min_business_impact\nAnd: 2\n";
+            $result = $this->queryLivestatusSingleColumn($query);
+        }
+        else {
+            $result = array();
+            foreach ($raw_result[0] as &$value) {
+                if (strpos($value, "/") == False) {
+                    array_push($result, $value);
+                }
+            }
+        }
+        return $result;
+    }
+
 }
 ?>

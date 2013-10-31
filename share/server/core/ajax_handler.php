@@ -46,7 +46,6 @@ try {
         'General',
         'Overview',
         'Map',
-        'AutoMap',
         'Url',
         'ChangePassword',
         'Auth',
@@ -58,6 +57,7 @@ try {
         'ManageBackgrounds',
         'Multisite',
         'User',
+        'Action',
     );
 
     require('../../server/core/functions/index.php');
