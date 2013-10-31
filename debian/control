@@ -2,12 +2,14 @@ Source: nagvis
 Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
-Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>, Alexander Reichle-Schmehl <tolimar@debian.org>
+Uploaders: Markus Frosch <markus@lazyfrosch.de>,
+           Alexander Wirt <formorer@debian.org>,
+           Jan Wagner <waja@cyconet.org>
 Build-Depends: debhelper (>= 7.0.50~), quilt, po-debconf
 Standards-Version: 3.9.3
 Homepage: http://www.nagvis.org
-Vcs-Svn: svn://svn.debian.org/svn/pkg-nagios/nagvis/trunk/
-Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagvis/trunk/
+Vcs-Git: git://anonscm.debian.org/pkg-nagios/pkg-nagvis.git
+Vcs-Browser: http://anonscm.debian.org/git/pkg-nagios/pkg-nagvis.git
 
 Package: nagvis
 Architecture: all

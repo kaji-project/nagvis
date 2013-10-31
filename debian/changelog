@@ -1,9 +1,3 @@
-nagvis (1:1.6.6+dfsg.1-4) UNRELEASED; urgency=low
-
-  * NOT RELEASED YET
-
- -- Alexander Reichle-Schmehl <tolimar@debian.org>  Wed, 20 Feb 2013 11:52:06 +0100
-
 nagvis (1:1.6.6+dfsg.1-3) unstable; urgency=medium
 
   * Bump version number to allow smooth upgrades from squeeze-backports
