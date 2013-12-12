@@ -15,7 +15,11 @@ set -e
 
 # move /etc/apache2/conf.d/nagvis.conf to /etc/nagvis/apache2.conf
 dpkg-maintscript-helper mv_conffile \
-    /etc/apache2/conf.d/nagvis.conf /etc/nagvis/apache2.conf "1:1.6.6+dfsg.1-3" nagvis -- "$@"
+    /etc/apache2/conf.d/nagvis.conf /etc/nagvis/apache2.conf "1:1.7.9+dfsg1-1~" nagvis -- "$@"
+
+# remove old automap
+dpkg-maintscript-helper rm_conffile \
+    /etc/nagvis/automaps/__automap.cfg "1:1.7.9+dfsg1-1~" nagvis -- "$@"
 
 case "$1" in
     install|upgrade)
