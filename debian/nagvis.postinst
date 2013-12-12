@@ -28,7 +28,7 @@ case "$1" in
 	    "icinga")
                 ## Creating Configuration file for Nagvis
                 nagvis_tmp=$(mktemp)
-                zcat /usr/share/doc/nagvis/nagvis.ini.php-sample.gz | sed \
+                cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
                   -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
                   -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
                   -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
@@ -49,7 +49,7 @@ case "$1" in
                 sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
                   -e "s#@NAGVIS_WEB@#/nagvis#g" \
                   -e "s#@NAGIOS_PATH@/etc#/etc/icinga#g" \
-                  < /usr/share/doc/nagvis/apache2-nagvis.conf-sample \
+                  < /usr/share/nagvis/defaults/apache2-nagvis.conf-sample \
                   > "$apache_tmp"
                 chmod go+r "$apache_tmp"
                 ucf --debconf-ok "$apache_tmp" /etc/apache2/conf.d/nagvis.conf
@@ -64,7 +64,7 @@ case "$1" in
             "nagios")
                 ## Creating Configuration file for Nagvis
                 nagvis_tmp=$(mktemp)
-                zcat /usr/share/doc/nagvis/nagvis.ini.php-sample.gz | sed \
+                cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
                   -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
                   -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
                   -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
@@ -85,7 +85,7 @@ case "$1" in
                 sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
                   -e "s#@NAGVIS_WEB@#/nagvis#g" \
                   -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g" \
-                  < /usr/share/doc/nagvis/apache2-nagvis.conf-sample \
+                  < /usr/share/nagvis/defaults/apache2-nagvis.conf-sample \
                   > "$apache_tmp"
                 chmod go+r "$apache_tmp"
                 ucf --debconf-ok "$apache_tmp" /etc/apache2/conf.d/nagvis.conf

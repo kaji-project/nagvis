@@ -4,3 +4,5 @@
 /etc/nagvis	/usr/share/nagvis/etc
 /var/cache/nagvis /usr/share/nagvis/var
 /usr/share/php/php-gettext /usr/share/nagvis/share/server/core/ext/php-gettext-1.0.9
+/usr/share/nagvis/defaults/nagvis.ini.php-sample /usr/share/doc/nagvis/nagvis.ini.php-sample
+/usr/share/nagvis/defaults/apache2-nagvis.conf-sample /usr/share/doc/nagvis/apache2-nagvis.conf-sample

@@ -2,3 +2,4 @@ share/userfiles/ var/cache/nagvis
 share/ usr/share/nagvis
 docs/ usr/share/nagvis
 etc/* etc/nagvis
+etc/nagvis.ini.php-sample etc/apache2-nagvis.conf-sample usr/share/nagvis/defaults
