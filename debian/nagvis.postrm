@@ -42,7 +42,7 @@ case "$1" in
     purge)
         ## remove apache part of the configuration and nagvis' ini file
         ## (both generetaded in postinst)
-        for conf_file in /etc/nagvis/apache2.conf /etc/nagvis/nagvis.ini.php ; do
+        for conf_file in /etc/apache2/conf.d/nagvis.conf /etc/nagvis/apache2.conf /etc/nagvis/nagvis.ini.php ; do
             rm -f "$conf_file"
             if which ucf >/dev/null; then
                 ucf --purge "$conf_file"

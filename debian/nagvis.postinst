@@ -26,6 +26,7 @@ if dpkg --compare-versions "$2" lt-nl "1:1.7.9+dfsg1-1~"; then
         /etc/apache2/conf.d/nagvis.conf /etc/nagvis/apache2.conf "1:1.7.9+dfsg1-1~" nagvis -- "$@"
 
     # unregister old file
+    ucf -p /etc/apache2/conf.d/nagvis.conf
     ucfr -p nagvis /etc/apache2/conf.d/nagvis.conf
     # delete helper file
     rm -f /etc/nagvis/apache2.conf.dpkg-new
