@@ -1,6 +1,6 @@
 --- a/share/server/core/defines/global.php
 +++ b/share/server/core/defines/global.php
-@@ -78,11 +78,11 @@ define('DEBUGFILE', '../../../var/nagvis
+@@ -79,11 +79,11 @@
  // The last value wins.
  //
  // Path to the main configuration file
@@ -15,3 +15,20 @@
  
  // The directory below the NagVis root which is shared by the webserver
  define('HTDOCS_DIR', 'share');
+--- a/share/server/core/classes/GlobalMainCfg.php
++++ b/share/server/core/classes/GlobalMainCfg.php
+@@ -1344,10 +1344,10 @@
+      * @author 	Lars Michelsen <lars@vertical-visions.de>
+      */
+     private function setPathsByBase($base, $htmlBase) {
+-        $this->validConfig['paths']['cfg']['default']                = $base.'etc/';
+-        $this->validConfig['paths']['mapcfg']['default']             = $base.'etc/maps/';
+-        $this->validConfig['paths']['geomap']['default']             = $base.'etc/geomap';
+-        $this->validConfig['paths']['profiles']['default']           = $base.'etc/profiles';
++        $this->validConfig['paths']['cfg']['default']                = '/etc/nagvis/';
++        $this->validConfig['paths']['mapcfg']['default']             = '/etc/nagvis/maps/';
++        $this->validConfig['paths']['geomap']['default']             = '/etc/nagvis/geomap';
++        $this->validConfig['paths']['profiles']['default']           = '/etc/nagvis/profiles';
+ 
+         $this->validConfig['paths']['var']['default']                = $base.'var/';
+         $this->validConfig['paths']['sharedvar']['default']          = $base.HTDOCS_DIR.'/var/';

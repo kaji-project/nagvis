@@ -37,7 +37,7 @@ case "$1" in
                   -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/icinga/rw/live\"#" \
                   -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
                   -e "s#interval=15#;interval=15#" \
-                  -e "s#maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#;maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#" \
+                  -e "s#maps=\"\(.*\)\"#;maps=\"\1\"#" \
                   > "$nagvis_tmp"
                 chgrp www-data "$nagvis_tmp"
                 chmod g+rw "$nagvis_tmp"
@@ -73,7 +73,7 @@ case "$1" in
                   -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#" \
                   -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
                   -e "s#interval=15#;interval=15#" \
-                  -e "s#maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#;maps=\"demo-germany,demo-ham-racks,demo-load,demo-muc-srv1\"#" \
+                  -e "s#maps=\"\(.*\)\"#;maps=\"\1\"#" \
                   > "$nagvis_tmp"
                 chgrp www-data "$nagvis_tmp"
                 chmod g+rw "$nagvis_tmp"

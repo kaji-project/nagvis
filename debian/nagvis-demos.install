@@ -1,14 +1,4 @@
 debian/demo_pool.ini.php etc/nagvis/conf.d/
-etc/automaps/demo-overview.cfg etc/nagvis/automaps/
-etc/maps/demo-ham-racks.cfg etc/nagvis/maps/
-etc/maps/demo-overview.cfg etc/nagvis/maps/
-etc/maps/demo-germany.cfg etc/nagvis/maps/
-etc/maps/demo-load.cfg etc/nagvis/maps/
-etc/maps/demo-muc-srv1.cfg etc/nagvis/maps/
-share/userfiles/images/shapes/demo_traffic_load_legend.png var/cache/nagvis/userfiles/images/shapes/
-share/userfiles/images/shapes/demo-wan-cloud.png var/cache/nagvis/userfiles/images/shapes/
-share/userfiles/images/maps/demo-host.png var/cache/nagvis/userfiles/images/maps/
-share/userfiles/images/maps/demo-overview.png var/cache/nagvis/userfiles/images/maps/
-share/userfiles/images/maps/demo-ham-racks.png var/cache/nagvis/userfiles/images/maps/
-share/userfiles/images/maps/demo-germany.png var/cache/nagvis/userfiles/images/maps/
-share/userfiles/images/maps/demo-load.png var/cache/nagvis/userfiles/images/maps/
+etc/maps/demo*.cfg etc/nagvis/maps/
+share/userfiles/images/shapes/demo*.png var/cache/nagvis/userfiles/images/shapes/
+share/userfiles/images/maps/demo*.png var/cache/nagvis/userfiles/images/maps/

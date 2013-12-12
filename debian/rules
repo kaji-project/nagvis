@@ -17,19 +17,9 @@ override_dh_install:
 	# these files are shipped in the nagvis-demo package; but are installed in a more general rule for dh_install
 	# remove them from the nagvis package here
 	rm -f debian/nagvis/etc/nagvis/conf.d/demo.ini.php \
-		debian/nagvis/etc/nagvis/automaps/demo-overview.cfg \
-		debian/nagvis/etc/nagvis/maps/demo-ham-racks.cfg \
-		debian/nagvis/etc/nagvis/maps/demo-overview.cfg \
-		debian/nagvis/etc/nagvis/maps/demo-germany.cfg \
-		debian/nagvis/etc/nagvis/maps/demo-load.cfg \
-		debian/nagvis/etc/nagvis/maps/demo-muc-srv1.cfg \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-germany.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-host.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-overview.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-ham-racks.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo-load.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo_traffic_load_legend.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo-wan-cloud.png
+		debian/nagvis/etc/nagvis/maps/demo*.cfg \
+		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo*.png \
+		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo*.png
 	# these files are shiped in /var/cache/nagvis/userfiles
 	# they are installed by the more general copy of the content of
 	# /usr/share/nagvis/share
@@ -39,7 +29,7 @@ override_dh_install:
 	# correct directory permissions
 	chown www-data:www-data debian/nagvis/etc/nagvis
 	chown -R www-data:www-data debian/nagvis/etc/nagvis/maps
-	chown -R www-data:www-data debian/nagvis/etc/nagvis/automaps
+	chown -R www-data:www-data debian/nagvis/etc/nagvis/conf.d
 	chown -R www-data:www-data debian/nagvis/etc/nagvis/profiles
 	chown -R www-data:www-data debian/nagvis/var/cache/nagvis
 	# Fixing some lintian issues
@@ -61,14 +51,3 @@ override_dh_clean:
 	dh_clean
 	debconf-updatepo
 
-get-orig-source:
-	$(eval TMP := $(shell mktemp -d))
-	wget -q -O $(TMP)/nagvis-1.6.6.tar.gz "http://downloads.sourceforge.net/project/nagvis/NagVis%201.6/nagvis-1.6.6.tar.gz"
-	tar --directory $(TMP) -xzf $(TMP)/nagvis-1.6.6.tar.gz
-	rm -rf $(TMP)/nagvis-1.6.6/uifx/
-	rm -rf $(TMP)/nagvis-1.6.6/share/netmap/shell.swf
-	rm -rf $(TMP)/nagvis-1.6.6/share/netmap/shell.html
-	rm -rf $(TMP)/nagvis-1.6.6/share/netmap/modules/gmap/
-	mv $(TMP)/nagvis-1.6.6 $(TMP)/nagvis-1.6.6+dfsg.1
-	tar --directory $(TMP) -czf nagvis_1.6.6+dfsg.1.orig.tar.gz nagvis-1.6.6+dfsg.1
-	rm -rf $(TMP)

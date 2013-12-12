@@ -1,6 +1,6 @@
 --- a/share/frontend/nagvis-js/js/frontend.js
 +++ b/share/frontend/nagvis-js/js/frontend.js
-@@ -1432,8 +1432,8 @@ function parseOverviewGeomap() {
+@@ -1410,8 +1410,8 @@
          oTr.appendChild(oTd);
  
          // Link
@@ -11,7 +11,7 @@
  
          // Status image
          var oImg = document.createElement('img');
-@@ -1441,17 +1441,17 @@ function parseOverviewGeomap() {
+@@ -1419,17 +1419,17 @@
          oImg.src = oGeneralProperties.path_iconsets+'std_small_unknown.png';
          oImg.alt = 'geomap';
  
@@ -32,7 +32,7 @@
          br = null;
  
          // Only show map thumb when configured
-@@ -1464,8 +1464,8 @@ function parseOverviewGeomap() {
+@@ -1442,8 +1442,8 @@
              oImg = null;
          }
  

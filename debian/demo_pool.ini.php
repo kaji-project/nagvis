@@ -11,7 +11,7 @@
 ; You may also add external URLs as steps. Simply enclose the url using []
 ; instead of the map name. It is also possible to add automaps to rotations,
 ; add an @ sign before the automap name to add an automap to the rotation.
-maps="demo-germany,demo-ham-racks,demo-load,demo-muc-srv1"
+maps="demo-germany,demo-ham-racks,demo-load,demo-muc-srv1,demo-geomap,demo-automap"
 ; rotation interval (seconds)
 interval=5
 
