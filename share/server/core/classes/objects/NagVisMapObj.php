@@ -127,7 +127,7 @@ class NagVisMapObj extends NagVisStatefulObject {
             $sType = $OBJ->type;
 
             // Skip unrelevant object types
-            if($sType == 'textbox' || $sType == 'shape' || $sType == 'line')
+            if(isset($this->CORE->statelessObjectTypes[$sType]))
                 continue;
 
             /**
@@ -182,8 +182,7 @@ class NagVisMapObj extends NagVisStatefulObject {
         $i = 0;
         // Loop all objects except the stateless ones and count them
         foreach($this->members AS $OBJ) {
-            $type = $OBJ->type;
-            if($type != 'textbox' && $type != 'shape' && $type != 'line') {
+            if(!isset($this->CORE->statelessObjectTypes[$OBJ->type])) {
                 $i++;
             }
         }
@@ -226,8 +225,7 @@ class NagVisMapObj extends NagVisStatefulObject {
     public function hasStatefulObjects() {
         // Loop all objects on the map
         foreach($this->members AS $OBJ) {
-            $type = $OBJ->getType();
-            if($type != 'textbox' && $type != 'shape' && $type != 'line') {
+            if(!isset($this->CORE->statelessObjectTypes[$OBJ->type])) {
                 // Exit on first result
                 return true;
             }
@@ -347,7 +345,7 @@ class NagVisMapObj extends NagVisStatefulObject {
         $parts   = explode('~~', $filter);
 
         // Never exclude stateless objects
-        if($objType == 'textbox' || $objType == 'shape' || $objType == 'line')
+        if(isset($this->CORE->statelessObjectTypes[$objType]))
             return false;
     
         if(isset($parts[1]) && $objType == 'service'
@@ -395,14 +393,8 @@ class NagVisMapObj extends NagVisStatefulObject {
                     $OBJ = new NagVisServicegroup($this->CORE, $this->BACKEND, $objConf['backend_id'], $objConf['servicegroup_name']);
                 break;
                 case 'map':
-                    // Initialize map configuration based on map type
-                    if($this->CORE->checkMapIsAutomap($objConf['map_name'])) {
-                        $SUBMAPCFG = new NagVisAutomapCfg($this->CORE, $objConf['map_name']);
-
-                        // Override the default map url for the automaps
-                        $objConf['url'] = str_replace('mod=Map', 'mod=AutoMap', $objConf['url']);
-                    } else
-                        $SUBMAPCFG = new NagVisMapCfg($this->CORE, $objConf['map_name']);
+                    // Initialize map configuration
+                    $SUBMAPCFG = new NagVisMapCfg($this->CORE, $objConf['map_name']);
 
                     $mapCfgInvalid = null;
                     if($SUBMAPCFG->checkMapConfigExists(0)) {
@@ -410,14 +402,12 @@ class NagVisMapObj extends NagVisStatefulObject {
                             $SUBMAPCFG->readMapConfig();
                         } catch(MapCfgInvalid $e) {
                             $mapCfgInvalid = l('Map Configuration Error: [ERR]', Array('ERR' => $e->getMessage()));
+                        } catch(Exception $e) {
+                            $mapCfgInvalid = l('Problem while processing map: [ERR]', Array('ERR' => (string) $e));
                         }
                     }
 
-                    if($this->CORE->checkMapIsAutomap($objConf['map_name'])) {
-                        $MAP = new NagVisAutoMap($this->CORE, $SUBMAPCFG, $this->BACKEND, Array(), !IS_VIEW);
-                        $OBJ = $MAP->MAPOBJ;
-                    } else
-                        $OBJ = new NagVisMapObj($this->CORE, $this->BACKEND, $SUBMAPCFG, !IS_VIEW);
+                    $OBJ = new NagVisMapObj($this->CORE, $this->BACKEND, $SUBMAPCFG, !IS_VIEW);
 
                     if($mapCfgInvalid)
                         $OBJ->setProblem($mapCfgInvalid);
@@ -464,6 +454,9 @@ class NagVisMapObj extends NagVisStatefulObject {
                 break;
                 case 'textbox':
                     $OBJ = new NagVisTextbox($this->CORE);
+                break;
+                case 'container':
+                    $OBJ = new NagVisContainer($this->CORE);
                 break;
                 case 'line':
                     $OBJ = new NagVisLine($this->CORE);

@@ -60,11 +60,15 @@ function replaceHoverTemplateChildMacros(oObj, sTemplateCode) {
                 }
             } else {
                 // Create an end line which shows the number of hidden child items
-                var oMember = { 'conf': { 'type': 'host',
-                                                                    'name': '',
-                                                                    'summary_state': '',
-                                                                    'summary_output': (oObj.conf.num_members - oObj.conf.hover_childs_limit)+' more items...',
-                                                                    '<!--\\sBEGIN\\sservicegroup_child\\s-->.+?<!--\\sEND\\sservicegroup_child\\s-->': ''}};
+                var oMember = {
+                    'conf': {
+                        'type': 'host',
+                        'name': '',
+                        'summary_state': '',
+                        'summary_output': (oObj.conf.num_members - oObj.conf.hover_childs_limit) + ' ' + _('more items...'),
+                        '<!--\\sBEGIN\\sservicegroup_child\\s-->.+?<!--\\sEND\\sservicegroup_child\\s-->': ''
+                    }
+                };
 
                 childsHtmlCode += replaceHoverTemplateMacrosChild(oMember, rowHtmlCode);
             }
@@ -128,10 +132,10 @@ function replaceHoverTemplateMacrosChild(oObj, sTemplateCode) {
 function replaceHoverTemplateDynamicMacros(oObj) {
     var oMacros = {};
 
-    if(isset(oPageProperties) && (oPageProperties.view_type === 'map' || oPageProperties.view_type === 'automap'))
+    if(isset(oPageProperties) && oPageProperties.view_type === 'map')
         oMacros.map_name = oPageProperties.map_name;
 
-    oMacros.last_status_refresh = date(oGeneralProperties.date_format, oObj.lastUpdate/1000);
+    oMacros.last_status_refresh = date(oGeneralProperties.date_format, oObj.lastUpdate);
 
     oMacros.obj_state = oObj.conf.state;
     oMacros.obj_summary_state = oObj.conf.summary_state;

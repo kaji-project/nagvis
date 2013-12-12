@@ -235,8 +235,8 @@ function dragObject(event) {
     draggingObject.style.position = 'absolute';
     draggingObject.style.top  = newTop + 'px';
     draggingObject.style.left = newLeft + 'px';
-    draggingObject.x = newLeft;
-    draggingObject.y = newTop;
+    draggingObject.x = rmZoomFactor(newLeft);
+    draggingObject.y = rmZoomFactor(newTop);
 
     // When this object has a relative coordinated label, then move this too
     moveRelativeObject(draggingObject.id, newTop, newLeft);
@@ -259,9 +259,16 @@ function dragObject(event) {
         }
     }
 
+    // Shift key
+    if(event.shiftKey) {
+        // Unhighlight all other objects
+        for(var i in oMapObjects)
+            oMapObjects[i].highlight(false);
+    }
+
     // Call the dragging handler when one is set
     if(dragMoveHandlers[draggingObject.id])
-        dragMoveHandlers[draggingObject.id](draggingObject);
+        dragMoveHandlers[draggingObject.id](draggingObject, event);
     oParent = null;
 }
 
@@ -362,7 +369,7 @@ function dragStop(event) {
 
         // Call the dragging handler when one is set
         if(dragMoveHandlers[draggingObject.id])
-            dragMoveHandlers[draggingObject.id](draggingObject);
+            dragMoveHandlers[draggingObject.id](draggingObject, event);
 
         draggingObject = null;
         return;
@@ -418,7 +425,7 @@ function cloneObject(e, objId) {
     var obj = getMapObjByDomObjId(objId);
 
     var numClicks = 1;
-    if(obj.conf.view_type == 'textbox' || obj.conf.view_type == 'line' || obj.type == 'line')
+    if(obj.conf.type == 'textbox'|| obj.conf.type == 'container' || obj.conf.view_type == 'line' || obj.type == 'line')
         numClicks = 2;
 
     return addObject(e, obj.conf.type, obj.conf.view_type, numClicks, 'clone');
@@ -472,13 +479,11 @@ function getEventMousePos(e) {
     // Substract height of header menu here
     posy -= getHeaderHeight();
 
-    // When a grid is enabled align the dragged object in the nearest grid
-    if(oViewProperties.grid_show === 1) {
-        var a = coordsToGrid(posx, posy);
-        posx = a[0];
-        posy = a[1];
-        a = null;
-    }
+    // Take the zoom into account. If the map is zoomed this function gathers
+    // coordinates where the zoom factor is included. It has to be removed for
+    // further processing.
+    posx = rmZoomFactor(posx);
+    posy = rmZoomFactor(posy);
 
     return [ posx, posy ];
 }
@@ -494,7 +499,7 @@ function addClick(e) {
     pos = null;
 
     // Draw a line to illustrate the progress of drawing the current line
-    if((addViewType === 'line' || addObjType === 'textbox' || addObjType === 'line')
+    if((addViewType === 'line' || addObjType === 'textbox' || addObjType === 'container' || addObjType === 'line')
        && addShape === null) {
         addShape = new jsGraphics('map');
         addShape.cnv.setAttribute('id', 'drawing');
@@ -515,7 +520,7 @@ function addClick(e) {
     if(document.body)
         document.body.style.cursor = 'default';
 
-    if(addObjType == 'textbox') {
+    if(addObjType == 'textbox' || addObjType == 'container') {
         var w = addX.pop();
         var h = addY.pop();
     }
@@ -528,13 +533,14 @@ function addClick(e) {
                + '&x=' + addX.join(',')
                + '&y=' + addY.join(',');
 
-    if(addObjType != 'shape' && addViewType != 'icon' && addViewType != '')
+    if(addObjType != 'textbox' && addObjType != 'container' 
+       && addObjType != 'shape' && addViewType != 'icon' && addViewType != '')
         sUrl += '&view_type=' + addViewType;
 
     if(addAction == 'clone' && cloneId !== null)
         sUrl += '&clone_id=' + cloneId;
 
-    if(addObjType == 'textbox')
+    if(addObjType == 'textbox' || addObjType == 'container')
         sUrl += '&w=' + (w - addX[0]) + '&h=' + (h - addY[0]);
 
     if(sUrl === '')
@@ -546,8 +552,7 @@ function addClick(e) {
         document.getElementById('map').removeChild(addShape.cnv);
     }
 
-    // FIXME: Language string
-    showFrontendDialog(sUrl, 'Properties');
+    showFrontendDialog(sUrl, _('Create Object'));
     sUrl = '';
 
     addObjType  = null,
@@ -784,6 +789,10 @@ function validateValue(sName, sValue, sRegex) {
     }
 }
 
+function useGrid() {
+    return oViewProperties.grid_show === 1;
+}
+
 /**
  * Parses a grind to make the alignment of the icons easier
  *
@@ -791,7 +800,7 @@ function validateValue(sName, sValue, sRegex) {
  */
 function gridParse() {
     // Only show when user configured to see a grid
-    if(oViewProperties.grid_show === 1) {
+    if(useGrid()) {
         // Create grid container and append to map
         var oGrid = document.createElement('div');
         oGrid.setAttribute('id', 'grid');
@@ -803,7 +812,7 @@ function gridParse() {
         grid.setColor(oViewProperties.grid_color);
         grid.setStroke(1);
 
-        var gridStep = oViewProperties.grid_steps;
+        var gridStep = addZoomFactor(oViewProperties.grid_steps);
 
         // Start
         var gridYStart = 0;
@@ -830,9 +839,9 @@ function gridParse() {
         gridYStart = null;
         gridStep = null;
         grid = null;
-    }
 
-    addEvent(window, "resize", gridRedraw);
+        addEvent(window, "resize", gridRedraw);
+    }
 }
 
 function gridRemove() {
@@ -862,7 +871,7 @@ function gridRedraw() {
  */
 function gridToggle() {
     // Toggle the grid state
-    if(oViewProperties.grid_show === 1) {
+    if(useGrid()) {
         oViewProperties.grid_show = 0;
         gridRemove();
     } else {
@@ -893,15 +902,15 @@ function coordsToGrid(x, y) {
         x = x.split(',');
         y = y.split(',');
         for(var i = 0; i < x.length; i++) {
-            x[i] = x[i] - (x[i] % oViewProperties.grid_steps);
-            y[i] = y[i] - (y[i] % oViewProperties.grid_steps);
+            x[i] = x[i] - (x[i] % addZoomFactor(oViewProperties.grid_steps));
+            y[i] = y[i] - (y[i] % addZoomFactor(ooViewProperties.grid_steps));
         }
         return [ x.join(','), y.join(',') ];
     } else {
         x = +x;
         y = +y;
-        var gridMoveX = x - (x % oViewProperties.grid_steps);
-        var gridMoveY = y - (y % oViewProperties.grid_steps);
+        var gridMoveX = x - (x % addZoomFactor(oViewProperties.grid_steps));
+        var gridMoveY = y - (y % addZoomFactor(oViewProperties.grid_steps));
         return [ gridMoveX, gridMoveY ];
     }
 }
@@ -1006,5 +1015,15 @@ function togglePicker(id) {
         o.color.hidePicker();
     else
         o.color.showPicker();
+    o = null;
+}
+
+function pickWindowSize(id, dimension) {
+    var o = document.getElementById(id);
+    if(dimension == 'width') {
+        o.value = pageWidth();
+    } else {
+        o.value = pageHeight() - getHeaderHeight();
+    }
     o = null;
 }

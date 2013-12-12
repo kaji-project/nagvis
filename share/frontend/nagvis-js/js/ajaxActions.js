@@ -28,10 +28,10 @@ function handleDragResult(objId, anchorId) {
 
 function saveObjectAfterResize(oObj) {
     var objId = oObj.id.split('-')[0];
-    var objX = pxToInt(oObj.style.left);
-    var objY = pxToInt(oObj.style.top);
-    var objW = parseInt(oObj.style.width);
-    var objH = parseInt(oObj.style.height);
+    var objX = rmZoomFactor(pxToInt(oObj.style.left));
+    var objY = rmZoomFactor(pxToInt(oObj.style.top));
+    var objW = rmZoomFactor(parseInt(oObj.style.width));
+    var objH = rmZoomFactor(parseInt(oObj.style.height));
 
     // Reposition in frontend
     var obj = getMapObjByDomObjId(objId);
@@ -74,14 +74,7 @@ function saveObjectAfterAnchorAction(oAnchor) {
         alert('Unhandled action object: ' + anchorType);
     }
 
-    var mod = 'Map';
-    var mapParam = 'map';
-    if(oPageProperties.view_type === 'automap') {
-        mod      = 'AutoMap';
-        mapParam = 'show';
-    }
-
-    getAsyncRequest(oGeneralProperties.path_server + '?mod='+mod+'&act=' + action + '&' + mapParam + '='
+    getAsyncRequest(oGeneralProperties.path_server + '?mod=Map&act=' + action + '&map='
                     + escapeUrlValues(oPageProperties.map_name)
                     + '&id=' + escapeUrlValues(objId) + urlPart);
 }
@@ -91,14 +84,7 @@ function saveObjectAttr(objId, attr) {
     for (var key in attr)
         urlPart += '&' + key + '=' + escapeUrlValues(attr[key]);
 
-    var mod = 'Map';
-    var mapParam = 'map';
-    if(oPageProperties.view_type === 'automap') {
-        mod      = 'AutoMap';
-        mapParam = 'show';
-    }
-
-    getAsyncRequest(oGeneralProperties.path_server + '?mod='+mod+'&act=modifyObject&'+mapParam+'='
+    getAsyncRequest(oGeneralProperties.path_server + '?mod=Map&act=modifyObject&map='
                     + escapeUrlValues(oPageProperties.map_name) + '&id=' + escapeUrlValues(objId) + urlPart);
 }
 

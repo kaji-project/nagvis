@@ -53,7 +53,6 @@ class CoreAuthorisationModSQLite extends CoreAuthorisationModule {
 
         switch($mod) {
             case 'Map':
-            case 'AutoMap':
             case 'Rotation':
                 return $this->DB->deletePermissions($mod, $name);
             default:
@@ -70,8 +69,6 @@ class CoreAuthorisationModSQLite extends CoreAuthorisationModule {
         switch($mod) {
             case 'Map':
                 return $this->DB->createMapPermissions($name);
-            case 'AutoMap':
-                return $this->DB->createAutoMapPermissions($name);
             case 'Rotation':
                 return $this->DB->createRotationPermissions($name);
             default:
@@ -209,11 +206,12 @@ class CoreAuthorisationModSQLite extends CoreAuthorisationModule {
         }
     }
 
-    public function parsePermissions() {
+    public function parsePermissions($sUsername = null) {
         global $AUTH;
         $aPerms = Array();
 
-        $sUsername = $AUTH->getUser();
+        if($sUsername === null)
+            $sUsername = $AUTH->getUser();
 
         // Only handle known users
         $userId = $this->getUserId($sUsername);

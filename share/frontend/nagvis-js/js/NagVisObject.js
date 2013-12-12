@@ -53,11 +53,9 @@ var NagVisObject = Base.extend({
         if(this.conf.object_id == null)
             this.conf.object_id = getRandomLowerCaseLetter() + getRandom(1, 99999);
 
-        // Load view specific config modifiers (Normaly triggered by url params)
-        this.loadViewOpts();
-
         // Load lock options
         this.loadLocked();
+        this.loadViewOpts();
     },
 
 
@@ -70,6 +68,10 @@ var NagVisObject = Base.extend({
      * state is not saved to the user properties.
      */
     loadLocked: function() {
+        // Editing is only possible in maps
+        if(oPageProperties.view_type != 'map')
+            return;
+
         if(!oUserProperties.hasOwnProperty('unlocked-' + oPageProperties.map_name))
             return;
 
@@ -88,7 +90,7 @@ var NagVisObject = Base.extend({
      *
      * Loads view specific options. Basically this options are triggered by url params
      *
-     * @author	Lars Michelsen <lars@vertical-visions.de>
+     * @author Lars Michelsen <lars@vertical-visions.de>
      */
     loadViewOpts: function() {
         // Do not load the view options for stateless lines
@@ -96,12 +98,12 @@ var NagVisObject = Base.extend({
             return;
 
         // View specific hover modifier set. Will override the map configured option
-        if(oViewProperties && oViewProperties.enableHover && oViewProperties.enableHover != '')
-            this.conf.hover_menu = oViewProperties.enableHover;
+        if(isset(oViewProperties) && isset(oViewProperties.hover_menu))
+            this.conf.hover_menu = oViewProperties.hover_menu;
 
         // View specific context modifier set. Will override the map configured option
-        if(oViewProperties && oViewProperties.enableContext && oViewProperties.enableContext != '')
-            this.conf.context_menu = oViewProperties.enableContext;
+        if(isset(oViewProperties) && isset(oViewProperties.context_menu))
+            this.conf.context_menu = oViewProperties.context_menu;
     },
 
     /**
@@ -196,7 +198,7 @@ var NagVisObject = Base.extend({
         if(this.needsContextMenu()) {
             if(this.conf.view_type && this.conf.view_type == 'line') {
                 this.getContextMenu(this.conf.object_id+'-linelink');
-            } else if(this.conf.type == 'textbox') {
+            } else if(this.conf.type == 'textbox' || this.conf.type == 'container') {
                 this.getContextMenu(this.conf.object_id);
             } else {
                 this.getContextMenu(this.conf.object_id+'-icon');
@@ -234,7 +236,7 @@ var NagVisObject = Base.extend({
         };
 
       if(typeof(oPageProperties) != 'undefined' && oPageProperties != null
-           && (oPageProperties.view_type === 'map' || oPageProperties.view_type === 'automap'))
+           && oPageProperties.view_type === 'map')
             oMacros.map_name = oPageProperties.map_name;
 
         if(this.conf.type === 'service') {
@@ -251,7 +253,8 @@ var NagVisObject = Base.extend({
         else
             oSectionMacros.host = '<!--\\sBEGIN\\shost\\s-->.+?<!--\\sEND\\shost\\s-->';
 
-        if(this.conf.type === 'line' || this.conf.type == 'shape' || this.conf.type == 'textbox')
+        if(this.conf.type === 'line' || this.conf.type == 'shape'
+           || this.conf.type == 'textbox' || this.conf.type === 'container')
             oSectionMacros.stateful = '<!--\\sBEGIN\\sstateful\\s-->.+?<!--\\sEND\\sstateful\\s-->';
 
         // Remove unlocked section for locked objects
@@ -263,7 +266,10 @@ var NagVisObject = Base.extend({
         if(!oViewProperties || !oViewProperties.permitted_edit)
             oSectionMacros.permitted_edit = '<!--\\sBEGIN\\spermitted_edit\\s-->.+?<!--\\sEND\\spermitted_edit\\s-->';
 
-        if(oPageProperties.view_type === 'automap') {
+        if(!oViewProperties || !oViewProperties.permitted_perform)
+            oSectionMacros.permitted_perform = '<!--\\sBEGIN\\spermitted_perform\\s-->.+?<!--\\sEND\\spermitted_perform\\s-->';
+
+        if(usesSource('automap')) {
             oSectionMacros.not_automap = '<!--\\sBEGIN\\snot_automap\\s-->.+?<!--\\sEND\\snot_automap\\s-->';
 	    // Skip the root change link for the root host
             if(this.conf.name === getUrlParam('root'))
@@ -274,7 +280,8 @@ var NagVisObject = Base.extend({
         }
         if(this.conf.view_type !== 'line')
             oSectionMacros.line = '<!--\\sBEGIN\\sline\\s-->.+?<!--\\sEND\\sline\\s-->';
-        if(this.conf.view_type !== 'line' || (this.conf.line_type == 11 || this.conf.line_type == 12))
+        if(this.conf.view_type !== 'line'
+           || (this.conf.line_type == 11 || this.conf.line_type == 12))
             oSectionMacros.line_type = '<!--\\sBEGIN\\sline_two_parts\\s-->.+?<!--\\sEND\\sline_two_parts\\s-->';
 
         // Replace hostgroup range macros when not in a hostgroup
@@ -288,6 +295,74 @@ var NagVisObject = Base.extend({
         // Replace map range macros when not in a hostgroup
         if(this.conf.type !== 'map')
             oSectionMacros.map = '<!--\\sBEGIN\\smap\\s-->.+?<!--\\sEND\\smap\\s-->';
+
+        // Loop all registered actions, check wether or not this action should be shown for this object
+        // and either add the replacement section or not
+        for (var key in oGeneralProperties.actions) {
+            if(key == "indexOf")
+                continue; // skip indexOf prototype (seems to be looped in IE)
+            var action = oGeneralProperties.actions[key];
+            var hide = false;
+
+            // Check object type
+            hide = action.obj_type.indexOf(this.conf.type) == -1;
+
+            // Only check the condition when not already hidden by another check before
+            if(!hide && isset(action.client_os) && action.client_os.length > 0) {
+                // Check the client os
+                var os = navigator.platform.toLowerCase();
+                if (os.indexOf('win') !== -1)
+                    os = 'win';
+                else if (os.indexOf('linux') !== -1)
+                    os = 'lnx';
+                else if (os.indexOf('mac') !== -1)
+                    os = 'mac';
+
+                hide = action.client_os.indexOf(os) == -1;
+            }
+
+            // Only check the condition when not already hidden by another check before
+            if(!hide && isset(action.condition) && action.condition !== '') {
+                var cond = action.condition;
+                
+                var op = '';
+                if (cond.indexOf('~') != -1) {
+                    op = '~';
+                } else if (cond.indexOf('=') != -1) {
+                    op = '=';
+                }
+
+                var parts = cond.split(op);
+                var attr  = parts[0];
+                var val   = parts[1];
+                var to_be_checked;
+                if (isset(this.conf.custom_variables) && isset(this.conf.custom_variables[attr])) {
+                    to_be_checked = this.conf.custom_variables[attr];
+                } else if(isset(this.conf[attr])) {
+                    to_be_checked = this.conf[attr];
+                }
+
+                if (to_be_checked) {
+                    if (op == '=' && to_be_checked != val) {
+                        hide = true;
+                    } else if (op == '~' && to_be_checked.indexOf(val) == -1) {
+                        hide = true;
+                    }
+                } else {
+                    hide = true;
+                }
+            }
+
+            // Remove the section macros of not hidden actions
+            if(!hide) {
+                oSectionMacros['action_'+key] = '<!--\\s(BEGIN|END)\\saction_'+key+'\\s-->';
+            }
+            cond = null;
+            action = null;
+        }
+        
+        // Remove all not hidden actions
+        oSectionMacros['actions'] = '<!--\\sBEGIN\\saction_.+?\\s-->.+?<!--\\sEND\\saction_.+?\\s-->';
 
         // Loop and replace all unwanted section macros
         for (var key in oSectionMacros) {
@@ -476,10 +551,13 @@ var NagVisObject = Base.extend({
         else
             this.bIsLocked = !this.bIsLocked;
 
+        if(this.conf.view_type === 'line' || this.conf.type === 'line')
+            this.parseLineHoverArea(document.getElementById(this.conf.object_id+'-linediv'));
         // Re-render the context menu
         this.parseContextMenu();
 
         if(this.toggleObjControls()) {
+
 	    if(typeof(this.toggleLabelLock) == 'function')
 		this.toggleLabelLock();
 
@@ -537,9 +615,10 @@ var NagVisObject = Base.extend({
      *
      * @author  Lars Michelsen <lars@vertical-visions.de>
      */
-    parseCoord: function(val, dir) {
+    parseCoord: function(val, dir, addZoom) {
+        var coord = 0;
         if(!isRelativeCoord(val)) {
-            return parseInt(val);
+            coord = parseInt(val);
         } else {
             // This must be an object id. Is there an offset given?
             if(val.search('%') !== -1) {
@@ -548,18 +627,19 @@ var NagVisObject = Base.extend({
                 var offset    = parts[1];
                 var refObj    = getMapObjByDomObjId(objectId);
                 if(refObj)
-                    return parseFloat(refObj.parseCoord(refObj.conf[dir], dir)) + parseFloat(offset);
-                else
-                    return 0;
+                    coord = parseFloat(refObj.parseCoord(refObj.conf[dir], dir, false)) + parseFloat(offset);
             } else {
                 // Only an object id. Get the coordinate and return it
                 var refObj = getMapObjByDomObjId(val);
                 if(refObj)
-                    return parseInt(refObj.parseCoord(refObj.conf[dir], dir));
-                else
-                    return 0;
+                    coord = parseInt(refObj.parseCoord(refObj.conf[dir], dir));
             }
         }
+
+        if(addZoom === undefined || addZoom === true)
+            return addZoomFactor(coord);
+        else
+            return coord;
     },
 
     /**
@@ -568,11 +648,11 @@ var NagVisObject = Base.extend({
      *
      * @author  Lars Michelsen <lars@vertical-visions.de>
      */
-    parseCoords: function(val, dir) {
-        var l = val.split(',');
+    parseCoords: function(val, dir, addZoom) {
+        var l = val.toString().split(',');
 
         for(var i = 0, len = l.length; i < len; i++)
-            l[i] = this.parseCoord(l[i], dir);
+            l[i] = this.parseCoord(l[i], dir, addZoom);
 
         return l;
     },
@@ -618,15 +698,15 @@ var NagVisObject = Base.extend({
         //        But it is not coded to attach relative objects to lines. So it is no big
         //        deal to leave this as it is.
         if(num === -1) {
-            this.conf.x = this.parseCoord(x, 'x');
-            this.conf.y = this.parseCoord(y, 'y');
+            this.conf.x = this.parseCoord(x, 'x', false);
+            this.conf.y = this.parseCoord(y, 'y', false);
         } else {
             var old  = this.conf.x.split(',');
-            old[num] = this.parseCoord(x, 'x');
+            old[num] = this.parseCoord(x, 'x', false);
             this.conf.x = old.join(',');
 
             old  = this.conf.y.split(',');
-            old[num] = this.parseCoord(y, 'y');
+            old[num] = this.parseCoord(y, 'y', false);
             this.conf.y = old.join(',');
             old = null;
         }
@@ -671,11 +751,11 @@ var NagVisObject = Base.extend({
         //        But it is not coded to attach relative objects to lines. So it is no big
         //        deal to leave this as it is.
         if(num === -1) {
-            this.conf.x = this.getRelCoords(oParent, this.parseCoord(this.conf.x, 'x'), 'x', -1);
-            this.conf.y = this.getRelCoords(oParent, this.parseCoord(this.conf.y, 'y'), 'y', -1);
+            this.conf.x = this.getRelCoords(oParent, this.parseCoord(this.conf.x, 'x', false), 'x', -1);
+            this.conf.y = this.getRelCoords(oParent, this.parseCoord(this.conf.y, 'y', false), 'y', -1);
         } else {
-            var newX = this.getRelCoords(oParent, this.parseCoords(this.conf.x, 'x')[num], 'x', -1);
-            var newY = this.getRelCoords(oParent, this.parseCoords(this.conf.y, 'y')[num], 'y', -1);
+            var newX = this.getRelCoords(oParent, this.parseCoords(this.conf.x, 'x', false)[num], 'x', -1);
+            var newY = this.getRelCoords(oParent, this.parseCoords(this.conf.y, 'y', false)[num], 'y', -1);
 
             var old  = this.conf.x.split(',');
             old[num] = newX;
@@ -697,7 +777,7 @@ var NagVisObject = Base.extend({
 
     getRelCoords: function(refObj, val, dir, num) {
         var refPos = num === -1 ? refObj.conf[dir] : refObj.conf[dir].split(',')[num];
-        var offset = parseInt(val) - parseInt(refObj.parseCoord(refPos, dir));
+        var offset = parseInt(val) - parseInt(refObj.parseCoord(refPos, dir, false));
         var pre    = offset >= 0 ? '+' : '';
         val        = refObj.conf.object_id + '%' + pre + offset;
         refObj     = null;
@@ -846,6 +926,20 @@ var NagVisObject = Base.extend({
     },
 
     /**
+     * Returns the x coordinate of the object in px
+     */
+    parsedX: function() {
+        return this.parseCoords(this.conf.x, 'x');
+    },
+
+    /**
+     * Returns the y coordinate of the object in px
+     */
+    parsedY: function() {
+        return this.parseCoords(this.conf.y, 'y');
+    },
+
+    /**
      * Entry point for repositioning objects in NagVis frontend
      * Handles whole redrawing of the object while moving
      *
@@ -854,7 +948,7 @@ var NagVisObject = Base.extend({
     reposition: function() {
         if(this.conf.view_type === 'line' || this.conf.type === 'line')
             this.drawLine();
-        else if(this.conf.type === 'textbox')
+        else if(this.conf.type === 'textbox' || this.conf.type === 'container')
             this.moveBox();
         else
             this.moveIcon();
@@ -896,7 +990,7 @@ var NagVisObject = Base.extend({
             this.parseLineControls();
         else if(this.conf.view_type === 'icon' || this.conf.view_type === 'gadget')
             this.parseIconControls();
-        else if(this.conf.type === 'textbox')
+        else if(this.conf.type === 'textbox' || this.conf.type === 'container')
             this.parseBoxControls();
         else if(this.conf.type === 'shape')
             this.parseShapeControls();
@@ -924,7 +1018,8 @@ var NagVisObject = Base.extend({
         var x = this.conf.x.split(',');
         var y = this.conf.y.split(',')
 
-        if(this.conf.line_type != 10 && this.conf.line_type != 13 && this.conf.line_type != 14) {
+        if(this.conf.line_type != 10 && this.conf.line_type != 13
+           && this.conf.line_type != 14 && this.conf.line_type != 15) {
             alert('Not available for this line. Only lines with 2 line parts have a middle coordinate.');
             return;
         }
@@ -934,13 +1029,13 @@ var NagVisObject = Base.extend({
             // - Calculate and add the 3rd coord as 2nd
             // - Add a drag control for the 2nd coord
             this.conf.x = [
-                x[0],
-              middle(this.parseCoords(this.conf.x, 'x')[0], this.parseCoords(this.conf.x, 'x')[1], this.conf.line_cut),
+              x[0],
+              middle(this.parseCoords(this.conf.x, 'x', false)[0], this.parseCoords(this.conf.x, 'x', false)[1], this.conf.line_cut),
               x[1],
             ].join(',');
             this.conf.y = [
                 y[0],
-                middle(this.parseCoords(this.conf.y, 'y')[0], this.parseCoords(this.conf.y, 'y')[1], this.conf.line_cut),
+                middle(this.parseCoords(this.conf.y, 'y', false)[0], this.parseCoords(this.conf.y, 'y', false)[1], this.conf.line_cut),
                 y[1],
             ].join(',');
         } else {
@@ -981,9 +1076,10 @@ var NagVisObject = Base.extend({
     },
 
     parseLineHoverArea: function(oContainer) {
-        // Parse hover/link area only when needed. This is only the container
+        // This is only the container for the hover/label elements
         // The real area or labels are added later
-        if(this.needsLineHoverArea()) {
+        var oLink = document.getElementById(this.conf.object_id+'-linelink');
+        if(!oLink) {
             var oLink = document.createElement('a');
             oLink.setAttribute('id', this.conf.object_id+'-linelink');
             oLink.setAttribute('class', 'linelink');
@@ -992,9 +1088,25 @@ var NagVisObject = Base.extend({
             oLink.target = this.conf.url_target;
 
             oContainer.appendChild(oLink);
-            oLink = null;
         }
+
+        // Hide if not needed, show if needed
+        if(!this.needsLineHoverArea()) {
+            oLink.style.display = 'none';
+        } else {
+            oLink.style.display = 'block';
+        }
+
+        oLink = null;
         oContainer = null;
+    },
+
+    removeLineHoverArea: function() {
+        if(!this.needsLineHoverArea()) {
+            var area = document.getElementById(this.conf.object_id+'-linelink');
+            area.style.display = 'none';
+            area = null;
+        }
     },
 
     parseLineControls: function () {
@@ -1014,12 +1126,8 @@ var NagVisObject = Base.extend({
             makeDragable([this.conf.object_id+'-drag-'+i], this.saveObject, this.moveObject);
         }
 
-        //this.parseControlDelete(x.length, this.getLineMid(this.conf.x, 'x'), this.getLineMid(this.conf.y, 'y'),
-        //                        20 - size / 2, -size - size / 2, size);
-        //this.parseControlModify(x.length+1, this.getLineMid(this.conf.x, 'x'), this.getLineMid(this.conf.y, 'y'),
-        //                        20 + size + 5 - size / 2, -size - size / 2, size);
-
-        if(this.conf.view_type === 'line' && (this.conf.line_type == 10 || this.conf.line_type == 13 || this.conf.line_type == 14))
+        if(this.conf.view_type === 'line' && (this.conf.line_type == 10
+           || this.conf.line_type == 13 || this.conf.line_type == 14 || this.conf.line_type == 15))
 	    this.parseControlToggleLineMid(x.length+2, this.getLineMid(this.conf.x, 'x'), this.getLineMid(this.conf.y, 'y'), 20 - size / 2, -size / 2 + 5, size);
 
         lineEndSize = null;
@@ -1031,11 +1139,11 @@ var NagVisObject = Base.extend({
     getLineMid: function(coord, dir) {
         var c = coord.split(',');
         if(c.length == 2)
-        return middle(this.parseCoords(coord, dir)[0],
-                      this.parseCoords(coord, dir)[1],
-                  this.conf.line_cut);
+            return middle(this.parseCoords(coord, dir)[0],
+                          this.parseCoords(coord, dir)[1],
+                          this.conf.line_cut);
         else
-        return this.parseCoords(coord, dir)[1];
+            return this.parseCoords(coord, dir)[1];
     },
 
     removeControls: function() {
@@ -1046,12 +1154,15 @@ var NagVisObject = Base.extend({
         this.objControls = [];
         oControls = null;
 
-        if(this.conf.type === 'textbox') {
+        if(this.conf.type === 'textbox' || this.conf.type === 'container') {
             this.removeBoxControls();
             makeUndragable([this.conf.object_id+'-label']);
         } else {
             makeUndragable([this.conf.object_id+'-icondiv']);
         }
+        
+        if(this.conf.view_type === 'line' || this.conf.type === 'line')
+            this.removeLineHoverArea();
     },
 
     parseControlDrag: function (num, objX, objY, offX, offY, size) {
@@ -1062,8 +1173,8 @@ var NagVisObject = Base.extend({
 	// FIXME: Multilanguage
 	ctl.title          = 'Move object';
         ctl.style.zIndex   = parseInt(this.conf.z)+1;
-        ctl.style.width    = size + 'px';
-        ctl.style.height   = size + 'px';
+        ctl.style.width    = addZoomFactor(size) + 'px';
+        ctl.style.height   = addZoomFactor(size) + 'px';
         ctl.style.left     = (objX + offX) + 'px';
         ctl.style.top      = (objY + offY) + 'px';
         ctl.objOffsetX     = offX;
@@ -1082,115 +1193,6 @@ var NagVisObject = Base.extend({
     },
 
     /**
-     * Adds the delete button to the controls including
-     * all eventhandlers
-     *
-     * Author: Lars Michelsen <lm@larsmichelsen.com>
-     */
-    parseControlDelete: function (num, objX, objY, offX, offY, size) {
-        var ctl= document.createElement('div');
-        ctl.setAttribute('id',         this.conf.object_id+'-delete-' + num);
-        ctl.setAttribute('class',     'control delete');
-        ctl.setAttribute('className', 'control delete');
-	// FIXME: Multilanguage
-	ctl.title          = 'Delete object';
-        ctl.style.zIndex   = parseInt(this.conf.z)+1;
-        ctl.style.width    = size + 'px';
-        ctl.style.height   = size + 'px';
-        ctl.style.left     = (objX + offX) + 'px';
-        ctl.style.top      = (objY + offY) + 'px';
-        ctl.objOffsetX     = offX;
-        ctl.objOffsetY     = offY;
-
-        ctl.onclick = function() {
-            // In the event handler this points to the ctl object
-            var arr   = this.id.split('-');
-            var objId = arr[0];
-            var obj = getMapObjByDomObjId(objId);
-
-            // FIXME: Multilanguage
-            if(!confirm('Really delete the object?'))
-                return;
-
-            obj.saveObject(this, null);
-            obj.remove();
-
-            // Remove object from JS
-            updateNumUnlocked(-1);
-            delete oMapObjects[objId];
-
-            obj   = null;
-            objId = null;
-            arr   = null;
-
-            document.body.style.cursor = 'auto';
-        };
-
-        ctl.onmouseover = function() {
-            document.body.style.cursor = 'pointer';
-        };
-
-        ctl.onmouseout = function() {
-            document.body.style.cursor = 'auto';
-        };
-
-        this.addControl(ctl);
-        ctl = null;
-    },
-
-    /**
-     * Adds the modify button to the controls including
-     * all eventhandlers
-     *
-     * Author: Lars Michelsen <lm@larsmichelsen.com>
-     */
-    parseControlModify: function (num, objX, objY, offX, offY, size) {
-        var ctl= document.createElement('div');
-        ctl.setAttribute('id',         this.conf.object_id+'-modify-' + num);
-        ctl.setAttribute('class',     'control modify');
-        ctl.setAttribute('className', 'control mdoify');
-	// FIXME: Multilanguage
-	ctl.title          = 'Modify object';
-        ctl.style.zIndex   = parseInt(this.conf.z)+1;
-        ctl.style.width    = size + 'px';
-        ctl.style.height   = size + 'px';
-        ctl.style.left     = (objX + offX) + 'px';
-        ctl.style.top      = (objY + offY) + 'px';
-        ctl.objOffsetX     = offX;
-        ctl.objOffsetY     = offY;
-
-        ctl.onclick = function() {
-            // In the event handler this points to the ctl object
-            var arr   = this.id.split('-');
-            var objId = arr[0];
-            var obj = getMapObjByDomObjId(objId);
-
-            showFrontendDialog(oGeneralProperties.path_server
-                       + '?mod=Map&act=addModify&show='
-                       + escapeUrlValues(oPageProperties.map_name)
-                       + '&object_id=' + escapeUrlValues(objId), 'Modify Object');
-
-            obj   = null;
-            objId = null;
-            arr   = null;
-
-            document.body.style.cursor = 'auto';
-        };
-
-        ctl.onmouseover = function() {
-            document.body.style.cursor = 'pointer';
-        };
-
-        ctl.onmouseout = function() {
-            document.body.style.cursor = 'auto';
-        };
-
-        this.addControl(ctl);
-        ctl = null;
-    },
-
-
-    /**
      * Adds the modify button to the controls including
      * all eventhandlers
      *
@@ -1204,8 +1206,8 @@ var NagVisObject = Base.extend({
 	// FIXME: Multilanguage
 	ctl.title          = 'Lock/Unlock line middle';
         ctl.style.zIndex   = parseInt(this.conf.z)+1;
-        ctl.style.width    = size + 'px';
-        ctl.style.height   = size + 'px';
+        ctl.style.width    = addZoomFactor(size) + 'px';
+        ctl.style.height   = addZoomFactor(size) + 'px';
         ctl.style.left     = (objX + offX) + 'px';
         ctl.style.top      = (objY + offY) + 'px';
         ctl.objOffsetX     = offX;
@@ -1316,19 +1318,19 @@ var NagVisObject = Base.extend({
             anchorId = -1;
 
         // Honor the enabled grid and reposition the object after dropping
-        if(oViewProperties.grid_show === 1) {
+        if(useGrid()) {
             if(viewType === 'line') {
-            var pos = coordsToGrid(jsObj.parseCoords(jsObj.conf.x, 'x')[anchorId],
-                                   jsObj.parseCoords(jsObj.conf.y, 'y')[anchorId]);
-            jsObj.conf.x = jsObj.calcNewCoord(pos[0], 'x', anchorId);
-            jsObj.conf.y = jsObj.calcNewCoord(pos[1], 'y', anchorId);
-            pos = null;
+               var pos = coordsToGrid(jsObj.parseCoords(jsObj.conf.x, 'x', false)[anchorId],
+                                      jsObj.parseCoords(jsObj.conf.y, 'y', false)[anchorId]);
+               jsObj.conf.x = jsObj.calcNewCoord(pos[0], 'x', anchorId);
+               jsObj.conf.y = jsObj.calcNewCoord(pos[1], 'y', anchorId);
+               pos = null;
             } else {
-            var pos = coordsToGrid(jsObj.parseCoord(jsObj.conf.x, 'x'),
-                                   jsObj.parseCoord(jsObj.conf.y, 'y'));
-            jsObj.conf.x = jsObj.calcNewCoord(pos[0], 'x');
-            jsObj.conf.y = jsObj.calcNewCoord(pos[1], 'y');
-            pos = null;
+               var pos = coordsToGrid(jsObj.parseCoord(jsObj.conf.x, 'x', false),
+                                      jsObj.parseCoord(jsObj.conf.y, 'y', false));
+               jsObj.conf.x = jsObj.calcNewCoord(pos[0], 'x');
+               jsObj.conf.y = jsObj.calcNewCoord(pos[1], 'y');
+               pos = null;
             }
             jsObj.reposition();
         }

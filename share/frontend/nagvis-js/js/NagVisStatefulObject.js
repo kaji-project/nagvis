@@ -26,10 +26,15 @@
  */
 
 var NagVisStatefulObject = NagVisObject.extend({
+    has_state: true,
+
     // Stores the information from last refresh (Needed for change detection)
     last_state: null,
     // Array of member objects
     members: [],
+    // Timestamps for last event handling events if repeated events are enabled
+    event_time_first: null,
+    event_time_last: null,
 
     constructor: function(oConf) {
         // Call parent constructor
@@ -63,6 +68,9 @@ var NagVisStatefulObject = NagVisObject.extend({
                     break;
                     case 'textbox':
                         oObj = new NagVisTextbox(oMember);
+                    break;
+                    case 'container':
+                        oObj = new NagVisContainer(oMember);
                     break;
                     case 'shape':
                         oObj = new NagVisShape(oMember);
@@ -154,6 +162,21 @@ var NagVisStatefulObject = NagVisObject.extend({
     },
 
     /**
+     * Returns true if the object is in non acked problem state
+     */
+    hasProblematicState: function() {
+        // In case of acked/downtimed states this is no problematic state
+        if(this.conf.summary_problem_has_been_acknowledged && this.conf.summary_problem_has_been_acknowledged === 1) {
+            return false;
+        } else if(this.conf.summary_in_downtime && this.conf.summary_in_downtime === 1) {
+            return false;
+        }
+        
+        var weight = oStates[this.conf.summary_state]['normal'];
+        return weight > oStates['UP']['normal'];
+    },
+
+    /**
      * PUBLIC outputChanged()
      *
      * Check if an output/perfdata change occured since last refresh
@@ -162,48 +185,6 @@ var NagVisStatefulObject = NagVisObject.extend({
      */
     outputOrPerfdataChanged: function() {
         return this.conf.output != this.last_state.output || this.conf.perfdata != this.last_state.perfdata;
-    },
-
-    /**
-     * PUBLIC parseAutomap()
-     *
-     * Parses the object on the automap
-     *
-     * @return	String		HTML code of the object
-     * @author	Lars Michelsen <lars@vertical-visions.de>
-     */
-    parseAutomap: function () {
-        if(!this.parsedObject) {
-            // Only replace the macros on first parse
-            this.replaceMacros();
-        }
-
-        // When this is an update, remove the object first
-        this.remove();
-
-        // Create container div
-        var doc = document;
-        var oContainerDiv = doc.createElement('div');
-        oContainerDiv.setAttribute('id', this.conf.object_id);
-
-        // Parse icon on automap
-        oContainerDiv.appendChild(this.parseIcon());
-
-        // Parse label when configured
-        if(this.conf.label_show && this.conf.label_show == '1') {
-            var oLabel = this.parseLabel();
-            oContainerDiv.appendChild(oLabel);
-            oLabel = null;
-        }
-
-        // Append child to map and save reference in parsedObject
-        var oMap = doc.getElementById('map');
-        if(oMap) {
-            this.parsedObject = oMap.appendChild(oContainerDiv);
-            oMap = null;
-        }
-        oContainerDiv = null;
-        doc = null
     },
 
     /**
@@ -241,21 +222,20 @@ var NagVisStatefulObject = NagVisObject.extend({
             break;
         }
 
-        // Parse label when configured
-        if(this.conf.label_show && this.conf.label_show == '1') {
-            var oLabel = this.parseLabel();
-            oContainerDiv.appendChild(oLabel);
-            oLabel = null;
-        }
-
         // Append child to map and save reference in parsedObject
         var oMap = doc.getElementById('map');
         if(oMap) {
             this.parsedObject = oMap.appendChild(oContainerDiv);
             oMap = null;
         }
-        oContainerDiv = null;
         doc = null;
+
+        // Parse label when configured
+        if(this.conf.label_show && this.conf.label_show == '1') {
+            this.parseLabel(oContainerDiv);
+        }
+
+        oContainerDiv = null;
 
         // Now really draw the line when this is one
         if(this.conf.view_type && this.conf.view_type == 'line')
@@ -487,7 +467,7 @@ var NagVisStatefulObject = NagVisObject.extend({
         var x = this.parseCoords(this.conf.x, 'x');
         var y = this.parseCoords(this.conf.y, 'y');
 
-        var width = this.conf.line_width;
+        var width = addZoomFactor(this.conf.line_width);
 
         var colorFill   = '';
         var colorFill2  = '';
@@ -518,7 +498,7 @@ var NagVisStatefulObject = NagVisObject.extend({
         }
 
         // Adjust fill color based on perfdata for weathermap lines
-        if(this.conf.line_type == 13 || this.conf.line_type == 14) {
+        if(this.conf.line_type == 13 || this.conf.line_type == 14 || this.conf.line_type == 15) {
             colorFill  = '#000000';
             colorFill2 = '#000000';
 
@@ -666,6 +646,33 @@ var NagVisStatefulObject = NagVisObject.extend({
     },
 
     /**
+     * PRIVATE perfdataCalcBitsReadable()
+     *
+     * Transform bits in a perfdata set to a human readable value
+     *
+     * @author	Lars Michelsen <lars@vertical-visions.de>
+     */
+    perfdataCalcBitsReadable: function(set) {
+        var KB   = 1024;
+        var MB   = 1024 * 1024;
+        var GB   = 1024 * 1024 * 1024;
+        if(set[1] > GB) {
+            set[1] /= GB
+            set[2]  = 'Gbit/s'
+        } else if(set[1] > MB) {
+            set[1] /= MB
+            set[2]  = 'Mbit/s'
+        } else if(set[1] > KB) {
+            set[1] /= KB
+            set[2]  = 'Kbit/s'
+        } else {
+            set[2]  = 'bit/s'
+        }
+        set[1] = Math.round(set[1]*100)/100;
+        return set;
+    },
+
+    /**
      * PRIVATE perfdataCalcBytesReadable()
      *
      * Transform bytes in a perfdata set to a human readable value
@@ -673,32 +680,23 @@ var NagVisStatefulObject = NagVisObject.extend({
      * @author	Lars Michelsen <lars@vertical-visions.de>
      */
     perfdataCalcBytesReadable: function(set) {
-        // Check if all needed information are present
-        if(set[1] === null || set[6] === null || set[1] == '' || set[6] == '')
-            return set;
-
         var KB   = 1024;
         var MB   = 1024 * 1024;
         var GB   = 1024 * 1024 * 1024;
-        var val  = set[1];
-        var crit = set[6];
-        var uom  = 'B';
-        if(val > GB) {
-            val  /= GB
-            uom   = 'GB'
-            crit /= GB
-        } else if(val > MB) {
-            val  /= MB
-            uom  = 'MB'
-            crit /= MB
-        } else if(val > KB) {
-            val  /= KB
-            uom   = 'KB'
-            crit /= KB
+        if(set[1] > GB) {
+            set[1] /= GB
+            set[2]  = 'GB/s'
+        } else if(set[1] > MB) {
+            set[1] /= MB
+            set[2]  = 'MB/s'
+        } else if(set[1] > KB) {
+            set[1] /= KB
+            set[2]  = 'KB/s'
+        } else {
+            set[2]  = 'B/s'
         }
-
-        // Calculate percentages with 2 decimals and reset other options
-        return Array(set[0], Math.round(val*100)/100, uom, set[3], set[4], 0, Math.round(crit*100)/100);
+        set[1] = Math.round(set[1]*100)/100;
+        return set;
     },
 
     /**
@@ -757,12 +755,15 @@ var NagVisStatefulObject = NagVisObject.extend({
             var arr   = this.id.split('-');
             var objId = arr[0];
             var obj = getMapObjByDomObjId(objId);
-            if(!obj.bIsLocked)
+            if(obj && !obj.bIsLocked){
                 obj.redrawControls();
-            obj = null;
+                obj = null;
+            }
             objId = null;
             arr = null;
         };
+
+        addZoomHandler(oIcon);
 
         oIcon.src = oGeneralProperties.path_iconsets + this.conf.icon;
         oIcon.alt = this.conf.type + '-' + alt;
@@ -802,10 +803,7 @@ var NagVisStatefulObject = NagVisObject.extend({
      */
     moveLabel: function () {
         var label  = document.getElementById(this.conf.object_id + '-label');
-        var coords = this.getLabelPos();
-        label.style.top  = coords[1] + 'px';
-        label.style.left = coords[0] + 'px';
-        coords = null;
+        this.updateLabelPos(label);
         label  = null;
     },
 
@@ -817,7 +815,7 @@ var NagVisStatefulObject = NagVisObject.extend({
      *
      * @author	Lars Michelsen <lars@vertical-visions.de>
      */
-    dragLabel: function(obj) {
+    dragLabel: function(obj, event) {
         var arr        = obj.id.split('-');
         var objId      = arr[0];
         var anchorType = arr[1];
@@ -826,8 +824,8 @@ var NagVisStatefulObject = NagVisObject.extend({
 
         var jsObj = getMapObjByDomObjId(objId);
 
-        jsObj.conf.label_x = jsObj.calcNewLabelCoord(jsObj.conf.label_x, jsObj.parseCoord(jsObj.conf.x, 'x'), obj.x);
-        jsObj.conf.label_y = jsObj.calcNewLabelCoord(jsObj.conf.label_y, jsObj.parseCoord(jsObj.conf.y, 'y'), obj.y);
+        jsObj.conf.label_x = jsObj.calcNewLabelCoord(jsObj.conf.label_x, jsObj.parseCoord(jsObj.conf.x, 'x', false), obj.x);
+        jsObj.conf.label_y = jsObj.calcNewLabelCoord(jsObj.conf.label_y, jsObj.parseCoord(jsObj.conf.y, 'y', false), obj.y);
 
         jsObj      = null;
         objId      = null;
@@ -864,27 +862,39 @@ var NagVisStatefulObject = NagVisObject.extend({
     },
 
     /**
-     * Calculates and returns the positions of the objects label
-     *
-     * @author	Lars Michelsen <lars@vertical-visions.de>
+     * Calculates and applies the real positions of the objects label. It uses the configuration
+     * variables label_x/label_y and repositions the labels based on the config. The label
+     * must have been rendered and added to dom to have the dimensions of the object to be able
+     * to realize the center/bottom coordinate definitions.
      */
-    getLabelPos: function () {
+    updateLabelPos: function (oLabel) {
         var x = this.conf.label_x,
             y = this.conf.label_y;
 
+        if(this.conf.label_x && this.conf.label_x.toString() == 'center') {
+            var diff_x = parseInt(parseInt(oLabel.clientWidth) - this.getObjWidth()) / 2;
+            x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x', false) - diff_x;
+        }
+
+        if(this.conf.label_y && this.conf.label_y.toString() == 'bottom') {
+            y = this.parseCoord(this.conf.y, 'y', false) + this.getObjHeight();
+        }
+
         // If there is a presign it should be relative to the objects x/y
         if(this.conf.label_x && this.conf.label_x.toString().match(/^(?:\+|\-)/))
-            x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x') + parseFloat(this.conf.label_x);
+            x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x', false) + parseFloat(this.conf.label_x);
         if(this.conf.label_y && this.conf.label_y.toString().match(/^(?:\+|\-)/))
-            y = this.parseCoord(this.parseLabelCoord(this.conf.y), 'y') + parseFloat(this.conf.label_y);
+            y = this.parseCoord(this.parseLabelCoord(this.conf.y), 'y', false) + parseFloat(this.conf.label_y);
 
         // If no x/y coords set, fallback to object x/y
         if(!this.conf.label_x || this.conf.label_x === '' || this.conf.label_x === '0')
-            x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x');
+            x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x', false);
         if(!this.conf.label_y || this.conf.label_y === '' || this.conf.label_y === '0')
-            y = this.parseCoord(this.parseLabelCoord(this.conf.y), 'y');
+            y = this.parseCoord(this.parseLabelCoord(this.conf.y), 'y', false);
 
-        return [ x, y ];
+        oLabel.style.left = addZoomFactor(x) + 'px';
+        oLabel.style.top  = addZoomFactor(y) + 'px';
+        oLabel = null;
     },
 
     parseLabelCoord: function (val) {
@@ -900,13 +910,18 @@ var NagVisStatefulObject = NagVisObject.extend({
      * @return	String		HTML code of the label
      * @author	Lars Michelsen <lars@vertical-visions.de>
      */
-    parseLabel: function () {
-        var coords = this.getLabelPos();
-        return drawNagVisTextbox(this.conf.object_id + '-label', 'object_label',
-                                 this.conf.label_background, this.conf.label_border,
-                                 coords[0], coords[1], this.conf.z,
-                                 this.conf.label_width, '', this.replaceLabelTextDynamicMacros(),
-                                 this.conf.label_style);
+    parseLabel: function (oContainer) {
+        var oLabel = drawNagVisTextbox(
+            oContainer, this.conf.object_id + '-label', 'object_label',
+            this.conf.label_background, this.conf.label_border,
+            // use object coords for initial rendering, updated by updateLabelPos below
+            this.parseCoord(this.conf.x, 'x', false), this.parseCoord(this.conf.y, 'y', false),
+            this.conf.z,
+            this.conf.label_width, '', this.replaceLabelTextDynamicMacros(),
+            this.conf.label_style
+        );
+        this.updateLabelPos(oLabel);
+        oLabel = null;
     },
 
     unlockLabel: function () {
@@ -960,15 +975,6 @@ var NagVisStatefulObject = NagVisObject.extend({
     },
 
     parseIconControls: function () {
-        // No controls on icons anymore
-        //var size = oGeneralProperties['controls_size'];
-        //this.parseControlModify(1, this.parseCoord(this.conf.x, 'x'), this.parseCoord(this.conf.y, 'y'),
-        //                         this.getObjWidth() + 5, - size / 2, size);
-
-        //this.parseControlDelete(0, this.parseCoord(this.conf.x, 'x'), this.parseCoord(this.conf.y, 'y'),
-        //                         this.getObjWidth() + 5, - size / 2 + 5 + size, size);
-        //size = null;
-
         // Simply make it dragable. Maybe will be extended in the future...
         makeDragable([this.conf.object_id+'-icondiv'], this.saveObject, this.moveObject);
     },
@@ -986,12 +992,12 @@ var NagVisStatefulObject = NagVisObject.extend({
         this.bIsFlashing = show;
         if(show) {
             oObjIcon.style.border  = "5px solid " + sColor;
-            oObjIconDiv.style.top  = (this.conf.y - 5)+'px';
-            oObjIconDiv.style.left = (this.conf.x - 5)+'px';
+            oObjIconDiv.style.top  = (this.parseCoord(this.conf.y, 'y') - 5) + 'px';
+            oObjIconDiv.style.left = (this.parseCoord(this.conf.x, 'x') - 5) + 'px';
         } else {
             oObjIcon.style.border  = "none";
-            oObjIconDiv.style.top  = this.conf.y + 'px';
-            oObjIconDiv.style.left = this.conf.x + 'px';
+            oObjIconDiv.style.top  = this.parseCoord(this.conf.y, 'y') + 'px';
+            oObjIconDiv.style.left = this.parseCoord(this.conf.x, 'x') + 'px';
         }
 
         sColor      = null;

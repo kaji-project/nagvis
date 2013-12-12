@@ -41,17 +41,21 @@ var oMapSummaryObj;
 var regexCache = {};
 
 // Used for editing
-var lang = {};
 var validMapConfig = {};
 var validMainConfig = {};
 
 // Initialize and define some other basic vars
-var iNow = Date.parse(new Date());
+var iNow = Math.floor(Date.parse(new Date()) / 1000);
 
 // Define some state options
 var oStates = {};
 
 var isIE  = navigator.appVersion.indexOf("MSIE") != -1;
+
+// These vars are used to stop earlier scrollings that mess between
+var crawlX = 0;
+var crawlY = 0;
+var crawling = 0;
 
 // This is a dummy fucntion which is overwritten by the definition in
 // the header template when it is enabled.
@@ -333,7 +337,7 @@ function updateWorkerCounter() {
     // write the time to refresh to header counter
     if(oWorkerCounter) {
         if(oWorkerProperties.last_run) {
-            oWorkerCounter.innerHTML = date(oGeneralProperties.date_format, oWorkerProperties.last_run/1000);
+            oWorkerCounter.innerHTML = date(oGeneralProperties.date_format, oWorkerProperties.last_run);
         }
     }
     oWorkerCounter = null;
@@ -407,6 +411,46 @@ function getUrlParam(name) {
     } else {
         return results[1];
     }
+}
+
+/**
+ * Function creates a new cleaned up URL
+ * - Can add/overwrite parameters
+ * - Can remove parameters by adding "null" values
+ */
+function makeuri(addparams) {
+    var tmp = window.location.href.split('?');
+    var base = tmp[0];
+    tmp = tmp[1].split('#');
+    tmp = tmp[0].split('&');
+    var len = tmp.length;
+    var params = {};
+    var pair = null;
+
+    for(var i = 0; i < tmp.length; i++) {
+        pair = tmp[i].split('=');
+
+        // Skip unwanted params
+        if(addparams[pair[0]] !== undefined && addparams[pair[0]] == null)
+            continue;
+
+        params[pair[0]] = pair[1];
+    }
+
+    // Add new params to the existing params. Overwrite duplicates
+    for (var key in addparams) {
+        if(addparams[key] != null) {
+            params[key] = addparams[key];
+        }
+    }
+
+    // Build list of key/value pairs
+    var aparams = [];
+    for (var key in params) {
+        aparams.push(key + '=' + params[key]);
+    }
+
+    return base + '?' + aparams.join('&');
 }
 
 /**
@@ -557,7 +601,17 @@ function scrollSlow(iTargetX, iTargetY, iSpeed) {
     var iWidth;
     var iHeight;
 
-    var iStep = 2;
+    var iStep = 10;
+
+    iTargetX = parseInt(iTargetX);
+    iTargetY = parseInt(iTargetY);
+
+    if((iTargetX !== crawlX || iTargetY !== crawlY) && crawlX !== 0 && crawlY !== 0) {
+        crawling = 1;
+    } else if(crawlX == 0 && crawlY == 0) {
+        crawlX = iTargetX;
+        crawlY = iTargetY;
+    }
 
     // Get offset of the map div
     var oMap = document.getElementById('map');
@@ -569,41 +623,49 @@ function scrollSlow(iTargetX, iTargetY, iSpeed) {
     oMap = null;
 
     // Get measure of the screen
-    iWidth = pageWidth();
+    iWidth  = pageWidth();
     iHeight = pageHeight() - iMapOffsetTop;
 
-    if(iTargetY <= (currentScrollTop+iHeight)  && iTargetY >= currentScrollTop) {
+    if((iTargetY < (currentScrollTop+iHeight/2+iStep) && iTargetY >= (currentScrollTop+iHeight/2-iStep)) || (currentScrollTop<iStep && iTargetY<iHeight/2)) {
         // Target is in current view
         scrollTop = 0;
-    } else if(iTargetY < currentScrollTop) {
+    } else if(iTargetY < (currentScrollTop+iHeight/2) && currentScrollTop>iStep) {
         // Target is above current view
         scrollTop = -iStep;
-    } else if(iTargetY > currentScrollTop) {
+    } else if(iTargetY > (currentScrollTop+iHeight/2)) {
         // Target is below current view
         scrollTop = iStep;
+    } else {
+        eventlog("js-error", "critical", "JS-Error occured: iTargetY: " +iTargetY);
+        scrollTop = 0;
     }
 
-    if(iTargetX <= (currentScrollLeft+iWidth) && iTargetX >= currentScrollLeft) {
+    if((iTargetX < (currentScrollLeft+iWidth/2+iStep) && iTargetX >= (currentScrollLeft+iWidth/2-iStep)) || (currentScrollLeft<iStep && iTargetX<iWidth/2)) {
         // Target is in current view
         scrollLeft = 0;
-    } else if(iTargetX < currentScrollLeft) {
+    } else if(iTargetX < (currentScrollLeft+iWidth/2) && currentScrollLeft>iStep) {
         // Target is left from current view
         scrollLeft = -iStep;
-    } else if(iTargetX > currentScrollLeft) {
+    } else if(iTargetX > (currentScrollLeft+iWidth/2)) {
         // Target is right from current view
         scrollLeft = iStep;
     } else {
+        eventlog("js-error", "critical", "JS-Error occured: iTargetX: " +iTargetX);
         scrollLeft = 0;
     }
 
     eventlog("scroll", "debug", currentScrollLeft+" to "+iTargetX+" = "+scrollLeft+", "+currentScrollTop+" to "+iTargetY+" = "+scrollTop);
 
-    if(scrollTop !== 0 || scrollLeft !== 0) {
+    if((scrollTop !== 0 || scrollLeft !== 0) && crawling == 0) {
         window.scrollBy(scrollLeft, scrollTop);
-
-        setTimeout(function() { scrollSlow(iTargetX, iTargetY, iSpeed); }, iSpeed);
+        if (currentScrollTop !== getScrollTop() || currentScrollLeft !== getScrollLeft()) {
+            setTimeout(function() { scrollSlow(iTargetX, iTargetY, iSpeed); }, iSpeed);
+        };
     } else {
         eventlog("scroll", "debug", 'No need to scroll: '+currentScrollLeft+' - '+iTargetX+', '+currentScrollTop+' - '+iTargetY);
+        crawlX=0;
+        crawlY=0;
+        crawling=0;
     }
 }
 
@@ -904,11 +966,13 @@ function hideStatusMessage() {
  * @return  Object  Returns the div object of the textbox
  * @author  Lars Michelsen <lars@vertical-visions.de>
  */
-function drawNagVisTextbox(id, className, bgColor, borderColor, x, y, z, w, h, text, customStyle) {
+function drawNagVisTextbox(oContainer, id, className, bgColor, borderColor, x, y, z, w, h, text, customStyle) {
+    var initRendering = false;
     var oLabelDiv = document.getElementById(id);
     if(!oLabelDiv) {
         oLabelDiv = document.createElement('div');
         oLabelDiv.setAttribute('id', id);
+        initRendering = true;
     }
     oLabelDiv.setAttribute('class', className);
     oLabelDiv.setAttribute('className', className);
@@ -920,10 +984,10 @@ function drawNagVisTextbox(id, className, bgColor, borderColor, x, y, z, w, h, t
     oLabelDiv.style.top = y + 'px';
 
     if(w && w !== '' && w !== 'auto')
-        oLabelDiv.style.width = w+'px';
+        oLabelDiv.style.width = addZoomFactor(w) + 'px';
 
     if(h && h !== '' && h !== 'auto')
-        oLabelDiv.style.height = h+'px';
+        oLabelDiv.style.height = addZoomFactor(h) + 'px';
 
     oLabelDiv.style.zIndex = parseInt(z) + 1;
     oLabelDiv.style.overflow = 'visible';
@@ -981,8 +1045,35 @@ function drawNagVisTextbox(id, className, bgColor, borderColor, x, y, z, w, h, t
     oLabelSpan.innerHTML = text;
 
     oLabelDiv.appendChild(oLabelSpan);
-    oLabelSpan = null;
+    oContainer.appendChild(oLabelDiv);
 
+    // Take zoom factor into account
+    if(initRendering) {
+        oLabelDiv.width  = addZoomFactor(oLabelDiv.width);
+        oLabelDiv.height = addZoomFactor(oLabelDiv.height);
+        var fontSize = getEffectiveStyle(oLabelSpan, 'font-size');
+        if(fontSize === null) {
+            eventlog(
+                "drawNagVisTextbox",
+                "critical",
+                "Unable to fetch font-size attribute for textbox"
+            );
+        } else {
+            // Only take zoom into account if the fontSize is set in px
+            if(fontSize.indexOf('px') !== -1) {
+                var fontSize = parseInt(fontSize.replace('px', ''));
+                oLabelSpan.style.fontSize = addZoomFactor(fontSize) + 'px';
+            } else {
+                eventlog(
+                    "drawNagVisTextbox",
+                    "critical",
+                    "Zoom: Can not handle this font-size declaration (" + fontSize + ")"
+                );
+            }
+        }
+    }
+
+    oLabelSpan = null;
     return oLabelDiv;
 }
 
@@ -1126,6 +1217,25 @@ if (!Array.prototype.indexOf) {
 
 }
 
+function getEffectiveStyle(e, attr) {
+    if(e.style[attr]) {
+        // Object local
+        return e.style[attr];
+    } else if(document.defaultView && document.defaultView.getComputedStyle) {
+        // DOM 
+        return document.defaultView.getComputedStyle(e, null).getPropertyValue(attr);
+    } else if(e.currentStyle){
+        // IE
+        var ie_attr = attr.replace(/\-(\w)/g, function (strMatch, p1){
+            return p1.toUpperCase();
+        });
+        var f = e.currentStyle[ie_attr];
+        if(f.length > 0) {
+            return f;
+        }
+    }
+    return null;
+}
 
 /**
  * Hack to scale elements which should fill 100% of the windows viewport. The
@@ -1155,4 +1265,123 @@ function scaleView() {
         sidebar.style.height = (pageHeight() + getScrollTop()) + 'px';
     }
     sidebar = null;
+}
+
+var g_zoom_factor = null;
+function getZoomFactor() {
+    if(g_zoom_factor !== null)
+        return g_zoom_factor; // only compute once
+
+    var zoom = getViewParam('zoom');
+    if(zoom === null)
+        g_zoom_factor = 100;
+    else
+        g_zoom_factor = parseInt(zoom); 
+
+    return g_zoom_factor;
+}
+
+function isZoomed() {
+    return g_zoom_factor !== 100;
+}
+
+/**
+ * Handles the zoom factor of the current view for a single integer which
+ * might be a coordinate or a dimension of an object
+ */
+function addZoomFactor(coord) {
+    return parseInt(coord * getZoomFactor() / 100);
+}
+
+function rmZoomFactor(coord) {
+    return parseInt(coord / getZoomFactor() * 100);
+}
+
+function zoomHandler(event) {
+    // Another IE specific thing: "this" points to the window element,
+    // not the raising object
+    if(this == window) {
+        if(event.srcElement) {
+            var obj = event.srcElement;
+        }
+    } else {
+        var obj = this;
+    }
+    
+    if(!obj)
+        return false;
+
+    // This can not be added directly to the object beacause the
+    // width/height is scaled in at least firefox automatically
+    //
+    // IE FAIL: Needs to be made visible during getting obj.width/height
+    // because IE can not tell us anything about the dimensions when
+    // the object is not visible
+    obj.style.display = 'block';
+    var width  = addZoomFactor(obj.width);
+    var height = addZoomFactor(obj.height);
+    obj.style.display = 'none';
+
+    obj.width  = width;
+    obj.height = height;
+    // Now really show the image
+    obj.style.display = 'block';
+    obj = null;
+
+}
+
+/**
+ * Hides the object from being displayed and adds a load handler
+ * which resizes the object based on the zoom factor. The hiding
+ * at the beginning is done to prevent up-then-over effects during
+ * resizing of the objects.
+ * The '.src' attribute must be assigned afterwards
+ */
+function addZoomHandler(oImage) {
+    if(!isZoomed())
+        return; // If not zoomed, no handler is needed
+    oImage.style.display = 'none';
+
+    addEvent(oImage, 'load', zoomHandler);
+    oImage = null;
+}
+
+/**
+ * Handle localized strings. The rendered HTML pages create a object
+ * named oLocales which holds the localization strings forwarded to
+ * the javascript frontend. This takes the native strings and cares
+ * about replacing vars.
+ *
+ * replace must be an array of pairs (2 item array) where the first
+ * item ist the key (without the "[" and "]") and the second ist the
+ * value to insert into the localized string.
+ */
+function _(s, replace) {
+    if(typeof s === 'undefined')
+        return '';
+
+    // Load localized version from PHP code (if available)
+    if(isset(oLocales[s])) {
+        s = oLocales[s];
+    } else {
+        eventlog(
+            "localize",
+            "warning",
+            "String is not localizable '" + s + "'"
+        );
+    }
+
+    // Replace HTML codes
+    s = s.replace(/<(\/|)(i|b)>/ig, '');
+    s = s.replace('&auml;', 'ä').replace('&uuml;', 'ü');
+    s = s.replace('&ouml;', 'ö').replace('&szlig;', '');
+
+    // optional replace of macros
+    if(typeof replace != "undefined") {
+        for(var i = 0; i < replace.length; i++) {
+            s = s.replace("["+replace[i][0]+"]", replace[i][1]);
+        }
+    }
+
+    return s;
 }

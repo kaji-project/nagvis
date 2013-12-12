@@ -128,20 +128,6 @@ class CoreSQLiteHandler {
         return true;
     }
 
-    public function createAutoMapPermissions($name) {
-        // Only create when not existing
-        if($this->count('SELECT COUNT(*) AS num FROM perms WHERE mod=\'AutoMap\' AND act=\'view\' AND obj='.$this->escape($name)) <= 0) {
-            if(DEBUG&&DEBUGLEVEL&2) debug('auth.db: create permissions for automap '.$name);
-            $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'AutoMap\', \'view\', '.$this->escape($name).')');
-            $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'AutoMap\', \'edit\', '.$this->escape($name).')');
-            $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'AutoMap\', \'delete\', '.$this->escape($name).')');
-        } else {
-            if(DEBUG&&DEBUGLEVEL&2) debug('auth.db: won\'t create permissions for automap '.$name);
-        }
-
-        return true;
-    }
-
     public function createRotationPermissions($name) {
         // Only create when not existing
         if($this->count('SELECT COUNT(*) AS num FROM perms WHERE mod=\'Rotation\' AND act=\'view\' AND obj='.$this->escape($name)) <= 0) {
@@ -185,6 +171,25 @@ class CoreSQLiteHandler {
         // Now perform the update for pre 1.6.5
         if($dbVersion < 1060500)
             $this->updateDb1060500();
+
+        // Now perform the update for pre 1.7b3
+        if($dbVersion < 1070023)
+            $this->updateDb1070023();
+    }
+
+    private function updateDb1070023() {
+	// Create permissions for Action/perform/*
+        $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'Action\', \'perform\', \'*\')');
+        
+        // Assign the new permission to the managers, users
+        $RES = $this->DB->query('SELECT roleId FROM roles WHERE name=\'Managers\' or \'Users (read-only)\'');
+        while($data = $this->fetchAssoc($RES))
+            $this->addRolePerm($data['roleId'], 'Action', 'perform', '*');
+
+        // Only apply the new version when this is the real release or newer
+        // (While development the version string remains on the old value)
+        if(GlobalCore::getInstance()->versionToTag(CONST_VERSION) >= 1070023)
+            $this->updateDbVersion();
     }
 
     private function updateDb1060500() {
@@ -208,20 +213,10 @@ class CoreSQLiteHandler {
             $this->createMapPermissions($map);
         }
 
-        // Access controll: Automap module levels for demo automaps
-        foreach(GlobalCore::getInstance()->demoAutomaps AS $automap) {
-            $this->createAutoMapPermissions($automap);
-        }
-
         $data = $this->fetchAssoc($this->DB->query('SELECT roleId FROM roles WHERE name=\'Guests\''));
         // Access assignment: Guests => Allowed to view the demo maps
         foreach(GlobalCore::getInstance()->demoMaps AS $map) {
             $this->addRolePerm($data['roleId'], 'Map', 'view', $map);
-        }
-
-        // Access assignment: Guests => Allowed to view the demo automaps
-        foreach(GlobalCore::getInstance()->demoAutomaps AS $automap) {
-            $this->addRolePerm($data['roleId'], 'AutoMap', 'view', $automap);
         }
 
         // Only apply the new version when this is the real release or newer
@@ -355,11 +350,6 @@ class CoreSQLiteHandler {
         // Access controll: Rotation module levels for rotation "demo"
         $this->createRotationPermissions('demo');
 
-        // Access controll: Automap module levels for demo automaps
-        foreach(GlobalCore::getInstance()->demoAutomaps AS $automap) {
-            $this->createAutoMapPermissions($automap);
-        }
-
         // Access controll: Change user options
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'User\', \'setOption\', \'*\')');
 
@@ -378,9 +368,6 @@ class CoreSQLiteHandler {
         // Access controll: Summary permissions for viewing/editing/deleting all maps
         $this->createMapPermissions('*');
 
-        // Access controll: Summary permissions for viewing/editing/deleting all automaps
-        $this->createAutoMapPermissions('*');
-
         // Access controll: Rotation module levels for viewing all rotations
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'Rotation\', \'view\', \'*\')');
 
@@ -394,10 +381,9 @@ class CoreSQLiteHandler {
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'ManageBackgrounds\', \'manage\', \'*\')');
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'ManageShapes\', \'manage\', \'*\')');
 
-        // Access controll: Edit/Delete maps and automaps
+        // Access controll: Edit/Delete maps
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'Map\', \'manage\', \'*\')');
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'Map\', \'add\', \'*\')');
-        $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'AutoMap\', \'add\', \'*\')');
 
         $this->DB->query('INSERT INTO perms (mod, act, obj) VALUES (\'MainCfg\', \'edit\', \'*\')');
 
@@ -433,13 +419,6 @@ class CoreSQLiteHandler {
         // Access assignment: Managers => Allowed to create maps
         $this->addRolePerm($data['roleId'], 'Map', 'add', '*');
 
-        // Access assignment: Managers => Allowed to edit/delete all automaps
-        $this->addRolePerm($data['roleId'], 'AutoMap', 'delete', '*');
-        $this->addRolePerm($data['roleId'], 'AutoMap', 'edit', '*');
-
-        // Access assignment: Managers => Allowed to create automaps
-        $this->addRolePerm($data['roleId'], 'AutoMap', 'add', '*');
-
         // Access assignment: Managers => Allowed to manage backgrounds and shapes
         $this->addRolePerm($data['roleId'], 'ManageBackgrounds', 'manage', '*');
         $this->addRolePerm($data['roleId'], 'ManageShapes', 'manage', '*');
@@ -452,9 +431,6 @@ class CoreSQLiteHandler {
 
         // Access assignment: Managers => Allowed to view all rotations
         $this->addRolePerm($data['roleId'], 'Rotation', 'view', '*');
-
-        // Access assignment: Managers => Allowed to view all automaps
-        $this->addRolePerm($data['roleId'], 'AutoMap', 'view', '*');
 
         // Access assignment: Managers => Allowed to change their passwords
         $this->addRolePerm($data['roleId'], 'ChangePassword', 'change', '*');
@@ -488,9 +464,6 @@ class CoreSQLiteHandler {
 
         // Access assignment: Users => Allowed to view all rotations
         $this->addRolePerm($data['roleId'], 'Rotation', 'view', '*');
-
-        // Access assignment: Users => Allowed to view all automaps
-        $this->addRolePerm($data['roleId'], 'AutoMap', 'view', '*');
 
         // Access assignment: Users => Allowed to change their passwords
         $this->addRolePerm($data['roleId'], 'ChangePassword', 'change', '*');
@@ -532,11 +505,6 @@ class CoreSQLiteHandler {
 
         // Access assignment: Guests => Allowed to view the demo rotation
         $this->addRolePerm($data['roleId'], 'Rotation', 'view', 'demo');
-
-        // Access assignment: Guests => Allowed to view the demo automaps
-        foreach(GlobalCore::getInstance()->demoAutomaps AS $automap) {
-            $this->addRolePerm($data['roleId'], 'AutoMap', 'view', $automap);
-        }
 
         // Access assignment: Guests => Allowed to change their passwords
         $this->addRolePerm($data['roleId'], 'ChangePassword', 'change', '*');

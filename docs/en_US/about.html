@@ -11,7 +11,7 @@
     <h2>What is NagVis?</h2>
         <p>NagVis is a visualization addon for the well known network management system Nagios&reg; (and Icinga which is a fork of Nagios).</p>
         <p>NagVis can be used to visualize Nagios data, e.g. to display IT processes like a mail system or a network infrastructure.
-            Using data supplied by a backend it will udate objects placed on maps in certain intervals to reflect the current state.
+            Using data supplied by a backend it will update objects placed on maps in certain intervals to reflect the current state.
             These maps allow to arrange the objects to display them in different layouts:
             <ul>
                 <li>physical (e.g. all hosts in a rack/room/department)</li>
@@ -40,11 +40,11 @@
         for each object. Hover menus can easily be modified by changing the <a href="hover_templates.html">templates</a> for them. You can also disable the hover menu.<br> 
         By default the state of the objects is displayed using icons on the map. You can change these icons by adding <a href="extending/iconsets.html">iconsets</a> from the NagVis 
         homepage or create your own. The state of the objects can also be displayed as lines or as <a href="gadgets.html">gadgets</a>.</p>
-        <p>In addition to the normal maps there is an <a href="automap.html">automap</a>.
-        Depending on the setting of the directive <a href="automap.html">"filterByState"</a> it displays all objects or only the ones in a non-OK-state including the way from the root object to the non-OK-objects.<br>
-        The automap is generated automatically based on the Nagios configuration. To use the automap you have to set up the <a href="http://nagios.sourceforge.net/docs/nagioscore/3/en/networkreachability.html">parent relationships</a> in Nagios.
-        The automap generates a background image based on the configuration, the layout parameters and the parent relationships.<br>
-Since NagVis 1.5 you can define multiple automaps.</p>
+
+        <p>Apart from the normal maps there is an <a href="automap.html">automap</a>. The objects are places automatically starting from the root host you specified. Depending on the value of the directice "filter_by_state" it will show all objects or only the ones in a non-OK state (including the way from the root object).<br>
+        To be able to use the automap you have to define the parents directives in your Nagios host objects.<br>
+
+        Starting with NagVis 1.5 you can define more than one automap.</p>
 
     <a name="licensing"></a>
     <h2>Licensing</h2>

@@ -77,11 +77,34 @@ class GlobalMainCfg {
 		    'must'     => 1,
                     'editable' => 1,
                     'default'  => 10,
-                    'match'    => MATCH_INTEGER),
-                'dateformat' => Array('must' => 1,
+                    'match'    => MATCH_INTEGER
+                ),
+                'dateformat' => Array(
+                    'must'     => 1,
                     'editable' => 1,
-                    'default' => 'Y-m-d H:i:s',
-                    'match' => MATCH_STRING),
+                    'default'  => 'Y-m-d H:i:s',
+                    'match'    => MATCH_STRING
+                ),
+
+                'dialog_ack_sticky' => Array(
+                    'must'     => 1,
+                    'editable' => 1,
+                    'default'  => 1,
+                    'match'    => MATCH_BOOLEAN
+                ),
+                'dialog_ack_notify' => Array(
+                    'must'     => 1,
+                    'editable' => 1,
+                    'default'  => 1,
+                    'match'    => MATCH_BOOLEAN
+                ),
+                'dialog_ack_persist' => Array(
+                    'must'     => 1,
+                    'editable' => 1,
+                    'default'  => 0,
+                    'match'    => MATCH_BOOLEAN
+                ),
+
                 'displayheader' => Array('must' => 1,
                     'editable' => 1,
                     'deprecated' => 1,
@@ -91,9 +114,34 @@ class GlobalMainCfg {
                 'file_group' => Array('must' => 0,
                     'default' => '',
                     'match' => MATCH_STRING),
-                'file_mode' => Array('must' => 1,
+                'file_mode' => Array(
+                    'must'    => 1,
                     'default' => 660,
-                    'match' => MATCH_INTEGER_EMPTY),
+                    'match'   => MATCH_INTEGER_EMPTY
+                ),
+
+                'geomap_server' => array(
+                    'must'    => 1,
+                    'default' => 'http://geomap.nagvis.org/',
+                    'match'   => MATCH_STRING_URL,
+                ),
+
+                'http_proxy' => array(
+                    'must'    => 0,
+                    'default' => null,
+                    'match'   => MATCH_STRING_URL,
+                ),
+                'http_proxy_auth' => array(
+                    'must'    => 0,
+                    'default' => null,
+                    'match'   => MATCH_NOT_EMPTY,
+                ),
+                'http_timeout' => array(
+                    'must'    => 1,
+                    'default' => 10,
+                    'match'   => MATCH_INTEGER,
+                ),
+
                 'language_detection' => Array('must' => 1,
                     'editable' => 1,
                     'array' => true,
@@ -142,6 +190,14 @@ class GlobalMainCfg {
                     'depends_value' => 'LogonMultisite',
                     'match'         => MATCH_STRING_PATH,
                 ),
+                'logon_multisite_serials' => Array(
+                    'must'          => 0,
+                    'editable'      => 1,
+                    'default'       => '',
+                    'depends_on'    => 'logonmodule',
+                    'depends_value' => 'LogonMultisite',
+                    'match'         => MATCH_STRING_PATH,
+                ),
                 'logon_multisite_secret' => Array(
                     'must'          => 0,
                     'editable'      => 1,
@@ -167,10 +223,19 @@ class GlobalMainCfg {
                     'match'         => MATCH_STRING
                 ),
 
+                'user_filtering' => Array(
+                    'must'       => 0,
+                    'editable'   => 1,
+                    'default'    => 0,
+                    'field_type' => 'boolean',
+                    'match'      => MATCH_BOOLEAN
+                ),
+
                 'refreshtime' => Array('must' => 1,
                     'editable' => 1,
                     'default' => '60',
                     'match' => MATCH_INTEGER),
+
                 'sesscookiedomain' => Array('must' => 0,
                     'editable' => 1,
                     'default' => '',
@@ -183,6 +248,12 @@ class GlobalMainCfg {
                     'editable'    => 1,
                     'default'     => '86400',
                     'match'       => MATCH_STRING),
+                'shinken_features' => Array('must' => 1,
+                    'editable'    => 1,
+                    'default'     => '0',
+                    'field_type'    => 'boolean',
+                    'match'         => MATCH_BOOLEAN),
+
                 'startmodule' => Array('must' => 1,
                     'editable'    => 1,
                     'default'     => 'Overview',
@@ -220,6 +291,27 @@ class GlobalMainCfg {
                     'editable' => 1,
                     'default' => '',
                     'match' => MATCH_STRING_NO_SPACE),
+
+                'event_on_load' => Array(
+                    'must'       => 0,
+                    'editable'   => 1,
+                    'default'    => 0,
+                    'field_type' => 'boolean',
+                    'match'      => MATCH_BOOLEAN
+                ),
+                'event_repeat_interval' => Array(
+                    'must'       => 0,
+                    'editable'   => 1,
+                    'default'    => 0,
+                    'match'      => MATCH_INTEGER,
+                ),
+                'event_repeat_duration' => Array(
+                    'must'       => 0,
+                    'editable'   => 1,
+                    'default'    => -1,
+                    'match'      => MATCH_INTEGER_PRESIGN,
+                ),
+
                 'eventbackground' => Array('must' => 0,
                     'editable' => 1,
                     'default' => '0',
@@ -282,6 +374,7 @@ class GlobalMainCfg {
                     'default' => '1',
                     'field_type' => 'boolean',
                     'match' => MATCH_BOOLEAN),
+
                 'headermenu' => Array('must' => 1,
                     'editable' => 1,
                     'default' => '1',
@@ -474,6 +567,18 @@ class GlobalMainCfg {
                     'default' => '',
                     'field_type' => 'hidden',
                     'match' => MATCH_STRING_PATH),
+                'sources' => Array('must' => 0,
+                    'editable' => 0,
+                    'default' => '',
+                    'field_type' => 'hidden',
+                    'match' => MATCH_STRING_PATH),
+                'actions' => Array(
+                    'must'       => 0,
+                    'editable'   => 0,
+                    'default'    => '',
+                    'field_type' => 'hidden',
+                    'match'      => MATCH_STRING_PATH
+                ),
                 'icons' => Array('must' => 0,
                     'editable' => 0,
                     'default' => '',
@@ -535,6 +640,13 @@ class GlobalMainCfg {
                     'default' => '',
                     'field_type' => 'hidden',
                     'match' => MATCH_STRING_PATH),
+                'geomap' => Array(
+                    'must'       => 0,
+                    'editable'   => 0,
+                    'default'    => '',
+                    'field_type' => 'hidden',
+                    'match'      => MATCH_STRING_PATH,
+                ),
                 'profiles' => Array('must' => 0,
                     'editable' => 0,
                     'default' => '',
@@ -543,6 +655,7 @@ class GlobalMainCfg {
                 'automapcfg' => Array('must' => 0,
                     'editable' => 0,
                     'default' => '',
+                    'deprecated' => 1,
                     'field_type' => 'hidden',
                     'match' => MATCH_STRING_PATH),
                 'gadgets' => Array('must' => 0,
@@ -650,7 +763,7 @@ class GlobalMainCfg {
                 'rotationid' => Array('must' => 1,
                     'editable' => 1,
                     'default' => 'demo',
-                    'match' =>MATCH_STRING_NO_SPACE),
+                    'match' => MATCH_STRING_NO_SPACE),
                 'interval' => Array('must' => 0,
                     'editable' => 1,
                     'default' => '',
@@ -659,6 +772,41 @@ class GlobalMainCfg {
                     'editable' => 1,
                     'default' => 'demo,demo2',
                     'match' => MATCH_STRING)),
+            'action' => Array(
+                'action_type' => Array(
+                    'must'     => 1,
+                    'editable' => 0,
+                    'default'  => '',
+                    'match'    => MATCH_STRING_NO_SPACE
+                ),
+                'action_id' => Array(
+                    'must'     => 1,
+                    'editable' => 0,
+                    'default'  => '',
+                    'match'    => MATCH_STRING_NO_SPACE
+                ),
+                'condition' => Array(
+                    'must'     => 0,
+                    'editable' => 1,
+                    'default'  => '',
+                    'match'    => MATCH_CONDITION
+                ),
+                'obj_type' => Array(
+                    'must'     => 1,
+                    'editable' => 1,
+                    'array'    => true,
+                    'default'  => array('host', 'service'),
+                    'match'    => MATCH_STRING
+                ),
+                'client_os' => Array(
+                    'must'     => 0,
+                    'editable' => 1,
+                    'array'    => true,
+                    'default'  => array(),
+                    'match'    => MATCH_STRING
+                ),
+                'options' => Array()
+            ),
             'automap' => Array(
                 'defaultparams' => Array('must' => 0,
                     'editable' => 1,
@@ -666,7 +814,7 @@ class GlobalMainCfg {
                     'match' => MATCH_STRING_URL),
                 'defaultroot' => Array('must' => 0,
                     'editable' => 1,
-                    'default' => 'localhost',
+                    'default' => '<<<monitoring>>>',
                     'match' => MATCH_STRING_NO_SPACE_EMPTY),
                 'graphvizpath' => Array('must' => 0,
                     'editable' => 1,
@@ -676,6 +824,7 @@ class GlobalMainCfg {
                     'editable' => 1,
                     'default' => '1',
                     'field_type' => 'boolean',
+                    'deprecated' => 1,
                     'match' => MATCH_BOOLEAN)
                 ),
             'index' => Array(
@@ -698,6 +847,7 @@ class GlobalMainCfg {
                     'editable' => 1,
                     'default' => 1,
                     'field_type' => 'boolean',
+                    'deprecated' => 1,
                     'match' => MATCH_BOOLEAN),
                 'showmaps' => Array('must' => 0,
                     'editable' => 1,
@@ -743,11 +893,11 @@ class GlobalMainCfg {
             'states' => Array(
                 'unreachable' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '9',
+                    'default' => 9,
                     'match' => MATCH_INTEGER),
                 'unreachable_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '6',
+                    'default' => 6,
                     'match' => MATCH_INTEGER),
                 'unreachable_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -755,7 +905,7 @@ class GlobalMainCfg {
                     'match' => MATCH_COLOR),
                 'unreachable_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '6',
+                    'default' => 6,
                     'match' => MATCH_INTEGER),
                 'unreachable_downtime_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -775,11 +925,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'down' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '10',
+                    'default' => 10,
                     'match' => MATCH_INTEGER),
                 'down_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '6',
+                    'default' => 6,
                     'match' => MATCH_INTEGER),
                 'down_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -807,11 +957,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'critical' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '8',
+                    'default' => 8,
                     'match' => MATCH_INTEGER),
                 'critical_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '6',
+                    'default' => 6,
                     'match' => MATCH_INTEGER),
                 'critical_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -819,7 +969,7 @@ class GlobalMainCfg {
                     'match' => MATCH_COLOR),
                 'critical_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '6',
+                    'default' => 6,
                     'match' => MATCH_INTEGER),
                 'critical_downtime_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -839,11 +989,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'warning' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '7',
+                    'default' => 7,
                     'match' => MATCH_INTEGER),
                 'warning_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '5',
+                    'default' => 5,
                     'match' => MATCH_INTEGER),
                 'warning_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -851,7 +1001,7 @@ class GlobalMainCfg {
                     'match' => MATCH_COLOR),
                 'warning_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '5',
+                    'default' => 5,
                     'match' => MATCH_INTEGER),
                 'warning_downtime_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -871,11 +1021,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'unknown' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '4',
+                    'default' => 4,
                     'match' => MATCH_INTEGER),
                 'unknown_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '3',
+                    'default' => 3,
                     'match' => MATCH_INTEGER),
                 'unknown_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -883,7 +1033,7 @@ class GlobalMainCfg {
                     'match' => MATCH_COLOR),
                 'unknown_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '3',
+                    'default' => 3,
                     'match' => MATCH_INTEGER),
                 'unknown_downtime_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -903,11 +1053,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'error' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '4',
+                    'default' => 4,
                     'match' => MATCH_INTEGER),
                 'error_ack' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '3',
+                    'default' => 3,
                     'match' => MATCH_INTEGER),
                 'error_ack_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -915,7 +1065,7 @@ class GlobalMainCfg {
                     'match' => MATCH_COLOR),
                 'error_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '3',
+                    'default' => 3,
                     'match' => MATCH_INTEGER),
                 'error_downtime_bgcolor' => Array('must' => 0,
                     'editable' => 1,
@@ -935,11 +1085,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'up' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '2',
+                    'default' => 2,
                     'match' => MATCH_INTEGER),
                 'up_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '2',
+                    'default' => 2,
                     'match' => MATCH_INTEGER),
                 'up_bgcolor' => Array('must' => 1,
                     'editable' => 1,
@@ -955,11 +1105,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'ok' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '1',
+                    'default' => 1,
                     'match' => MATCH_INTEGER),
                 'ok_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '1',
+                    'default' => 1,
                     'match' => MATCH_INTEGER),
                 'ok_bgcolor' => Array('must' => 1,
                     'editable' => 1,
@@ -975,11 +1125,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'pending' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '0',
+                    'default' => 0,
                     'match' => MATCH_INTEGER),
                 'pending_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '0',
+                    'default' => 0,
                     'match' => MATCH_INTEGER),
                 'pending_bgcolor' => Array('must' => 1,
                     'editable' => 1,
@@ -995,11 +1145,11 @@ class GlobalMainCfg {
                     'match' => MATCH_MP3_FILE),
                 'unchecked' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '0',
+                    'default' => 0,
                     'match' => MATCH_INTEGER),
                 'unchecked_downtime' => Array('must' => 1,
                     'editable' => 1,
-                    'default' => '0',
+                    'default' => 0,
                     'match' => MATCH_INTEGER),
                 'unchecked_bgcolor' => Array('must' => 1,
                     'editable' => 1,
@@ -1061,6 +1211,26 @@ class GlobalMainCfg {
         $this->setConfigFiles($this->getConfigFiles());
     }
 
+    /**
+     * Loads the custom action definitions from their files
+     */
+    private function fetchCustomActions() {
+        foreach(GlobalCore::getInstance()->getAvailableCustomActions() AS $action_file) {
+            $configVars = array();
+
+            if(file_exists(path('sys', 'local', 'actions'))) {
+                include(path('sys', 'local', 'actions') . '/'. $action_file);
+            } else {
+                include(path('sys', 'global', 'actions') . '/'. $action_file);
+            }
+
+            $name = substr($action_file, 0, -4);
+
+            // Feed the valid config array to get the options from the sources
+            $this->validConfig['action']['options'][$name] = $configVars;
+        }
+    }
+
     public function setConfigFiles($arr) {
         $this->configFiles = $arr;
     }
@@ -1087,13 +1257,17 @@ class GlobalMainCfg {
         // Get the valid configuration definitions from the available backends
         $this->getBackendValidConf();
 
+        // Load valid config definitions registered by custom actions
+        $this->fetchCustomActions();
+
         // Use the newest file as indicator for using the cache or not
         $this->CACHE = new GlobalFileCache(CONST_MAINCFG, CONST_MAINCFG_CACHE.'-'.CONST_VERSION.'-cache'.$cacheSuffix);
         $this->PUCACHE = new GlobalFileCache(array_slice($this->configFiles, 0, count($this->configFiles) - 1),
                                              CONST_MAINCFG_CACHE.'-pre-user-'.CONST_VERSION.'-cache'.$cacheSuffix);
 
   	if($this->CACHE->isCached(false) === -1
-           || $this->PUCACHE->isCached(false) === -1) {
+           || $this->PUCACHE->isCached(false) === -1
+           || $this->PUCACHE->getCacheFileAge() < filemtime(CONST_MAINCFG_DIR)) {
             // The cache is too old. Load all config files
             foreach($this->configFiles AS $configFile) {
                 // Only proceed when the configuration file exists and is readable
@@ -1172,7 +1346,7 @@ class GlobalMainCfg {
     private function setPathsByBase($base, $htmlBase) {
         $this->validConfig['paths']['cfg']['default']                = $base.'etc/';
         $this->validConfig['paths']['mapcfg']['default']             = $base.'etc/maps/';
-        $this->validConfig['paths']['automapcfg']['default']         = $base.'etc/automaps/';
+        $this->validConfig['paths']['geomap']['default']             = $base.'etc/geomap';
         $this->validConfig['paths']['profiles']['default']           = $base.'etc/profiles';
 
         $this->validConfig['paths']['var']['default']                = $base.'var/';
@@ -1181,7 +1355,7 @@ class GlobalMainCfg {
 
         $this->validConfig['paths']['language']['default']           = $base.HTDOCS_DIR.'/frontend/nagvis-js/locale';
         $this->validConfig['paths']['class']['default']              = $base.HTDOCS_DIR.'/server/core/classes/';
-        $this->validConfig['paths']['server']['default']              = $base.HTDOCS_DIR.'/server/core';
+        $this->validConfig['paths']['server']['default']             = $base.HTDOCS_DIR.'/server/core';
         $this->validConfig['paths']['doc']['default']                = $base.HTDOCS_DIR.'/docs';
 
         $this->validConfig['paths']['htmlcss']['default']            = $htmlBase.'/frontend/nagvis-js/css/';
@@ -1199,6 +1373,8 @@ class GlobalMainCfg {
         $this->validConfig['paths']['icons']['default']              = 'userfiles/images/iconsets/';
         $this->validConfig['paths']['shapes']['default']             = 'userfiles/images/shapes/';
         $this->validConfig['paths']['sounds']['default']             = 'userfiles/sounds/';
+        $this->validConfig['paths']['sources']['default']            = 'server/core/sources';
+        $this->validConfig['paths']['actions']['default']            = 'server/core/actions';
 
         $this->validConfig['paths']['templateimages']['default']     = 'userfiles/images/templates/';
 
@@ -1252,112 +1428,117 @@ class GlobalMainCfg {
             // cut spaces from beginning and end
             $line = trim($file[$i]);
 
-            // don't read empty lines
-            if(isset($line) && $line != '') {
-                // get first char of actual line
-                $firstChar = substr($line,0,1);
+            // get first char of actual line
+            $firstChar = substr($line,0,1);
 
-                // check what's in this line
-                if($firstChar == ';') {
-                    if($isUserMainCfg) {
-                        // comment...
-                        $key = 'comment_'.($numComments++);
-                        $val = trim($line);
+            // check what's in this line
+            if($firstChar == ';' || $line == '') {
+                if($isUserMainCfg) {
+                    // comment...
+                    $key = 'comment_'.($numComments++);
+                    $val = trim($line);
 
-                        if(isset($sec) && $sec != '') {
-                            $this->config[$sec][$key] = $val;
-                        } else {
-                            $this->config[$key] = $val;
-                        }
-                    }
-                } elseif ((substr($line, 0, 1) == '[') && (substr($line, -1, 1)) == ']') {
-                    // section
-                    $sec = trim(substr($line, 1, strlen($line)-2));
-
-                    // write to array
-                    if(!isset($this->config[$sec])) {
-                        if(preg_match('/^backend_/i', $sec)) {
-                            $this->config[$sec] = Array();
-                            $this->config[$sec]['backendid'] = str_replace('backend_','',$sec);
-                        } elseif(preg_match('/^rotation_/i', $sec)) {
-                            $this->config[$sec] = Array();
-                            $this->config[$sec]['rotationid'] = str_replace('rotation_','',$sec);
-                        } else {
-                            $this->config[$sec] = Array();
-                        }
-                    }
-                } else {
-                    // parameter...
-
-                    // separate string in an array
-                    $arr = explode('=', $line);
-                    // read key from array and delete it
-                    $key = strtolower(trim($arr[0]));
-                    unset($arr[0]);
-                    // build string from rest of array
-                    $val = trim(implode('=', $arr));
-
-                    // remove " at beginning and at the end of the string
-                    if ((substr($val,0,1) == '"') && (substr($val,-1,1)=='"')) {
-                        $val = substr($val,1,strlen($val)-2);
-                    }
-
-                    // Special options (Arrays)
-                    if(isset($this->validConfig[$sec][$key]['array']) && $this->validConfig[$sec][$key]['array'] === true) {
-                        $val = $this->stringToArray($val);
-                    } elseif(preg_match('/^rotation_/i', $sec) && $key == 'maps') {
-                        // Explode comma separated list to array
-                        $val = explode(',', $val);
-
-                        // Check if an element has a label defined
-                        foreach($val AS $id => $element) {
-                            if(preg_match("/^([^\[.]+:)?(\[(.+)\]|(.+))$/", $element, $arrRet)) {
-                                $label = '';
-                                $map = '';
-                                $automap = '';
-
-                                // When no label is set, set map or url as label
-                                if($arrRet[1] != '') {
-                                    $label = substr($arrRet[1],0,-1);
-                                } else {
-                                    if($arrRet[3] != '') {
-                                        $label = $arrRet[3];
-                                    } else {
-                                        $label = $arrRet[4];
-                                    }
-                                }
-
-                                if(isset($arrRet[4]) && $arrRet[4] != '') {
-                                    // Remove leading/trailing spaces
-                                    $map = $arrRet[4];
-                                }
-
-                                // Remove surrounding spaces
-                                $label = trim($label);
-                                $map = trim($map);
-
-                                // Check if the map is an automap
-                                if(substr($map, 0, 1) === '@') {
-                                    $automap = substr($map, 1);
-                                    $map = '';
-                                }
-
-                                // Save the extracted information to an array
-                                $val[$id] = Array('label' => $label, 'map' => $map, 'automap' => $automap, 'url' => $arrRet[3], 'target' => '');
-                            }
-                        }
-                    }
-
-                    // write in config array
-                    if(isset($sec))
+                    if(isset($sec) && $sec != '') {
                         $this->config[$sec][$key] = $val;
-                    else
+                    } else {
                         $this->config[$key] = $val;
+                    }
+                }
+            } elseif ((substr($line, 0, 1) == '[') && (substr($line, -1, 1)) == ']') {
+                // section
+                $sec = trim(substr($line, 1, strlen($line)-2));
+
+                // write to array
+                if(!isset($this->config[$sec])) {
+                    if(preg_match('/^backend_/i', $sec)) {
+                        $this->config[$sec] = Array();
+                        $this->config[$sec]['backendid'] = str_replace('backend_', '', $sec);
+                    } elseif(preg_match('/^rotation_/i', $sec)) {
+                        $this->config[$sec] = Array();
+                        $this->config[$sec]['rotationid'] = str_replace('rotation_', '', $sec);
+                    } elseif(preg_match('/^action_/i', $sec)) {
+                        $this->config[$sec] = Array();
+                        $this->config[$sec]['action_id'] = str_replace('action_', '', $sec);
+                    } else {
+                        $this->config[$sec] = Array();
+                    }
                 }
             } else {
-                $sec = '';
-                if($isUserMainCfg)
-                    $this->config['comment_'.($numComments++)] = '';
+                // parameter...
+
+                // separate string in an array
+                $arr = explode('=', $line);
+                // read key from array and delete it
+                $key = strtolower(trim($arr[0]));
+                unset($arr[0]);
+                // build string from rest of array
+                $val = trim(implode('=', $arr));
+
+                // remove " at beginning and at the end of the string
+                if ((substr($val,0,1) == '"') && (substr($val,-1,1)=='"')) {
+                    $val = substr($val,1,strlen($val)-2);
+                }
+
+                // Try to get the valid config array. But be aware. This is not the whole
+                // truth. Since we might not know the (backend|action)_type, there are some
+                // vars missing in this array. But this is ok for us ... for the moment.
+                if (substr($sec, 0, 7) == 'action_') {
+                    $validConfig = $this->validConfig['action'];
+
+                } elseif (substr($sec, 0, 8) == 'backend_') {
+                    $validConfig = $this->validConfig['action'];
+
+                } elseif (isset($this->validConfig[$sec])) {
+                    $validConfig = $this->validConfig[$sec];
+                } else {
+                    $validConfig = array();
+                }
+
+                // Special options (Arrays)
+                if(isset($validConfig[$key]['array']) && $validConfig[$key]['array'] === true) {
+                    $val = $this->stringToArray($val);
+
+                } elseif(substr($sec, 0, 9) == 'rotation_' && $key == 'maps') {
+                    // Explode comma separated list to array
+                    $val = explode(',', $val);
+
+                    // Check if an element has a label defined
+                    foreach($val AS $id => $element) {
+                        if(preg_match("/^([^\[.]+:)?(\[(.+)\]|(.+))$/", $element, $arrRet)) {
+                            $label = '';
+                            $map = '';
+
+                            // When no label is set, set map or url as label
+                            if($arrRet[1] != '') {
+                                $label = substr($arrRet[1],0,-1);
+                            } else {
+                                if($arrRet[3] != '') {
+                                    $label = $arrRet[3];
+                                } else {
+                                    $label = $arrRet[4];
+                                }
+                            }
+
+                            if(isset($arrRet[4]) && $arrRet[4] != '') {
+                                // Remove leading/trailing spaces
+                                $map = $arrRet[4];
+                            }
+
+                            // Remove surrounding spaces
+                            $label = trim($label);
+                            $map = trim($map);
+
+                            // Save the extracted information to an array
+                            $val[$id] = Array('label' => $label, 'map' => $map, 'url' => $arrRet[3], 'target' => '');
+                        }
+                    }
+                }
+
+                // write in config array
+                if(isset($sec))
+                    $this->config[$sec][$key] = $val;
+                else
+                    $this->config[$key] = $val;
             }
         }
 
@@ -1378,6 +1559,21 @@ class GlobalMainCfg {
     }
 
     /**
+     * Returns the computed (merged) valid configuration for the instanciated section
+     * of a specific type. Is used for "backend" and "action" at the moment.
+     */
+    private function getInstanceableValidConfig($what, $sec) {
+        $ty = $this->getValue($sec, ($what == 'backend' ? 'backendtype' : 'action_type'));
+
+        if(isset($this->validConfig[$what]['options'][$ty])
+             && is_array($this->validConfig[$what]['options'][$ty])) {
+            return array_merge($this->validConfig[$what], $this->validConfig[$what]['options'][$ty]);
+        } else {
+            return $this->validConfig[$what];
+        }
+    }
+
+    /**
      * Checks if the main config file is valid
      *
      * @param	Boolean $printErr
@@ -1388,24 +1584,24 @@ class GlobalMainCfg {
         // check given objects and attributes
         foreach($this->config AS $type => &$vars) {
             if(!preg_match('/^comment_/',$type)) {
-                if(isset($this->validConfig[$type]) || preg_match('/^(backend|rotation)_/', $type)) {
+                if(isset($this->validConfig[$type]) || preg_match('/^(backend|rotation|action)_/', $type)) {
                     // loop validConfig for checking: => missing "must" atributes
                     if(preg_match('/^backend_/', $type)) {
-                        if(isset($this->validConfig['backend']['options'][$this->getValue($type,'backendtype')])
-                             && is_array($this->validConfig['backend']['options'][$this->getValue($type,'backendtype')])) {
-                            $arrValidConfig = array_merge($this->validConfig['backend'], $this->validConfig['backend']['options'][$this->getValue($type,'backendtype')]);
-                        } else {
-                            $arrValidConfig = $this->validConfig['backend'];
-                        }
+                        $arrValidConfig = $this->getInstanceableValidConfig('backend', $type);
+
                     } elseif(preg_match('/^rotation_/', $type)) {
                         $arrValidConfig = $this->validConfig['rotation'];
+
+                    } elseif(preg_match('/^action_/', $type)) {
+                        $arrValidConfig = $this->getInstanceableValidConfig('action', $type);
+
                     } else {
                         $arrValidConfig = $this->validConfig[$type];
                     }
                     foreach($arrValidConfig AS $key => &$val) {
                         if((isset($val['must']) && $val['must'] == '1')) {
                             // value is "must"
-                            if($this->getValue($type,$key) == '') {
+                            if($this->getValue($type,$key) === null) {
                                 // a "must" value is missing or empty
                                 throw new NagVisException(l('The needed attribute [ATTRIBUTE] is missing in section [TYPE] in main configuration file. Please take a look at the documentation.',
                                                             Array('ATTRIBUTE' => $key, 'TYPE' => $type)));
@@ -1418,14 +1614,26 @@ class GlobalMainCfg {
                     foreach($vars AS $key => $val) {
                         if(!preg_match('/^comment_/', $key)) {
                             if(preg_match('/^backend_/', $type)) {
-                                if(isset($this->validConfig['backend']['options'][$this->getValue($type,'backendtype')])
-                                     && is_array($this->validConfig['backend']['options'][$this->getValue($type,'backendtype')])) {
-                                    $arrValidConfig = array_merge($this->validConfig['backend'], $this->validConfig['backend']['options'][$this->getValue($type,'backendtype')]);
+                                $ty = $this->getValue($type,'backendtype');
+                                if(isset($this->validConfig['backend']['options'][$ty])
+                                     && is_array($this->validConfig['backend']['options'][$ty])) {
+                                    $arrValidConfig = array_merge($this->validConfig['backend'], $this->validConfig['backend']['options'][$ty]);
                                 } else {
                                     $arrValidConfig = $this->validConfig['backend'];
                                 }
+
                             } elseif(preg_match('/^rotation_/', $type)) {
                                 $arrValidConfig = $this->validConfig['rotation'];
+
+                            } elseif(preg_match('/^action_/', $type)) {
+                                $ty = $this->getValue($type, 'action_type');
+                                if(isset($this->validConfig['action']['options'][$ty])
+                                     && is_array($this->validConfig['action']['options'][$ty])) {
+                                    $arrValidConfig = array_merge($this->validConfig['action'], $this->validConfig['action']['options'][$ty]);
+                                } else {
+                                    $arrValidConfig = $this->validConfig['action'];
+                                }
+
                             } else {
                                 $arrValidConfig = $this->validConfig[$type];
                             }
@@ -1616,17 +1824,34 @@ class GlobalMainCfg {
                         return $this->validConfig['backend'][$var]['default'];
                     }
                 }
+
             } elseif(strpos($sec, 'rotation_') === 0) {
                 if(isset($this->config[$sec]) && is_array($this->config[$sec])) {
                     return $this->validConfig['rotation'][$var]['default'];
                 } else {
-                    return FALSE;
+                    return null;
                 }
+
+            } elseif(strpos($sec, 'action_') === 0) {
+                if(!isset($this->config[$sec]['action_type']))
+                    return null;
+                $ty = $this->config[$sec]['action_type'];
+
+                // This value could be emtpy - so only check if it is set
+                if(isset($this->validConfig['action']['options'][$ty][$var]['default'])) {
+                    return $this->validConfig['action']['options'][$ty][$var]['default'];
+                } else {
+                    // This value could be emtpy - so only check if it is set
+                    if(isset($this->validConfig['action'][$var]['default'])) {
+                        return $this->validConfig['action'][$var]['default'];
+                    }
+                }
+
             } else {
                 return $this->validConfig[$sec][$var]['default'];
             }
         } else {
-            return FALSE;
+            return null;
         }
     }
 
@@ -1675,7 +1900,7 @@ class GlobalMainCfg {
      * @author 	Lars Michelsen <lars@vertical-visions.de>
      */
     public function parseGeneralProperties() {
-        return json_encode(Array(
+        $p = Array(
           'controls_size'  => intval($this->getValue('global', 'controls_size')),
           'date_format'    => $this->getValue('global', 'dateformat'),
           'path_base'      => $this->getValue('paths','htmlbase'),
@@ -1686,7 +1911,19 @@ class GlobalMainCfg {
           'path_images'    => $this->getValue('paths','htmlimages'),
           'path_server'    => $this->getValue('paths','htmlbase').'/server/core/ajax_handler.php',
           'internal_title' => $this->getValue('internal', 'title'),
-        ));
+        );
+
+        // Add custom action configuration
+        $p['actions'] = array();
+        foreach (GlobalCore::getInstance()->getDefinedCustomActions() as $id) {
+            $p['actions'][$id] = array(
+                'obj_type'  => $this->getValue('action_'.$id, 'obj_type'),
+                'client_os' => $this->getValue('action_'.$id, 'client_os'),
+                'condition' => $this->getValue('action_'.$id, 'condition')
+            );
+        }
+
+        return json_encode($p);
     }
 
     /**
@@ -1720,13 +1957,23 @@ class GlobalMainCfg {
                 $arr[strtoupper($key[0])] = Array();
             }
 
+            // Convert state values to int
+            $last_part = $key[sizeof($key) - 1];
+            if($last_part != 'color' && $last_part != 'bgcolor' && $last_part != 'sound') {
+                $val = intval($this->getValue('states', $lowState));
+            } else {
+                $val = $this->getValue('states', $lowState);
+            }
+
             if(isset($key[1]) && isset($key[2])) {
-                $arr[strtoupper($key[0])][$key[1].'_'.$key[2]] = $this->getValue('states', $lowState);
+                // at the moment only bg colors of substates
+                $arr[strtoupper($key[0])][$key[1].'_'.$key[2]] = $val;
             } elseif(isset($key[1])) {
                 // ack/downtime
-                $arr[strtoupper($key[0])][$key[1]] = $this->getValue('states', $lowState);
+                $arr[strtoupper($key[0])][$key[1]] = $val;
             } else {
-                $arr[strtoupper($key[0])]['normal'] = $this->getValue('states', $lowState);
+                // normal state definition
+                $arr[strtoupper($key[0])]['normal'] = $val;
             }
         }
 
@@ -1886,7 +2133,7 @@ class GlobalMainCfg {
                             }
 
                             // Don't write the backendid/rotationid attributes (Are internal)
-                            if($key2 !== 'backendid' && $key2 !== 'rotationid') {
+                            if($key2 !== 'backendid' && $key2 !== 'rotationid' && $key2 !== 'action_id') {
                                 // Don't apply config options which are set to the same
                                 // value in the pre user config files
                                 if($this->preUserConfig !== null
@@ -1894,7 +2141,17 @@ class GlobalMainCfg {
                                    && isset($this->preUserConfig[$key][$key2])
                                    && $item2 == $this->preUserConfig[$key][$key2])
                                     continue;
-                                if(isset($this->validConfig[$key][$key2]['array']) && $this->validConfig[$key][$key2]['array'] === true)
+
+                                if (substr($key, 0, 8) == 'backend_')
+                                    $arrValidConfig = $this->getInstanceableValidConfig('backend', $key);
+                                elseif (substr($key, 0, 9) == 'rotation_')
+                                    $arrValidConfig = $this->validConfig['rotation'];
+                                elseif (substr($key, 0, 7) == 'action_')
+                                    $arrValidConfig = $this->getInstanceableValidConfig('action', $key);
+                                else
+                                    $arrValidConfig = $this->validConfig[$key];
+
+                                if(isset($arrValidConfig[$key2]['array']) && $arrValidConfig[$key2]['array'] === true)
                                     $item2 = implode(',', $item2);
 
                                 $content .= $key2.'="'.$item2.'"'."\n";

@@ -43,9 +43,9 @@ img {border:0}
 
 /* Global DIVs */
 .main {margin:0;padding:0;background-color:white;color:black}
-.header {position:fixed;top:0;left:0;padding:0;z-index:100;min-width:920px;}
+.header {position:fixed;top:0;left:0;padding:0;z-index:100;min-width:1000px;}
 .headerspacer {width:100%}
-.map {position:relative;top:0;left:0;z-index:98}
+.map, #overview {position:relative;top:0;left:0;z-index:98}
 
 /* Welcome page */
 div.welcome {padding:20px;width:600px}
@@ -54,15 +54,11 @@ div.welcome p {padding:5px;font-size:12px}
 div.welcome a,div.welcome a:active,div.welcome a:visited {color:#43B3CF}
 div.welcome a:hover {color:#779D2A}
 
-/* Automap */
-#automap {z-index:97}
-#automap shape {z-index:97}
-
 /* Message-Box */
 .messageBox {
     width: 600px;
     border: 0px;
-    background-color:  #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 .messageBox th {
@@ -88,6 +84,8 @@ div.welcome a:hover {color:#779D2A}
 /* Background images */
 #backgroundImage {
     position: absolute;
+    top: 0;
+    left: 0;
     z-index: 0;
 }
 
@@ -106,6 +104,10 @@ div.welcome a:hover {color:#779D2A}
     border-style : dotted;
     border-width : 1px;
     border-color : black;
+}
+
+.jsline div {
+    z-index: 10;
 }
 
 a.linelink {
@@ -163,14 +165,13 @@ div.control.togglemid {
     background-image: url('../images/templates/default.control_togglemid.gif');
 }
 
-/* Style on info pages (index.php?info, index.php) */
 div.infopage {
-    position:relative;
+    padding-top: 25px;
 }
 
+/* Style on info pages (index.php?info, index.php) */
 div.infopage > table {
     margin: auto;
-    margin-top: 25px;
     margin-bottom: 25px;
 
     width: 800px;
@@ -377,6 +378,7 @@ div.infopage a:hover {
 }
 
 #messageBoxDiv code {
+    display: block;
     text-align: left;
     font-size: 10px;
 }
@@ -504,7 +506,11 @@ td#popupWindowContent table.mytable tr td.tdfield span {
     word-wrap: break-word;
 }
 td#popupWindowContent table.mytable tr td.tdfield div.picker input {
-    width:151px;
+    width:150px;
+    margin-right:2px;
+}
+td#popupWindowContent table.mytable tr td.tdfield input.checkbox {
+    width: auto;
     margin-right:2px;
 }
 td#popupWindowContent table.mytable tr td.tdfield div.picker img {
@@ -534,7 +540,8 @@ td#popupWindowContent table.mytable tr td.err div {
     border-radius: 5px;
 }
 
-td#popupWindowContent div.success {
+td#popupWindowContent div.success,
+td#popupWindowContent div.err {
     padding: 5px 8px;
     margin: 10px;
     border: 1px solid #00ff00;
@@ -544,6 +551,12 @@ td#popupWindowContent div.success {
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+}
+
+td#popupWindowContent div.err {
+    border: 1px solid #ff0000;
+    background-color: #FFC9C9;
+    color: #000;
 }
 
 /* Popup window forms */
@@ -621,7 +634,7 @@ td#popupWindowContent a:hover {color:#779D2A;text-decoration:underline}
     margin-top: 2px;
 }
 
-.header ul.head li.logo a, .header ul.head li.logo a:active, .header ul.head li.logo a:visited {
+.header ul.head li.logo a, .header ul.head li.logo a:active {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -642,9 +655,10 @@ td#popupWindowContent a:hover {color:#779D2A;text-decoration:underline}
 .dropdown li.lvl4 a{padding-left:30px;width:168px}
 .dropdown li.lvl5 a{padding-left:40px;width:158px}
 .dropdown li.lvl5 a{padding-left:50px;width:148px}
-.dropdown a, .dropdown a:active, .dropdown a:visited, .dropdown li.spacer, .dropdown dl.subdropdown dt {display:block;width:193px;background:#eaf0f2;margin:0;color:#43B3CF;text-decoration:none;border-left:1px solid #a4a4a4;border-right:1px solid #a4a4a4;padding:5px;z-index:100}
-.dropdown a.left, .dropdown a.left:active, .dropdown a.left:visited {float:left;width:152px;border-right:0}
-.dropdown a.right, .dropdown a.right:active, .dropdown a.right:visited {float:right;width:30px;border-left:1px solid #43B3CF}
+.dropdown a, .dropdown a:active, .dropdown li.spacer, .dropdown dl.subdropdown dt {display:block;width:193px;background:#eaf0f2;margin:0;color:#43B3CF;text-decoration:none;border-left:1px solid #a4a4a4;border-right:1px solid #a4a4a4;padding:5px;z-index:100}
+.dropdown a:visited {color:#43B3CF;}
+.dropdown a.left, .dropdown a.left:active {float:left;width:152px;border-right:0}
+.dropdown a.right, .dropdown a.right:active {float:right;width:30px;border-left:1px solid #43B3CF}
 .dropdown a.error, .dropdown a.error:active, .dropdown a.error:visited {color:#ff0000}
 .dropdown a:hover {background:#d9e1e4;color:#779D2A}
 .dropdown a.submenu-link:after {float:right;content:">"}
