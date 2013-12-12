@@ -18,7 +18,7 @@ Architecture: all
 Pre-Depends: dpkg (>= 1.15.7.2)
 Depends: ${misc:Depends},
          php5-common (>= 5.3.0),
-         libapache2-mod-php5,
+         php5,
          php5-gd,
          ucf,
          graphviz,
