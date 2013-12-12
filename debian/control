@@ -5,16 +5,27 @@ Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian
 Uploaders: Markus Frosch <markus@lazyfrosch.de>,
            Alexander Wirt <formorer@debian.org>,
            Jan Wagner <waja@cyconet.org>
-Build-Depends: debhelper (>= 7.0.50~), quilt, po-debconf
-Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 7.0.50~),
+               quilt,
+               po-debconf
+Standards-Version: 3.9.5
 Homepage: http://www.nagvis.org
 Vcs-Git: git://anonscm.debian.org/pkg-nagios/pkg-nagvis.git
-Vcs-Browser: http://anonscm.debian.org/git/pkg-nagios/pkg-nagvis.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-nagvis.git;a=summary
 
 Package: nagvis
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.7.2)
-Depends: ${misc:Depends}, php5-common (>= 5.3.0), libapache2-mod-php5, php5-gd, ucf, graphviz, php5-sqlite, php-net-socket, php-gettext, check-mk-livestatus
+Depends: ${misc:Depends},
+         php5-common (>= 5.3.0),
+         libapache2-mod-php5,
+         php5-gd,
+         ucf,
+         graphviz,
+         php5-sqlite,
+         php-net-socket,
+         php-gettext,
+         check-mk-livestatus
 Suggests: nagvis-demos
 Description: visualization addon for Nagios or Icinga
  NagVis can be used to visualize Nagios or Icinga data, for instance
@@ -29,7 +40,8 @@ Description: visualization addon for Nagios or Icinga
 
 Package: nagvis-demos
 Architecture: all
-Depends: ${misc:Depends}, nagvis (= ${source:Version})
+Depends: ${misc:Depends},
+         nagvis (= ${source:Version})
 Description: visualization addon for Nagios or Icinga - demo maps
  NagVis can be used to visualize Nagios or Icinga data, for instance
  to display network traffic or IT services such as email.
