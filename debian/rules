@@ -33,9 +33,8 @@ override_dh_install:
 	chown -R www-data:www-data debian/nagvis/etc/nagvis/profiles
 	chown -R www-data:www-data debian/nagvis/var/cache/nagvis
 	# Fixing some lintian issues
-	rm -f debian/nagvis/usr/share/nagvis/share/frontend/nagvis-js/ext/dwoo-1.1.0/LICENSE \
-		debian/nagvis/var/cache/nagvis/userfiles/images/gadgets/.gitignore \
-		debian/nagvis/var/cache/nagvis/userfiles/styles/.gitignore
+	rm -f debian/nagvis/usr/share/nagvis/share/frontend/nagvis-js/ext/dwoo-1.1.0/LICENSE
+	find debian/nagvis/ -name ".gitignore" -delete
 	# remove example configuration files (they are already installed to
 	# /usr/share/doc/nagvis)
 	rm -f debian/nagvis/etc/nagvis/apache2-nagvis.conf-sample
@@ -51,3 +50,4 @@ override_dh_clean:
 	dh_clean
 	debconf-updatepo
 
+# vi: noexpandtab :
