@@ -468,6 +468,8 @@ var NagVisStatefulObject = NagVisObject.extend({
         var y = this.parseCoords(this.conf.y, 'y');
 
         var width = addZoomFactor(this.conf.line_width);
+        if(width <= 0)
+            width = 1; // minimal width for lines
 
         var colorFill   = '';
         var colorFill2  = '';
@@ -625,17 +627,34 @@ var NagVisStatefulObject = NagVisObject.extend({
         var newPerfdata = [];
         var foundNew = false;
 
+        // Check_MK if/if64 checks support switching between bytes/bits. The detection
+        // can be made by some curios hack. The most hackish hack I've ever seen. From hell.
+        // Well, let's deal with it.
+        var display_bits = false;
+        if(oldPerfdata.length >= 11 && oldPerfdata[10][5] == '0.0')
+            display_bits = true;
+
         // This loop takes perfdata with the labels "in" and "out" and uses the current value
         // and maximum values to parse the percentage usage of the line
         for(var i = 0; i < oldPerfdata.length; i++) {
             if(oldPerfdata[i][0] == 'in' && (oldPerfdata[i][2] === null || oldPerfdata[i][2] === '')) {
                 newPerfdata[0] = this.perfdataCalcPerc(oldPerfdata[i]);
-                newPerfdata[2] = this.perfdataCalcBytesReadable(oldPerfdata[i]);
+                if(!display_bits) {
+                    newPerfdata[2] = this.perfdataCalcBytesReadable(oldPerfdata[i]);
+                } else {
+                    oldPerfdata[i][1] *= 8; // convert those hakish bytes to bits
+                    newPerfdata[2] = this.perfdataCalcBitsReadable(oldPerfdata[i]);
+                }
                 foundNew = true;
             }
             if(oldPerfdata[i][0] == 'out' && (oldPerfdata[i][2] === null || oldPerfdata[i][2] === '')) {
                 newPerfdata[1] = this.perfdataCalcPerc(oldPerfdata[i]);
-                newPerfdata[3] = this.perfdataCalcBytesReadable(oldPerfdata[i]);
+                if(!display_bits) {
+                    newPerfdata[3] = this.perfdataCalcBytesReadable(oldPerfdata[i]);
+                } else {
+                    oldPerfdata[i][1] *= 8; // convert those hakish bytes to bits
+                    newPerfdata[3] = this.perfdataCalcBitsReadable(oldPerfdata[i]);
+                }
                 foundNew = true;
             }
         }
@@ -801,10 +820,12 @@ var NagVisStatefulObject = NagVisObject.extend({
      *
      * @author	Lars Michelsen <lars@vertical-visions.de>
      */
-    moveLabel: function () {
+    updateLabel: function () {
         var label  = document.getElementById(this.conf.object_id + '-label');
-        this.updateLabelPos(label);
-        label  = null;
+        if (label) {
+            this.updateLabelPos(label);
+            label  = null;
+        }
     },
 
     /**
@@ -872,12 +893,12 @@ var NagVisStatefulObject = NagVisObject.extend({
             y = this.conf.label_y;
 
         if(this.conf.label_x && this.conf.label_x.toString() == 'center') {
-            var diff_x = parseInt(parseInt(oLabel.clientWidth) - this.getObjWidth()) / 2;
+            var diff_x = parseInt(parseInt(oLabel.clientWidth) - rmZoomFactor(this.getObjWidth())) / 2;
             x = this.parseCoord(this.parseLabelCoord(this.conf.x), 'x', false) - diff_x;
         }
 
         if(this.conf.label_y && this.conf.label_y.toString() == 'bottom') {
-            y = this.parseCoord(this.conf.y, 'y', false) + this.getObjHeight();
+            y = this.parseCoord(this.conf.y, 'y', false) + rmZoomFactor(this.getObjHeight());
         }
 
         // If there is a presign it should be relative to the objects x/y
