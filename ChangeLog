@@ -1,3 +1,20 @@
+1.7.10
+Frontend:
+  * Weathermap lines now deal with bit/byte values provided by Check_MKs
+    interface checks
+  * FIX: Fixed "TypeError: oLabel is null" on at least geomaps
+  * FIX: Fixed shape image displaying when using external URLS
+  * FIX: Hiding	"Edit Map" link for "on demand" automaps
+  * FIX: Fixed "modify view" dialog for "on demand" automaps
+  * FIX: Fixed wrong viewport html header (Thanks to Carl Helmertz <chelmertz@op5.com>)
+
+Automap:
+  * Labels have now a white background to improve the text readability
+  * Labels should not overlap on automaps with many hosts anymore
+  * Slightly layout improvement of automaps in undirected mode
+  * FIX: Rendering lines on zoomed automaps correctly
+  * FIX: Fixed positions of labels on zoomed automaps
+
 1.7.9
 Core:
   * Livestatus: Fixed handling of hosts/services without custom variables
