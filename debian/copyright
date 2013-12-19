@@ -1,61 +1,39 @@
-This work was packaged for Debian by:
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: NagVis
+Source: http://sourceforge.net/projects/nagvis/files/
 
-    Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org> on Wed, 22 Feb 2012 15:22:51 +0100
+Files: *
+Copyright: Copyright 2007-2013, Lars Michelsen <lars@vertical-visions.de>
+           Copyright 2007, Michael Luebben <mickey2002@nagios-wiki.de>
+           and contributors
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2"
 
-It was downloaded from:
-
-    http://www.nagvis.org/downloads
-
-Upstream Authors:
-
-    NagVis Project
-    Lars Michelsen <lars@vertical-visions.de>
-    Michael Luebben <mickey2002@nagios-wiki.de>
-
-Copyright:
-
-    2007 Lars Michelsen <lars@vertical-visions.de>
-    2007 Michael Luebben <mickey2002@nagios-wiki.de>
-
-License:
-
-   This package is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
-
-   This package is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program. If not, see <http://www.gnu.org/licenses/>
-
-On Debian systems, the complete text of the GNU General
-Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
-
-
-Removed files:
-
-  The original upstream tarball contains some swf files, for which the
-  source is present, but for which we miss the needed tools to build them
-  from source.
-  
-  We therefore had to remove the following files from the upstream tarball:
-  
-  uifx/
-  share/netmap/shell.swf
-  share/netmap/shell.html (referencing shell.swf and otherwise emmpty)
-  share/netmap/modules/gmap/
-
+Files: debian/*
+Copyright: Copyright 2007-2012, Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
+           Copyright 2009, Alexander Wirt <formorer@debian.org>
+           Copyright 2009, Jan Wagner <waja@debian.org>
+           Copyright 2011-2012, Alexander Reichle-Schmehl <tolimar@debian.org>
+           Copyright 2013, Markus Frosch <markus@lazyfrosch.de>
+           and contributors
+License: GPL-2+
 
 Files: share/frontend/nagvis-js/ext/dwoo-1.1.0/*
 Copyright: (c) 2008, Jordi Boggiano
 License: BSD
  Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are
-met:
- . 
+ modification, are permitted provided that the following conditions are met:
+ .
    * Redistributions of source code must retain the above copyright
      notice, this list of conditions and the following disclaimer.
    * Redistributions in binary form must reproduce the above copyright
@@ -81,14 +59,14 @@ Copyright: (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
 License: BSD
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:
- .   
+ .
      * Redistributions of source code must retain the above copyright notice,
        this list of conditions and the following disclaimer.
- .   
+ .
      * Redistributions in binary form must reproduce the above copyright notice,
        this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
- .   
+ .
      * Neither the name of Zend Technologies USA, Inc. nor the names of its
        contributors may be used to endorse or promote products derived from this
        software without specific prior written permission.
@@ -104,27 +82,9 @@ License: BSD
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 Files: share/server/core/ext/php-gettext-1.0.9/*
 Copyright:  2005 Steven Armstrong <sa at c-area dot ch>
    2003, 2005, 2006, 2009 Danilo Segan <danilo@kvota.net>
    2005 Nico Kaiser <nico@siriux.net>
-License: GPLv2+
- This package is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
- .
- On Debian systems, the complete text of the GNU General
- Public License can be found in `/usr/share/common-licenses/GPL'.
-
-
-The Debian packaging is:
-
-    Copyright (C) 2012 Alexander Reichle-Schmehl <tolimar@debian.org>
-
-you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+License: GPL-2+
 

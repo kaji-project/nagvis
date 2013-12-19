@@ -1,9 +1,14 @@
 nagvis for Debian
 -----------------
 
-This package uses quilt as patch management.  More details on its usage may
-be found in /usr/share/doc/quilt/README.source after installing the quilt
-package.
+  The original upstream tarball contains some swf files, for which the
+  source is present, but for which we miss the needed tools to build them
+  from source.
 
+  We therefore had to remove the following files from the upstream tarball:
 
+  uifx/
+  share/netmap/shell.swf
+  share/netmap/shell.html (referencing shell.swf and otherwise emmpty)
+  share/netmap/modules/gmap/
 
