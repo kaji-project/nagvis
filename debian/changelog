@@ -1,3 +1,22 @@
+nagvis (1:1.7.10+dfsg1-1) unstable; urgency=medium
+
+  [ victory ]
+  * [8f99113] [INTL:ja] New Japanese translation (Closes: #692577)
+
+  [ Markus Frosch ]
+  * [d0b4e11] Depending on php5 instead of libapache2-mod-php5 to allow
+              other PHP implementations. (Closes: #680937)
+  * [61c5f43] Make sure to unregister /etc/apache2/conf.d/nagvis.conf on
+              migration and purge
+  * [09298c9] Moved permissions to postinst, this fixes problems on update
+              (Closes: #719698)
+  * [8f7d748] Moved userfiles to /var/lib/nagvis/userfiles (Closes: #706245)
+  * [618eceb] Updated copyright information and README.source
+  * [e21aafb] Imported Upstream version 1.7.10
+  * [bdc32e6] DFSG cleaned upstream version 1.7.10+dfsg1
+
+ -- Markus Frosch <markus@lazyfrosch.de>  Thu, 19 Dec 2013 22:15:14 +0100
+
 nagvis (1:1.7.9+dfsg1-1~exp1) experimental; urgency=low
 
   * Maintainer was switched team internally to Markus Frosch
