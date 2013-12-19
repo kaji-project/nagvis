@@ -18,9 +18,9 @@ override_dh_install:
 	# remove them from the nagvis package here
 	rm -f debian/nagvis/etc/nagvis/conf.d/demo.ini.php \
 		debian/nagvis/etc/nagvis/maps/demo*.cfg \
-		debian/nagvis/var/cache/nagvis/userfiles/images/maps/demo*.png \
-		debian/nagvis/var/cache/nagvis/userfiles/images/shapes/demo*.png
-	# these files are shiped in /var/cache/nagvis/userfiles
+		debian/nagvis/var/lib/nagvis/userfiles/images/maps/demo*.png \
+		debian/nagvis/var/lib/nagvis/userfiles/images/shapes/demo*.png
+	# these files are shiped in /var/lib/nagvis/userfiles
 	# they are installed by the more general copy of the content of
 	# /usr/share/nagvis/share
 	rm -rf debian/nagvis/usr/share/nagvis/share/userfiles/

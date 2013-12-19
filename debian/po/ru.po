@@ -62,12 +62,12 @@ msgstr "Удалить данные NagVis при вычистке пакета?
 #. Description
 #: ../nagvis.templates:3001
 msgid ""
-"NagVis creates files in /var/cache/nagvis and /etc/nagvis (for instance "
+"NagVis creates files in /var/{cache,lib}/nagvis and /etc/nagvis (for instance "
 "background images and map files), including a small database for "
 "authentification. If you don't need any of these files, they can be removed "
 "now, or you may want to keep them and clean up by hand later."
 msgstr ""
-"NagVis создаёт файлы в каталоге /var/cache/nagvis и /etc/nagvis (такие как "
+"NagVis создаёт файлы в каталоге /var/{cache,lib}/nagvis и /etc/nagvis (такие как "
 "фоновые изображения и карты), в которых содержится маленькая база "
 "аутентификационных данных. Если вам ненужны эти файлы, то они могут быть "
 "удалены прямо сейчас, или вы можете их оставить и удалить позже вручную."

@@ -59,12 +59,12 @@ msgstr "パッケージの完全削除時に NagVis のデータを削除しま�
 #. Description
 #: ../nagvis.templates:3001
 msgid ""
-"NagVis creates files in /var/cache/nagvis and /etc/nagvis (for instance "
+"NagVis creates files in /var/{cache,lib}/nagvis and /etc/nagvis (for instance "
 "background images and map files), including a small database for "
 "authentification. If you don't need any of these files, they can be removed "
 "now, or you may want to keep them and clean up by hand later."
 msgstr ""
-"NagVis は /var/cache/nagvis と /etc/nagvis (例えば背景画像やマップファイル) に"
+"NagVis は /var/{cache,lib}/nagvis と /etc/nagvis (例えば背景画像やマップファイル) に"
 "認証用の小さなデータベースも含め、ファイルを作成します。こういったファイルが"
 "一切不要な場合ここで削除することができますが、残しておいて後で手作業で整理する"
 "こともできます。"

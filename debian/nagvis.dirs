@@ -1,6 +1,7 @@
 var/cache/nagvis
 var/cache/nagvis/tmpl/cache
 var/cache/nagvis/tmpl/compile
+var/lib/nagvis
 etc/nagvis/profiles
 etc/apache2/conf.d/
 usr/share/nagvis/defaults

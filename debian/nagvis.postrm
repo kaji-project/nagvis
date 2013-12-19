@@ -66,6 +66,7 @@ case "$1" in
             rm -rf /etc/nagvis/maps/*
             rm -rf /etc/nagvis/profiles/*
             rm -rf /var/cache/nagvis/*
+            rm -rf /var/lib/nagvis/*
         fi
     ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)

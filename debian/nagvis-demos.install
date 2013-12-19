@@ -1,4 +1,4 @@
 debian/demo_pool.ini.php etc/nagvis/conf.d/
 etc/maps/demo*.cfg etc/nagvis/maps/
-share/userfiles/images/shapes/demo*.png var/cache/nagvis/userfiles/images/shapes/
-share/userfiles/images/maps/demo*.png var/cache/nagvis/userfiles/images/maps/
+share/userfiles/images/shapes/demo*.png var/lib/nagvis/userfiles/images/shapes/
+share/userfiles/images/maps/demo*.png var/lib/nagvis/userfiles/images/maps/

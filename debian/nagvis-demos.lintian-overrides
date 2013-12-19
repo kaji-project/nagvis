@@ -1,7 +1,0 @@
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/maps/demo-germany.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/maps/demo-ham-racks.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/maps/demo-host.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/maps/demo-load.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/maps/demo-overview.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/shapes/demo-wan-cloud.png
-nagvis-demos: file-in-unusual-dir var/cache/nagvis/userfiles/images/shapes/demo_traffic_load_legend.png

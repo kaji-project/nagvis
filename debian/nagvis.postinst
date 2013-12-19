@@ -57,15 +57,31 @@ update_permissions() {
     setperm www-data www-data 0755 /etc/nagvis/conf.d
     setperm www-data www-data 0755 /etc/nagvis/profiles
 
+    setperm www-data www-data 0755 /var/lib/nagvis/userfiles
+    setperm www-data www-data 0755 /var/lib/nagvis/userfiles/images/maps
+    setperm www-data www-data 0755 /var/lib/nagvis/userfiles/images/shapes
+
     setperm www-data www-data 0750 /var/cache/nagvis
-
-    setperm www-data www-data 0755 /var/cache/nagvis/userfiles
-    setperm www-data www-data 0755 /var/cache/nagvis/userfiles/images/maps
-    setperm www-data www-data 0755 /var/cache/nagvis/userfiles/images/shapes
-
     setperm www-data www-data 0750 /var/cache/nagvis/tmpl
     setperm www-data www-data 0750 /var/cache/nagvis/tmpl/compile
     setperm www-data www-data 0750 /var/cache/nagvis/tmpl/cache
+}
+
+# migrate userfiles from /var/cache/nagvis to /var/lib/nagvis
+migrate_userfiles() {
+    from="/var/cache/nagvis/userfiles"
+    to="/var/lib/nagvis/userfiles"
+
+    for dir in images/maps images/shapes; do
+        if [ -d "$from/$dir" ]; then
+            echo "moving files from $from/$dir to $to/$dir ..."
+            mv "$from/$dir"/* "$to/$dir/"
+            rmdir "$from/$dir" || true
+        fi
+    done
+
+    test -d "$from/images" && rmdir "$from/images" || true
+    test -d "$from" && rmdir "$from" || true
 }
 
 case "$1" in
@@ -173,6 +189,7 @@ case "$1" in
         fi
 
         update_permissions
+        migrate_userfiles
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
