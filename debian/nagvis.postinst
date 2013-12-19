@@ -38,6 +38,36 @@ if dpkg --compare-versions "$2" lt-nl "1:1.7.9+dfsg1-1~"; then
     rmdir /etc/nagvis/automaps/ 2>/dev/null || true
 fi
 
+setperm() {
+    user="$1"
+    group="$2"
+    mode="$3"
+    file="$4"
+    shift 4
+    # only do something when no setting exists
+    if ! dpkg-statoverride --list "$file" >/dev/null 2>&1; then
+      chown "$user":"$group" "$file"
+      chmod "$mode" "$file"
+    fi
+}
+
+update_permissions() {
+    setperm www-data www-data 0755 /etc/nagvis
+    setperm www-data www-data 0755 /etc/nagvis/maps
+    setperm www-data www-data 0755 /etc/nagvis/conf.d
+    setperm www-data www-data 0755 /etc/nagvis/profiles
+
+    setperm www-data www-data 0750 /var/cache/nagvis
+
+    setperm www-data www-data 0755 /var/cache/nagvis/userfiles
+    setperm www-data www-data 0755 /var/cache/nagvis/userfiles/images/maps
+    setperm www-data www-data 0755 /var/cache/nagvis/userfiles/images/shapes
+
+    setperm www-data www-data 0750 /var/cache/nagvis/tmpl
+    setperm www-data www-data 0750 /var/cache/nagvis/tmpl/compile
+    setperm www-data www-data 0750 /var/cache/nagvis/tmpl/cache
+}
+
 case "$1" in
     configure)
         # Source debconf library.
@@ -141,6 +171,8 @@ case "$1" in
             fi
 
         fi
+
+        update_permissions
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

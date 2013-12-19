@@ -26,12 +26,6 @@ override_dh_install:
 	rm -rf debian/nagvis/usr/share/nagvis/share/userfiles/
 	# We use the external php-gettext lib to avoid copy copies
 	rm -rf debian/nagvis/usr/share/nagvis/share/server/core/ext/php-gettext-1.0.9
-	# correct directory permissions
-	chown www-data:www-data debian/nagvis/etc/nagvis
-	chown -R www-data:www-data debian/nagvis/etc/nagvis/maps
-	chown -R www-data:www-data debian/nagvis/etc/nagvis/conf.d
-	chown -R www-data:www-data debian/nagvis/etc/nagvis/profiles
-	chown -R www-data:www-data debian/nagvis/var/cache/nagvis
 	# Fixing some lintian issues
 	rm -f debian/nagvis/usr/share/nagvis/share/frontend/nagvis-js/ext/dwoo-1.1.0/LICENSE
 	find debian/nagvis/ -name ".gitignore" -delete
@@ -39,12 +33,6 @@ override_dh_install:
 	# /usr/share/doc/nagvis)
 	rm -f debian/nagvis/etc/nagvis/apache2-nagvis.conf-sample
 	rm -f debian/nagvis/etc/nagvis/nagvis.ini.php-sample
-
-
-
-override_dh_fixperms:
-	dh_fixperms -X /var/cache/nagvis -X /etc/nagvis -X /var/lib/nagvis/userfiles/images
-
 
 override_dh_clean:
 	dh_clean
