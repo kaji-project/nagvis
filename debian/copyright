@@ -7,17 +7,6 @@ Copyright: Copyright 2007-2013, Lars Michelsen <lars@vertical-visions.de>
            Copyright 2007, Michael Luebben <mickey2002@nagios-wiki.de>
            and contributors
 License: GPL-2+
- This package is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License version 2 as
- published by the Free Software Foundation.
- .
- This package is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- .
- On Debian systems, the complete text of the GNU General
- Public License version 2 can be found in "/usr/share/common-licenses/GPL-2"
 
 Files: debian/*
 Copyright: Copyright 2007-2012, Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
@@ -87,4 +76,17 @@ Copyright:  2005 Steven Armstrong <sa at c-area dot ch>
    2003, 2005, 2006, 2009 Danilo Segan <danilo@kvota.net>
    2005 Nico Kaiser <nico@siriux.net>
 License: GPL-2+
+
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2"
 
