@@ -91,7 +91,7 @@ case "$1" in
         db_get nagvis/monitoring_system
         MONITORING="$RET"
         case "$MONITORING" in
-            "icinga"|"nagios")
+            "icinga"|"nagios"|"shinken")
                 ## Creating Configuration file for Nagvis
                 nagvis_tmp=$(mktemp)
                 cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
@@ -114,6 +114,11 @@ case "$1" in
                           -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
                           -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#"
                     ;;
+                    "shinken")
+                        sed -i "$nagvis_tmp" \
+                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
+                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"tcp:localhost:50000\"#"
+                    ;;
                 esac
                 chgrp www-data "$nagvis_tmp"
                 chmod g+rw "$nagvis_tmp"
@@ -135,6 +140,10 @@ case "$1" in
                         sed -i "$apache_tmp" \
                           -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g"
                     ;;
+                    "shinken")
+                        sed -i "$apache_tmp" \
+                          -e "s#@NAGIOS_PATH@/etc#/etc/shinken#g"
+                    ;;
                 esac
                 chmod go+r "$apache_tmp"
                 ucf --debconf-ok "$apache_tmp" /etc/nagvis/apache2.conf
@@ -147,7 +156,7 @@ case "$1" in
         esac
 
         # enable apache when file exists and we are on autoconfigure
-        if [ -f /etc/nagvis/apache2.conf ] && ( [ "$MONITORING" = "nagios" ] || [ "$MONITORING" = "icinga" ] ); then
+        if [ -f /etc/nagvis/apache2.conf ] && ( [ "$MONITORING" = "nagios" ] || [ "$MONITORING" = "icinga" ] || [ "$MONITORING" = "shinken" ] ); then
             echo "enabling Apache2 config..."
 
             COMMON_STATE=$(dpkg-query -f '${Status}' -W 'apache2.2-common' 2>/dev/null | awk '{print $3}' || true)

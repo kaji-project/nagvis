@@ -10,8 +10,8 @@
 Template: nagvis/monitoring_system
 Type: select
 Default: icinga
-#flag:translate:3
-__Choices: icinga, nagios, other
+#flag:translate:4
+__Choices: icinga, nagios, shinken, other
 _Description: Monitoring suite used with NagVis:
  The NagVis package supports Icinga as well as
  Nagios, using the check-mk-live broker backend.
