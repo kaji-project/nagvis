@@ -90,8 +90,8 @@ case "$1" in
         . /usr/share/debconf/confmodule
         db_get nagvis/monitoring_system
         MONITORING="$RET"
-	case "$MONITORING" in
-	    "icinga")
+        case "$MONITORING" in
+            "icinga"|"nagios")
                 ## Creating Configuration file for Nagvis
                 nagvis_tmp=$(mktemp)
                 cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
@@ -99,12 +99,22 @@ case "$1" in
                   -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
                   -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
                   -e "s#;htmlbase=\"/nagvis\"#htmlbase=\"/nagvis\"#" \
-                  -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/icinga/cgi-bin\"#" \
-                  -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/icinga/rw/live\"#" \
                   -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
                   -e "s#interval=15#;interval=15#" \
                   -e "s#maps=\"\(.*\)\"#;maps=\"\1\"#" \
                   > "$nagvis_tmp"
+                case "$MONITORING" in
+                    "icinga")
+                        sed -i "$nagvis_tmp" \
+                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/icinga/cgi-bin\"#" \
+                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/icinga/rw/live\"#"
+                    ;;
+                    "nagios")
+                        sed -i "$nagvis_tmp" \
+                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
+                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#"
+                    ;;
+                esac
                 chgrp www-data "$nagvis_tmp"
                 chmod g+rw "$nagvis_tmp"
                 ucf --debconf-ok "$nagvis_tmp" /etc/nagvis/nagvis.ini.php
@@ -114,40 +124,18 @@ case "$1" in
                 apache_tmp=$(mktemp)
                 sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
                   -e "s#@NAGVIS_WEB@#/nagvis#g" \
-                  -e "s#@NAGIOS_PATH@/etc#/etc/icinga#g" \
                   < /usr/share/nagvis/defaults/apache2-nagvis.conf-sample \
                   > "$apache_tmp"
-                chmod go+r "$apache_tmp"
-                ucf --debconf-ok "$apache_tmp" /etc/nagvis/apache2.conf
-                ucfr nagvis /etc/nagvis/apache2.conf
-                rm -f "$apache_tmp"
-            ;;
-            "nagios")
-                ## Creating Configuration file for Nagvis
-                nagvis_tmp=$(mktemp)
-                cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
-                  -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
-                  -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
-                  -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
-                  -e "s#;htmlbase=\"/nagvis\"#htmlbase=\"/nagvis\"#" \
-                  -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
-                  -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#" \
-                  -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
-                  -e "s#interval=15#;interval=15#" \
-                  -e "s#maps=\"\(.*\)\"#;maps=\"\1\"#" \
-                  > "$nagvis_tmp"
-                chgrp www-data "$nagvis_tmp"
-                chmod g+rw "$nagvis_tmp"
-                ucf --debconf-ok "$nagvis_tmp" /etc/nagvis/nagvis.ini.php
-                ucfr nagvis /etc/nagvis/nagvis.ini.php
-                rm -f "$nagvis_tmp"
-                ## Creating Configuration snipplet for Apache
-                apache_tmp=$(mktemp)
-                sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
-                  -e "s#@NAGVIS_WEB@#/nagvis#g" \
-                  -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g" \
-                  < /usr/share/nagvis/defaults/apache2-nagvis.conf-sample \
-                  > "$apache_tmp"
+                case "$MONITORING" in
+                    "icinga")
+                        sed -i "$apache_tmp" \
+                          -e "s#@NAGIOS_PATH@/etc#/etc/icinga#g"
+                    ;;
+                    "nagios")
+                        sed -i "$apache_tmp" \
+                          -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g"
+                    ;;
+                esac
                 chmod go+r "$apache_tmp"
                 ucf --debconf-ok "$apache_tmp" /etc/nagvis/apache2.conf
                 ucfr nagvis /etc/nagvis/apache2.conf
