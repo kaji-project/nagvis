@@ -1,3 +1,18 @@
+nagvis (1:1.7.10+dfsg1-2) unstable; urgency=low
+
+  [ Mathieu Parent ]
+  * [fca29f3] Refactor monitoring configuration
+  * [3253395] Shinken support (Closes: #733139)
+
+  [ Markus Frosch ]
+  * [12156c3] Fix Debian watch file for +dfsg1 versions
+  * [91b09f2] Added patch headers to existing patches
+  * [4ee9a4c] Added privary-breach patch for cleaning up
+              possible privacy breaches
+  * [12156c3] Fix Debian watch file for +dfsg1 versions
+
+ -- Markus Frosch <markus@lazyfrosch.de>  Fri, 27 Dec 2013 18:09:08 +0100
+
 nagvis (1:1.7.10+dfsg1-1) unstable; urgency=medium
 
   [ victory ]
