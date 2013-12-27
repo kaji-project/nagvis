@@ -1,3 +1,9 @@
+Description: Change nagvis config paths for Debian
+Author: Alexander Reichle-Schmehl <tolimar@debian.org>
+Reviewed-by: Markus Frosch <markus@lazyfrosch.de>
+Last-Update: 2013-12-12
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/share/server/core/defines/global.php
 +++ b/share/server/core/defines/global.php
 @@ -79,11 +79,11 @@
