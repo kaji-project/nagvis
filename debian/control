@@ -15,7 +15,6 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-nagvis.git;a=sum
 
 Package: nagvis
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.7.2)
 Depends: ${misc:Depends},
          php5-common (>= 5.3.0),
          php5,
