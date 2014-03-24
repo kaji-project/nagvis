@@ -23,9 +23,8 @@ Depends: ${misc:Depends},
          graphviz,
          php5-sqlite,
          php-net-socket,
-         php-gettext,
-         check-mk-livestatus
-Suggests: nagvis-demos
+         php-gettext
+Suggests: check-mk-livestatus, nagvis-demos
 Description: visualization addon for Nagios or Icinga
  NagVis can be used to visualize Nagios or Icinga data, for instance
  to display network traffic or IT services such as email.
