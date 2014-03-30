@@ -1,3 +1,10 @@
+nagvis (1:1.7.10+dfsg1-3) unstable; urgency=medium
+
+  * [4b7b449] Removed obsolete Pre-Depends on dpkg for dpkg-maintscript-helper
+  * [e158ed0] Made check-mk-livestatus a suggestion (Closes: #742644)
+
+ -- Markus Frosch <markus@lazyfrosch.de>  Sun, 30 Mar 2014 20:34:22 +0200
+
 nagvis (1:1.7.10+dfsg1-2) unstable; urgency=low
 
   [ Mathieu Parent ]
