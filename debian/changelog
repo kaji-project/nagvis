@@ -1,3 +1,9 @@
+nagvis (1:1.7.10+dfsg1-3~debmon70+1) debmon-wheezy; urgency=medium
+
+  * Rebuild for debmon-wheezy
+
+ -- Markus Frosch <markus@lazyfrosch.de>  Sun, 30 Mar 2014 20:51:06 +0200
+
 nagvis (1:1.7.10+dfsg1-3) unstable; urgency=medium
 
   * [4b7b449] Removed obsolete Pre-Depends on dpkg for dpkg-maintscript-helper
