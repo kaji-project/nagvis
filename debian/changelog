@@ -1,3 +1,9 @@
+nagvis (1:1.7.10+dfsg1-3~debmon70+2.1kaji0.2) unstable; urgency=medium
+
+  * Kaji release
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Tue, 12 Aug 2014 15:13:27 -0400
+
 nagvis (1:1.7.10+dfsg1-3~debmon70+1) debmon-wheezy; urgency=medium
 
   * Rebuild for debmon-wheezy
