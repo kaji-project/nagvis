@@ -88,8 +88,8 @@ case "$1" in
     configure)
         # Source debconf library.
         . /usr/share/debconf/confmodule
-        db_get nagvis/monitoring_system
-        MONITORING="$RET"
+        #db_get nagvis/monitoring_system
+        MONITORING="kaji"
         case "$MONITORING" in
             "icinga"|"nagios"|"shinken")
                 ## Creating Configuration file for Nagvis
@@ -118,6 +118,17 @@ case "$1" in
                         sed -i "$nagvis_tmp" \
                           -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
                           -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"tcp:localhost:50000\"#"
+                    ;;
+                    "kaji")
+                        sed -i "$nagvis_tmp" \
+                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"tcp:localhost:50000\"#" \
+                          -e "s#;hosturl=.*#hosturl=\"/status/detail?host_name=[host_name]\"#" \
+                          -e "s#;hostgroupurl=.*#hostgroupurl=\"/status/detail?hostgroup_name=[hostgroup_name]\"#" \
+                          -e "s#;serviceurl=.*#serviceurl=\"/status/detail?host_name=[host_name]\&service_description=[service_description]\"#" \
+                          -e "s#;servicegroupurl=.*#servicegroupurl=\"/status/detail?servicegroup_name=[servicegroup_name]\"#" \
+                          -e "s#;urltarget=\"_self\"#urltarget=\"_blank\"#" \
+                          -e "s#\[backend_live_1\]#[backend_localhost:50000]#" \
+                          -e "s#;backend=\"live_1\"#backend=\"localhost:50000\"#"
                     ;;
                 esac
                 chgrp www-data "$nagvis_tmp"
