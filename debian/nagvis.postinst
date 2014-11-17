@@ -91,7 +91,7 @@ case "$1" in
         #db_get nagvis/monitoring_system
         MONITORING="kaji"
         case "$MONITORING" in
-            "icinga"|"nagios"|"shinken")
+            "icinga"|"nagios"|"shinken"|"kaji")
                 ## Creating Configuration file for Nagvis
                 nagvis_tmp=$(mktemp)
                 cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
@@ -155,6 +155,10 @@ case "$1" in
                         sed -i "$apache_tmp" \
                           -e "s#@NAGIOS_PATH@/etc#/etc/shinken#g"
                     ;;
+                    "kaji")
+                        sed -i "$apache_tmp" \
+                          -e "s#@NAGIOS_PATH@/etc#/etc/shinken#g"
+                    ;;
                 esac
                 chmod go+r "$apache_tmp"
                 ucf --debconf-ok "$apache_tmp" /etc/nagvis/apache2.conf
@@ -167,7 +171,7 @@ case "$1" in
         esac
 
         # enable apache when file exists and we are on autoconfigure
-        if [ -f /etc/nagvis/apache2.conf ] && ( [ "$MONITORING" = "nagios" ] || [ "$MONITORING" = "icinga" ] || [ "$MONITORING" = "shinken" ] ); then
+        if [ -f /etc/nagvis/apache2.conf ] && ( [ "$MONITORING" = "nagios" ] || [ "$MONITORING" = "icinga" ] || [ "$MONITORING" = "shinken" ] || [ "$MONITORING" = "kaji" ] ); then
             echo "enabling Apache2 config..."
 
             COMMON_STATE=$(dpkg-query -f '${Status}' -W 'apache2.2-common' 2>/dev/null | awk '{print $3}' || true)
