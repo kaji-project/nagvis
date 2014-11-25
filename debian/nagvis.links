@@ -7,3 +7,4 @@
 /usr/share/nagvis/defaults/nagvis.ini.php-sample /usr/share/doc/nagvis/nagvis.ini.php-sample
 /usr/share/nagvis/defaults/apache2-nagvis.conf-sample /usr/share/doc/nagvis/apache2-nagvis.conf-sample
 etc/nagvis/apache2.conf etc/apache2/conf-available/nagvis.conf
+/var/cache/nagvis /usr/share/nagvis/share/var
