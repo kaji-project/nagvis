@@ -27,6 +27,8 @@ override_dh_install:
 	# /usr/share/doc/nagvis)
 	rm -f debian/nagvis/etc/nagvis/apache2-nagvis.conf-sample
 	rm -f debian/nagvis/etc/nagvis/nagvis.ini.php-sample
+	# Copy kis_icons
+	cp -r debian/kis_icons/* debian/nagvis/var/lib/nagvis/userfiles/images/iconsets/
 
 override_dh_clean:
 	dh_clean
