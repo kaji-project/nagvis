@@ -7,7 +7,6 @@ Group:		Nagvis
 License:	GPLv2
 URL:        https://github.com/kaji-project/nagvis
 Source0:    %{name}_%{version}.orig.tar.gz
-Source1:    %{name}_%{version}-%{release}.debian.tar.xz
 Requires: php, php-mysql, php-gd, httpd, graphviz-gd, php-mbstring
 Requires: graphviz >= 2.14
 
@@ -35,8 +34,6 @@ Key features :
 
 %prep
 %setup -q
-# Untar debian tarball
-tar vxf %{SOURCE1}
 # Apply all patches
 ls .
 for patch_file in $(cat debian/patches/series | grep -v "^#")
