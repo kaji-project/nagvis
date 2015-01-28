@@ -63,10 +63,12 @@ cp -r share %{buildroot}%{_datadir}/%{name}
 cp -r docs %{buildroot}%{_datadir}/%{name}/share
 %{__install} -d %{buildroot}%{_datadir}/%{name}/share/var
 
+
 pushd %{buildroot}%{_datadir}/%{name}
 ln -s ../../..%{_sysconfdir}/%{name} etc
 popd
 
+%{__install} -d -m 755 %{buildroot}%{_var}/cache/%{name}
 install -d -m 755 %{buildroot}%{_var}/lib/%{name}
 install -d -m 755 %{buildroot}%{_var}/lib/%{name}/tmpl
 install -d -m 755 %{buildroot}%{_var}/lib/%{name}/tmpl/cache
@@ -144,6 +146,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,0755)
 %doc INSTALL LICENCE README
 %{_sysconfdir}/httpd/conf.d/nagvis.conf
+%attr(755,apache,apache) %dir %{_var}/cache/%{name}
 %attr(775,root,apache) %dir %{_sysconfdir}/nagvis
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/maps
 #%attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/automaps
