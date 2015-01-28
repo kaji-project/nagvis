@@ -66,8 +66,8 @@ cp -r docs/ %{buildroot}%{_datadir}/%{name}
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/profiles
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/defaults
-mv -m 644 etc/nagvis.ini.php-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
-mv -m 644 etc/apache2-nagvis.conf-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
+mv etc/nagvis.ini.php-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
+mv etc/apache2-nagvis.conf-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
 cp -r etc/* %{buildroot}%{_sysconfdir}/%{name}
 
 
