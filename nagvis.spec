@@ -9,6 +9,7 @@ URL:        https://github.com/kaji-project/nagvis
 Source0:    %{name}_%{version}.orig.tar.gz
 Requires: php, php-mysql, php-gd, httpd, graphviz-gd, php-mbstring
 Requires: graphviz >= 2.14
+BuildArch: noarch
 
 %description
 NagVis is a visualization addon for the well known network managment system Nagios.
