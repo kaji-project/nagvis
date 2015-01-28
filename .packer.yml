@@ -1,4 +1,4 @@
 distro:
   - centos_6
-spec: shinken.spec
+spec: nagvis.spec
 debian: debian
