@@ -48,49 +48,52 @@ done
 %install
 
 %{__rm} -rf %{buildroot}
-%{__install} -d %{buildroot}%{_sysconfdir}/nagvis
-install -m 644 etc/nagvis.ini.php-sample %{buildroot}%{_sysconfdir}/%{name}/nagvis.ini.php
-
-install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}
-cp -r etc/maps %{buildroot}%{_sysconfdir}/%{name}
-#cp -r etc/automaps %{buildroot}%{_sysconfdir}/%{name}
-cp -r etc/geomap %{buildroot}%{_sysconfdir}/%{name}
-cp -r etc/conf.d %{buildroot}%{_sysconfdir}/%{name}
-%{__install} -d %{buildroot}%{_sysconfdir}/%{name}/profiles
-
-%{__install} -d %{buildroot}%{_datadir}/%{name}
-cp -r share %{buildroot}%{_datadir}/%{name}
-cp -r docs %{buildroot}%{_datadir}/%{name}/share
-%{__install} -d %{buildroot}%{_datadir}/%{name}/share/var
 
 
-pushd %{buildroot}%{_datadir}/%{name}
-ln -s ../../..%{_sysconfdir}/%{name} etc
-popd
+# /var/lib/nagvis
+%{__install} -d -m 0755 %{buildroot}%{_var}/lib/%{name}
+mv share/userfiles/ %{buildroot}%{_var}/lib/%{name}
 
-%{__install} -d -m 755 %{buildroot}%{_var}/cache/%{name}
-install -d -m 755 %{buildroot}%{_var}/lib/%{name}
-install -d -m 755 %{buildroot}%{_var}/lib/%{name}/tmpl
-install -d -m 755 %{buildroot}%{_var}/lib/%{name}/tmpl/cache
-install -d -m 755 %{buildroot}%{_var}/lib/%{name}/tmpl/compile
-pushd %{buildroot}%{_datadir}/%{name}
-ln -s ../../..%{_var}/lib/%{name} var
-popd
+# /var/share/nagvis
+%{__install} -d -m 0755 %{buildroot}%{_datadir}/%{name}
+%{__install} -d -m 0755 %{buildroot}%{_datadir}/%{name}/tmpl
+%{__install} -d -m 0755 %{buildroot}%{_datadir}/%{name}/tmpl/cache
+%{__install} -d -m 0755 %{buildroot}%{_datadir}/%{name}/tmpl/compile
+cp -r share/ %{buildroot}%{_datadir}/%{name}
+cp -r docs/ %{buildroot}%{_datadir}/%{name}
 
-%{__install} -d -m 0755 %buildroot%{_sysconfdir}/httpd/conf.d
-cat << EOF >> %buildroot%{_sysconfdir}/httpd/conf.d/nagvis.conf
-Alias /nagvis         /usr/share/nagvis/share
-<Directory /usr/share/nagvis/share/>
-    Options +FollowSymLinks
-    AllowOverride All
-    Order allow,deny
-    Allow from all
-</Directory>
 
-<IfModule mod_php5.c>
-  php_value date.timezone = "Europe/Paris"
-</IfModule>
-EOF
+%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}
+%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/profiles
+%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/defaults
+mv -m 644 etc/nagvis.ini.php-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
+mv -m 644 etc/apache2-nagvis.conf-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
+cp -r etc/* %{buildroot}%{_sysconfdir}/%{name}
+
+
+%{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/httpd/conf.d
+
+
+# Copy kis_icons
+cp -r debian/kis_icons/* %{buildroot}%{_datadir}/%{name}/userfiles/images/iconsets/
+
+# Delete demo files
+rm -f %{buildroot}%{_sysconfdir}/%{name}/conf.d/demo.ini.php
+rm -f %{buildroot}%{_sysconfdir}/%{name}/maps/demo*.cfg
+rm -f %{buildroot}%{_var}/lib/%{name}/userfiles/images/maps/demo*.png \
+rm -f %{buildroot}%{_var}/lib/%{name}/userfiles/images/shapes/demo*.png
+#rm -rf %{buildroot}%{_datadir}/%{name}/share/userfiles/
+
+
+ln -sf /var/lib/nagvis/userfiles %{buildroot}%{_datadir}/%{name}/share/userfiles/
+ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/doc/%{name}/html
+ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/%{name}/share/docs
+ln -sf /etc/nagvis %{buildroot}%{_datadir}/%{name}/etc
+ln -sf /var/cache/nagvis %{buildroot}%{_datadir}/%{name}/var
+ln -sf /usr/share/nagvis/defaults/nagvis.ini.php-sample %{buildroot}%{_datadir}/doc/%{name}/nagvis.ini.php-sample
+ln -sf /usr/share/nagvis/defaults/apache2-nagvis.conf-sample %{buildroot}%{_datadir}/doc/%{name}/apache2-nagvis.conf-sample
+ln -sf /etc/nagvis/apache2.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/nagvis.conf
+ln -sf /var/cache/nagvis %{buildroot}%{_datadir}%{name}/share/var
 
 %postun
 
