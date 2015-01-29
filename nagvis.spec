@@ -86,7 +86,7 @@ rm -f %{buildroot}%{_var}/lib/%{name}/userfiles/images/shapes/demo*.png
 #rm -rf %{buildroot}%{_datadir}/%{name}/share/userfiles/
 
 
-ln -sf /var/lib/nagvis/userfiles %{buildroot}%{_datadir}/%{name}/share/userfiles/
+ln -sf /var/lib/nagvis/userfiles %{buildroot}%{_datadir}/%{name}/share/userfiles
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/doc/%{name}/html
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/%{name}/share/docs
 ln -sf /etc/nagvis %{buildroot}%{_datadir}/%{name}/etc
