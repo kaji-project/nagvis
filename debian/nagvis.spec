@@ -121,8 +121,8 @@ if [ "$1" = "2" ] ; then
     sed -i '/^usegdlibs=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
     sed -i '/^displayheader=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
     sed -i '/^hovertimeout=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^allowed_for_config=/d' %{_sysconfdir}/nagvis/maps/*.cfg
-    sed -i '/^allowed_user=/d' %{_sysconfdir}/nagvis/maps/*.cfg
+#    sed -i '/^allowed_for_config=/d' %{_sysconfdir}/nagvis/maps/*.cfg
+#    sed -i '/^allowed_user=/d' %{_sysconfdir}/nagvis/maps/*.cfg
 #    sed -i '/^allowed_for_config=/d' %{_sysconfdir}/nagvis/automaps/*.cfg
 fi
 
@@ -161,11 +161,11 @@ rm -rf %{buildroot}
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/conf.d
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/profiles
 %attr(640,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/nagvis.ini.php
-%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/maps/*.cfg
+#%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/maps/*.cfg
 #%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/automaps/*.cfg
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.xml
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.csv
-%attr(-,apache,apache) %{_sysconfdir}/nagvis/conf.d/*.ini.php
+#%attr(-,apache,apache) %{_sysconfdir}/nagvis/conf.d/*.ini.php
 %attr(-,apache,apache) %{_var}/lib/%{name}
 
 %defattr(-,apache,apache,0775)
