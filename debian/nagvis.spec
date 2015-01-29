@@ -88,15 +88,16 @@ rm -f %{buildroot}%{_var}/lib/%{name}/userfiles/images/shapes/demo*.png
 
 %{__install} -d -m 0755 %{buildroot}%{_datadir}/doc/%{name}
 %{__install} -d -m 0755 %{buildroot}%{_datadir}/doc/%{name}/share/
+%{__install} -d -m 0755 %{buildroot}%{_var}/cache/%{name}
 ln -sf /var/lib/nagvis/userfiles %{buildroot}%{_datadir}/%{name}/share/userfiles
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/doc/%{name}/html
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/%{name}/share/docs
 ln -sf /etc/nagvis %{buildroot}%{_datadir}/%{name}/etc
-ln -sf /var/cache/nagvis %{buildroot}%{_datadir}/%{name}/var
+ln -sf %{_var}/cache/%{name} %{buildroot}%{_datadir}/%{name}/var
 ln -sf /usr/share/nagvis/defaults/nagvis.ini.php-sample %{buildroot}%{_datadir}/doc/%{name}/nagvis.ini.php-sample
 ln -sf /usr/share/nagvis/defaults/apache2-nagvis.conf-sample %{buildroot}%{_datadir}/doc/%{name}/apache2-nagvis.conf-sample
 ln -sf /etc/nagvis/apache2.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/nagvis.conf
-ln -sf /var/cache/nagvis %{buildroot}%{_datadir}/%{name}/share/var
+ln -sf %{_var}/cache/%{name} %{buildroot}%{_datadir}/%{name}/share/var
 
 %postun
 

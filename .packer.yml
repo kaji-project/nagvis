@@ -1,4 +1,4 @@
 distro:
   - centos_6
-spec: nagvis.spec
+spec: debian/nagvis.spec
 debian: debian
