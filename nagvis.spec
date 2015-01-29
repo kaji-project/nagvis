@@ -86,6 +86,8 @@ rm -f %{buildroot}%{_var}/lib/%{name}/userfiles/images/shapes/demo*.png
 #rm -rf %{buildroot}%{_datadir}/%{name}/share/userfiles/
 
 
+%{__install} -d -m 0755 %{_datadir}/doc/%{name}
+%{__install} -d -m 0755 %{_datadir}/doc/%{name}/share/
 ln -sf /var/lib/nagvis/userfiles %{buildroot}%{_datadir}/%{name}/share/userfiles
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/doc/%{name}/html
 ln -sf /usr/share/nagvis/docs %{buildroot}%{_datadir}/%{name}/share/docs
