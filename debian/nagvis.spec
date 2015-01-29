@@ -160,7 +160,7 @@ rm -rf %{buildroot}
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/geomap
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/conf.d
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/profiles
-%attr(640,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/nagvis.ini.php
+#%attr(640,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/nagvis.ini.php
 #%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/maps/*.cfg
 #%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/automaps/*.cfg
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.xml
