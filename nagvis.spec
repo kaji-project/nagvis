@@ -75,6 +75,7 @@ cp -r etc/* %{buildroot}%{_sysconfdir}/%{name}
 
 
 # Copy kis_icons
+%{__install} -d -m 0755 %{buildroot}%{_datadir}/%{name}/userfiles/images/iconsets/
 cp -r debian/kis_icons/* %{buildroot}%{_datadir}/%{name}/userfiles/images/iconsets/
 
 # Delete demo files
