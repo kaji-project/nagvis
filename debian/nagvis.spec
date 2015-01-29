@@ -152,6 +152,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,0755)
 %doc INSTALL LICENCE README
+%{_datadir}/doc/%{name}/
+%attr(755,apache,apache) %{_sysconfdir}/nagvis/defaults
 %{_sysconfdir}/httpd/conf.d/nagvis.conf
 %attr(755,apache,apache) %dir %{_var}/cache/%{name}
 %attr(775,root,apache) %dir %{_sysconfdir}/nagvis
@@ -167,6 +169,7 @@ rm -rf %{buildroot}
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.csv
 #%attr(-,apache,apache) %{_sysconfdir}/nagvis/conf.d/*.ini.php
 %attr(-,apache,apache) %{_var}/lib/%{name}
+
 
 %defattr(-,apache,apache,0775)
 %{_datadir}/%{name}
