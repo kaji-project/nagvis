@@ -96,7 +96,7 @@ ln -sf /var/cache/nagvis %{buildroot}%{_datadir}/%{name}/var
 ln -sf /usr/share/nagvis/defaults/nagvis.ini.php-sample %{buildroot}%{_datadir}/doc/%{name}/nagvis.ini.php-sample
 ln -sf /usr/share/nagvis/defaults/apache2-nagvis.conf-sample %{buildroot}%{_datadir}/doc/%{name}/apache2-nagvis.conf-sample
 ln -sf /etc/nagvis/apache2.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/nagvis.conf
-ln -sf /var/cache/nagvis %{buildroot}%{_datadir}%{name}/share/var
+ln -sf /var/cache/nagvis %{buildroot}%{_datadir}/%{name}/share/var
 
 %postun
 
