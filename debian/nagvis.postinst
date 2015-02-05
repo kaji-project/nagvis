@@ -17,27 +17,6 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-if dpkg --compare-versions "$2" lt-nl "1:1.7.9+dfsg1-1~"; then
-    # help by adding a empty file
-    touch /etc/nagvis/apache2.conf
-
-    # move /etc/apache2/conf.d/nagvis.conf to /etc/nagvis/apache2.conf
-    dpkg-maintscript-helper mv_conffile \
-        /etc/apache2/conf.d/nagvis.conf /etc/nagvis/apache2.conf "1:1.7.9+dfsg1-1~" nagvis -- "$@"
-
-    # unregister old file
-    ucf -p /etc/apache2/conf.d/nagvis.conf
-    ucfr -p nagvis /etc/apache2/conf.d/nagvis.conf
-    # delete helper file
-    rm -f /etc/nagvis/apache2.conf.dpkg-new
-
-    # remove old automap
-    dpkg-maintscript-helper rm_conffile \
-        /etc/nagvis/automaps/__automap.cfg "1:1.7.9+dfsg1-1~" nagvis -- "$@"
-
-    rmdir /etc/nagvis/automaps/ 2>/dev/null || true
-fi
-
 setperm() {
     user="$1"
     group="$2"
@@ -67,141 +46,11 @@ update_permissions() {
     setperm www-data www-data 0750 /var/cache/nagvis/tmpl/cache
 }
 
-# migrate userfiles from /var/cache/nagvis to /var/lib/nagvis
-migrate_userfiles() {
-    from="/var/cache/nagvis/userfiles"
-    to="/var/lib/nagvis/userfiles"
 
-    for dir in images/maps images/shapes; do
-        if [ -d "$from/$dir" ]; then
-            echo "moving files from $from/$dir to $to/$dir ..."
-            mv "$from/$dir"/* "$to/$dir/"
-            rmdir "$from/$dir" || true
-        fi
-    done
-
-    test -d "$from/images" && rmdir "$from/images" || true
-    test -d "$from" && rmdir "$from" || true
-}
 
 case "$1" in
     configure)
-        # Source debconf library.
-        . /usr/share/debconf/confmodule
-        #db_get nagvis/monitoring_system
-        MONITORING="kaji"
-        case "$MONITORING" in
-            "icinga"|"nagios"|"shinken"|"kaji")
-                ## Creating Configuration file for Nagvis
-                nagvis_tmp=$(mktemp)
-                cat /usr/share/nagvis/defaults/nagvis.ini.php-sample | sed \
-                  -e "s#;file_group=\"\"#file_group=\"www-data\"#g" \
-                  -e "s#;file_mode=\"660\"#file_mode=\"660\"#g" \
-                  -e "s#;base=\"/usr/local/nagvis/\"#base=\"/usr/share/nagvis/\"#" \
-                  -e "s#;htmlbase=\"/nagvis\"#htmlbase=\"/nagvis\"#" \
-                  -e "s#\[rotation_demo\]#;\[rotation_demo\]#" \
-                  -e "s#interval=15#;interval=15#" \
-                  -e "s#maps=\"\(.*\)\"#;maps=\"\1\"#" \
-                  > "$nagvis_tmp"
-                case "$MONITORING" in
-                    "icinga")
-                        sed -i "$nagvis_tmp" \
-                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/icinga/cgi-bin\"#" \
-                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/icinga/rw/live\"#"
-                    ;;
-                    "nagios")
-                        sed -i "$nagvis_tmp" \
-                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
-                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"unix:/var/lib/nagios3/rw/live\"#"
-                    ;;
-                    "shinken")
-                        sed -i "$nagvis_tmp" \
-                          -e "s#;htmlcgi=\"/nagios/cgi-bin\"#htmlcgi=\"/nagios/cgi-bin\"#" \
-                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"tcp:localhost:50000\"#"
-                    ;;
-                    "kaji")
-                        sed -i "$nagvis_tmp" \
-                          -e "s#;socket=\"unix:/usr/local/nagios/var/rw/live\"#socket=\"tcp:localhost:50000\"#" \
-                          -e "s#;hosturl=.*#hosturl=\"/status/detail?host_name=[host_name]\"#" \
-                          -e "s#;hostgroupurl=.*#hostgroupurl=\"/status/detail?hostgroup_name=[hostgroup_name]\"#" \
-                          -e "s#;serviceurl=.*#serviceurl=\"/status/detail?host_name=[host_name]\&service_description=[service_description]\"#" \
-                          -e "s#;servicegroupurl=.*#servicegroupurl=\"/status/detail?servicegroup_name=[servicegroup_name]\"#" \
-                          -e "s#;urltarget=\"_self\"#urltarget=\"_blank\"#" \
-                          -e "s#\[backend_live_1\]#[backend_localhost:50000]#" \
-                          -e "s#;backend=\"live_1\"#backend=\"localhost:50000\"#"
-                    ;;
-                esac
-                chgrp www-data "$nagvis_tmp"
-                chmod g+rw "$nagvis_tmp"
-                ucf --debconf-ok "$nagvis_tmp" /etc/nagvis/nagvis.ini.php
-                ucfr nagvis /etc/nagvis/nagvis.ini.php
-                rm -f "$nagvis_tmp"
-                ## Creating Configuration snipplet for Apache
-                apache_tmp=$(mktemp)
-                sed -e "s#@NAGVIS_PATH@#/usr/share/nagvis/share/#g" \
-                  -e "s#@NAGVIS_WEB@#/nagvis#g" \
-                  < /usr/share/nagvis/defaults/apache2-nagvis.conf-sample \
-                  > "$apache_tmp"
-                case "$MONITORING" in
-                    "icinga")
-                        sed -i "$apache_tmp" \
-                          -e "s#@NAGIOS_PATH@/etc#/etc/icinga#g"
-                    ;;
-                    "nagios")
-                        sed -i "$apache_tmp" \
-                          -e "s#@NAGIOS_PATH@/etc#/etc/nagios3#g"
-                    ;;
-                    "shinken")
-                        sed -i "$apache_tmp" \
-                          -e "s#@NAGIOS_PATH@/etc#/etc/shinken#g"
-                    ;;
-                    "kaji")
-                        sed -i "$apache_tmp" \
-                          -e "s#@NAGIOS_PATH@/etc#/etc/shinken#g"
-                    ;;
-                esac
-                chmod go+r "$apache_tmp"
-                ucf --debconf-ok "$apache_tmp" /etc/nagvis/apache2.conf
-                ucfr nagvis /etc/nagvis/apache2.conf
-                rm -f "$apache_tmp"
-            ;;
-            "other")
-                 # nothing to be done for others
-            ;;
-        esac
-
-        # enable apache when file exists and we are on autoconfigure
-        if [ -f /etc/nagvis/apache2.conf ] && ( [ "$MONITORING" = "nagios" ] || [ "$MONITORING" = "icinga" ] || [ "$MONITORING" = "shinken" ] || [ "$MONITORING" = "kaji" ] ); then
-            echo "enabling Apache2 config..."
-
-            COMMON_STATE=$(dpkg-query -f '${Status}' -W 'apache2.2-common' 2>/dev/null | awk '{print $3}' || true)
-
-            # NEW method for Apache >= 2.4
-            if [ -e /usr/share/apache2/apache2-maintscript-helper ]; then
-                . /usr/share/apache2/apache2-maintscript-helper
-
-                apache2_invoke enmod rewrite
-                apache2_invoke enconf nagvis
-
-                # remove OLD Apache 2.2 link
-                [ -L /etc/apache2/conf.d/nagvis.conf ] && rm /etc/apache2/conf.d/nagvis.conf
-
-            # OLD methods for Apache < 2.4
-            elif [ "$COMMON_STATE" = "installed" ] || [ "$COMMON_STATE" = "unpacked" ] ; then
-                # enable mod rewrite
-                [ -f /etc/apache2/mods-enabled/rewrite.load ] || a2enmod rewrite
-
-                # create symlink if not existing
-                [ -f /etc/apache2/conf.d/nagvis.conf ] || ln -vs ../../nagvis/apache2.conf /etc/apache2/conf.d/nagvis.conf
-
-                # reload webserver
-                [ -x $(which invoke-rc.d) ] && invoke-rc.d apache2 reload
-            fi
-
-        fi
-
         update_permissions
-        migrate_userfiles
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
