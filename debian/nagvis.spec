@@ -1,5 +1,5 @@
 Name:		nagvis
-Version:	1.7.10+dfsg1
+Version:	1.7.10
 Release:	1kaji0.2
 Summary:	NagVis
 
@@ -34,7 +34,7 @@ Key features :
 
 
 %prep
-%setup -q
+%setup -qn%{name}
 # Apply all patches
 ls .
 for patch_file in $(cat debian/patches/series | grep -v "^#")
@@ -69,6 +69,7 @@ cp -r docs/ %{buildroot}%{_datadir}/%{name}
 mv etc/nagvis.ini.php-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
 mv etc/apache2-nagvis.conf-sample %{buildroot}%{_sysconfdir}/%{name}/defaults
 cp -r etc/* %{buildroot}%{_sysconfdir}/%{name}
+cp -r debian/etc/* %{buildroot}%{_sysconfdir}/%{name}
 
 
 %{__install} -d -m 0755 %{buildroot}%{_sysconfdir}/httpd/conf.d
@@ -102,49 +103,9 @@ ln -sf %{_var}/cache/%{name} %{buildroot}%{_datadir}/%{name}/share/var
 %postun
 
 %post
-# Configuration database informations
-sed -i 's:;base=.*:base="/usr/share/nagvis/":' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's:;htmlbase=.*:htmlbase="/nagvis":' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/;backend=.*/backend="ndomy_1"/' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/;dbhost=.*/dbhost="localhost"/' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/;dbname=.*/dbname="nagios"/' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/;dbuser=.*/dbuser="root"/' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/;dbpass.*/dbpass=""/' %{_sysconfdir}/nagvis/nagvis.ini.php
-sed -i 's/^;dbinstancename=.*$/dbinstancename="default"/' %{_sysconfdir}/nagvis/nagvis.ini.php
-
-# check upgrade 
-if [ "$1" = "2" ] ; then
-    sed -i '/^allowedforconfig=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^autoupdatefreq=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^htmlwuijs=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^wuijs=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^usegdlibs=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^displayheader=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-    sed -i '/^hovertimeout=/d' %{_sysconfdir}/nagvis/nagvis.ini.php
-#    sed -i '/^allowed_for_config=/d' %{_sysconfdir}/nagvis/maps/*.cfg
-#    sed -i '/^allowed_user=/d' %{_sysconfdir}/nagvis/maps/*.cfg
-#    sed -i '/^allowed_for_config=/d' %{_sysconfdir}/nagvis/automaps/*.cfg
-fi
 
 %pre
-# check upgrade 
-if [ "$1" = "2" ] ; then
-    if [ -f %{_datadir}/%{name}/share/server/core/defines/global.php ]; then
-        OLD_VERSION=$(grep CONST_VERSION %{_datadir}/%{name}/share/server/core/defines/global.php | awk -F"'" '{print $4}')
-        if [ "$OLD_VERSION" == "1.5.9" ] || [ "$OLD_VERSION" == "1.5.10" ]; then
-            cd %{_var}/lib/%{name}
-            for file in $(ls *); do
-                rm -fr $file
-            done
-        fi
-    fi
-fi
 
-getent group apache >/dev/null || groupadd -r apache
-getent passwd apache >/dev/null || \
-useradd -r -g apache -d /var/www -s /sbin/nologin \
--c "Apache" apache
-exit 0
 
 %clean
 rm -rf %{buildroot}
@@ -158,16 +119,13 @@ rm -rf %{buildroot}
 %attr(755,apache,apache) %dir %{_var}/cache/%{name}
 %attr(775,root,apache) %dir %{_sysconfdir}/nagvis
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/maps
-#%attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/automaps
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/geomap
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/conf.d
 %attr(755,apache,apache) %dir %{_sysconfdir}/nagvis/profiles
-#%attr(640,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/nagvis.ini.php
-#%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/maps/*.cfg
-#%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/automaps/*.cfg
+%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/apache2.conf
+%attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/nagvis.ini.php
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.xml
 %attr(-,apache,apache) %config(noreplace) %{_sysconfdir}/nagvis/geomap/*.csv
-#%attr(-,apache,apache) %{_sysconfdir}/nagvis/conf.d/*.ini.php
 %attr(-,apache,apache) %{_var}/lib/%{name}
 
 
