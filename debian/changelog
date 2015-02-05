@@ -1,3 +1,9 @@
+nagvis (1:1.7.10-2kaji0.2) unstable; urgency=medium
+
+  * Kaji release
+
+ -- Thibault Cohen <thibault.cohen@savoirfairelinux.com>  Thu, 05 Feb 2015 10:49:37 -0500
+
 nagvis (1:1.7.10+dfsg1-1kaji0.2) unstable; urgency=medium
 
   * Kaji release
