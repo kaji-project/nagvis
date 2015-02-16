@@ -34,7 +34,7 @@ Key features :
 
 
 %prep
-%setup -qn%{name}
+%setup -q
 # Apply all patches
 ls .
 for patch_file in $(cat debian/patches/series | grep -v "^#")
