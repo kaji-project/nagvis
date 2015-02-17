@@ -49,3 +49,5 @@ share/nagvis/gadgets/*.php
 
 # Exclude all var contents
 var/*
+
+.pc/
