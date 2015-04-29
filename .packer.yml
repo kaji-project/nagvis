@@ -2,6 +2,8 @@ centos_6:
     spec: debian/nagvis.spec
 centos_7:
     spec: debian/nagvis.spec
+debian_7:
+    debian: debian
 debian_8:
     debian: debian
 ubuntu_12.04:
