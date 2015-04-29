@@ -1,6 +1,6 @@
 Name:		nagvis
 Version:	1.7.10
-Release:	1kaji0.2
+Release:	4kaji0.2
 Summary:	NagVis
 
 Group:		Nagvis
@@ -133,6 +133,9 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}
 
 %changelog
+* Wed Apr 29 2015 Sebastien Caovoux <sebastien.coavoux@savoirfairelinux.com> 1.7.10-4kaji0.2
+- Update Kaji packaging
+
 * Wed Jan 4 2012 Olivier LI-KIANG-CHEONG <olivier@gezen.fr> 1.6.1-fan.4
 - Create directory /etc/nagvis/profiles
 
